@@ -6,16 +6,17 @@ import { cookies as nextCookies } from "next/headers"
 import { getAuthHeaders, getCacheTag, getCartId } from "./cookies"
 
 const LOCALE_COOKIE_NAME = "_medusa_locale"
+const DEFAULT_LOCALE = "vi"
 
 /**
- * Gets the current locale from cookies
+ * Gets the current locale from cookies, defaulting to Vietnamese
  */
 export const getLocale = async (): Promise<string | null> => {
   try {
     const cookies = await nextCookies()
-    return cookies.get(LOCALE_COOKIE_NAME)?.value ?? null
+    return cookies.get(LOCALE_COOKIE_NAME)?.value ?? DEFAULT_LOCALE
   } catch {
-    return null
+    return DEFAULT_LOCALE
   }
 }
 

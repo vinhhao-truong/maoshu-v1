@@ -4,6 +4,7 @@ import { sdk } from "@lib/config"
 import medusaError from "@lib/util/medusa-error"
 import { HttpTypes } from "@medusajs/types"
 import { revalidateTag } from "next/cache"
+import { headers as nextHeaders } from "next/headers"
 import { redirect } from "next/navigation"
 import {
   getAuthHeaders,
@@ -97,11 +98,19 @@ export async function signup(_currentState: unknown, formData: FormData) {
     revalidateTag(customerCacheTag)
 
     await transferCart()
-
-    return createdCustomer
   } catch (error) {
     return String(error)
   }
+
+  const headersList = await nextHeaders()
+  const referer = headersList.get("referer") || ""
+  let countryCode = "vn"
+  try {
+    const pathname = new URL(referer).pathname
+    countryCode = pathname.split("/")[1] || countryCode
+  } catch {}
+
+  redirect(`/${countryCode}/account`)
 }
 
 export async function login(_currentState: unknown, formData: FormData) {
@@ -125,6 +134,16 @@ export async function login(_currentState: unknown, formData: FormData) {
   } catch (error) {
     return String(error)
   }
+
+  const headersList = await nextHeaders()
+  const referer = headersList.get("referer") || ""
+  let countryCode = "vn"
+  try {
+    const pathname = new URL(referer).pathname
+    countryCode = pathname.split("/")[1] || countryCode
+  } catch {}
+
+  redirect(`/${countryCode}/account`)
 }
 
 export async function signout(countryCode: string) {

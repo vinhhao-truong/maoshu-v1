@@ -6,7 +6,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "npm -r dev",
+    "dev": "turbo dev",
     "build": "npm -r build",
     "start": "turbo start",
     "lint": "turbo lint",
