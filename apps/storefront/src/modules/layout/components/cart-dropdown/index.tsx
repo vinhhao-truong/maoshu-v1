@@ -80,6 +80,13 @@ const CartDropdown = ({
       onMouseEnter={openAndCancel}
       onMouseLeave={close}
     >
+      {cartDropdownOpen && (
+        <div
+          className="fixed top-16 left-0 right-0 bottom-0 backdrop-blur-sm bg-black/10 z-[45]"
+          onClick={close}
+          onMouseEnter={close}
+        />
+      )}
       <Popover className="relative h-full">
         <PopoverButton className="h-full">
           <LocalizedClientLink
@@ -121,7 +128,7 @@ const CartDropdown = ({
         >
           <PopoverPanel
             static
-            className="hidden small:block absolute top-[calc(100%+1px)] right-0 bg-white border-x border-b border-gray-200 w-[420px] text-ui-fg-base"
+            className="hidden small:block absolute top-[calc(100%+1px)] right-0 bg-white border-x border-b border-gray-200 w-[420px] text-ui-fg-base z-[50]"
             data-testid="nav-cart-dropdown"
           >
             <div className="p-4 flex items-center justify-center">

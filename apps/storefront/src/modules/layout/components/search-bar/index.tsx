@@ -15,16 +15,49 @@ const BACKEND_URL =
   process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL ?? "http://localhost:9000"
 const PUB_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY ?? ""
 
+function normalizeText(str: string): string {
+  return str
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .replace(/[đĐ]/g, (c) => (c === "đ" ? "d" : "D"))
+    .toLowerCase()
+}
+
+function scoreProduct(title: string, normalizedQ: string, queryWords: string[]): number {
+  const titleNorm = normalizeText(title)
+
+  // Full phrase match → highest score
+  if (titleNorm.includes(normalizedQ)) return 1
+
+  // Word-level match: score = fraction of query words found in title
+  const matched = queryWords.filter((w) => titleNorm.includes(w)).length
+  return matched / queryWords.length
+}
+
 async function searchProducts(q: string): Promise<ProductResult[]> {
   if (!q.trim()) return []
-  const url = `${BACKEND_URL}/store/products?q=${encodeURIComponent(q)}&limit=6&fields=id,title,handle,thumbnail`
+
+  const normalizedQ = normalizeText(q)
+  const queryWords = normalizedQ.split(/\s+/).filter(Boolean)
+  if (queryWords.length === 0) return []
+
+  const url = `${BACKEND_URL}/store/products?limit=200&fields=id,title,handle,thumbnail`
   const res = await fetch(url, {
     headers: { "x-publishable-api-key": PUB_KEY },
     cache: "no-store",
   })
   if (!res.ok) return []
   const { products } = await res.json()
-  return products ?? []
+
+  return (products ?? [] as ProductResult[])
+    .map((p: ProductResult) => ({
+      p,
+      score: scoreProduct(p.title, normalizedQ, queryWords),
+    }))
+    .filter(({ score }: { score: number }) => score > 0)
+    .sort((a: { score: number }, b: { score: number }) => b.score - a.score)
+    .slice(0, 6)
+    .map(({ p }: { p: ProductResult }) => p)
 }
 
 export default function SearchBar() {
@@ -45,7 +78,6 @@ export default function SearchBar() {
       setOpen(false)
       return
     }
-    // Show hint dropdown immediately for short queries
     if (query.trim().length < 3) {
       setResults([])
       setOpen(true)
@@ -124,39 +156,49 @@ export default function SearchBar() {
         )}
       </div>
 
+      {/* Backdrop */}
+      {open && (
+        <div
+          className="fixed top-16 left-0 right-0 bottom-0 backdrop-blur-sm bg-black/10 z-[199]"
+          onClick={handleClose}
+        />
+      )}
+
       {/* Dropdown */}
       {open && (
-        <div className="absolute top-[calc(100%+8px)] right-0 w-72 bg-white border border-gray-200 shadow-lg rounded-md z-[200] overflow-hidden">
-          {query.trim().length < 3 ? (
-            <div className="p-4 text-xs text-gray-400 text-center">Nhập ít nhất 3 ký tự để tìm kiếm</div>
-          ) : loading ? (
-            <div className="p-4 text-xs text-gray-400 text-center">Đang tìm...</div>
-          ) : results.length === 0 ? (
-            <div className="p-4 text-xs text-gray-400 text-center">Không tìm thấy sản phẩm</div>
-          ) : (
-            <ul>
-              {results.map((p) => (
-                <li key={p.id} className="border-b border-gray-100 last:border-0">
-                  <LocalizedClientLink
-                    href={`/products/${p.handle}`}
-                    className="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 transition-colors"
-                    onClick={handleClose}
-                  >
-                    {p.thumbnail ? (
-                      <img
-                        src={p.thumbnail}
-                        alt={p.title}
-                        className="w-10 h-10 object-cover rounded border border-gray-100 shrink-0"
-                      />
-                    ) : (
-                      <div className="w-10 h-10 rounded border border-gray-100 bg-gray-100 shrink-0" />
-                    )}
-                    <span className="text-xs text-gray-700 line-clamp-2">{p.title}</span>
-                  </LocalizedClientLink>
-                </li>
-              ))}
-            </ul>
-          )}
+        <div className="fixed top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-md z-[200] overflow-hidden">
+          <div className="content-container py-2">
+            {query.trim().length < 3 ? (
+              <div className="py-3 text-xs text-gray-400 text-center">Nhập ít nhất 3 ký tự để tìm kiếm</div>
+            ) : loading ? (
+              <div className="py-3 text-xs text-gray-400 text-center">Đang tìm...</div>
+            ) : results.length === 0 ? (
+              <div className="py-3 text-xs text-gray-400 text-center">Không tìm thấy sản phẩm</div>
+            ) : (
+              <ul className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-4 gap-x-4 gap-y-1 py-2">
+                {results.map((p) => (
+                  <li key={p.id}>
+                    <LocalizedClientLink
+                      href={`/products/${p.handle}`}
+                      className="flex items-center gap-3 px-2 py-2 hover:bg-gray-50 transition-colors"
+                      onClick={handleClose}
+                    >
+                      {p.thumbnail ? (
+                        <img
+                          src={p.thumbnail}
+                          alt={p.title}
+                          className="w-10 h-10 object-cover border border-gray-100 shrink-0"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 border border-gray-100 bg-gray-100 shrink-0" />
+                      )}
+                      <span className="text-xs text-gray-700 line-clamp-2">{p.title}</span>
+                    </LocalizedClientLink>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       )}
     </div>
