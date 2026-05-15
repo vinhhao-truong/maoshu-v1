@@ -26,7 +26,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
   return (
     <Container
       className={clx(
-        "relative w-full bg-ui-bg-subtle border border-gray-200 shadow-elevation-card-rest rounded-large group-hover:shadow-elevation-card-hover transition-shadow ease-in-out duration-150",
+        "relative w-full bg-ui-bg-subtle border border-gray-200 shadow-elevation-card-rest rounded-md group-hover:shadow-elevation-card-hover transition-shadow ease-in-out duration-150",
         className,
         {
           "aspect-[1/1]": true,
@@ -38,7 +38,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
       )}
       data-testid={dataTestid}
     >
-      <div className="absolute inset-[4px] overflow-hidden">
+      <div className="absolute inset-[4px] overflow-hidden rounded-sm">
         <ImageOrPlaceholder image={initialImage} size={size} />
       </div>
     </Container>

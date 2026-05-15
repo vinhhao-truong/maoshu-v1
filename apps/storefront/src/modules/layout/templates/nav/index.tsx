@@ -8,6 +8,7 @@ import { StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
 import SideMenu from "@modules/layout/components/side-menu"
+import SearchBar from "@modules/layout/components/search-bar"
 import { getTranslations } from "next-intl/server"
 
 export default async function Nav() {
@@ -39,8 +40,8 @@ export default async function Nav() {
             </LocalizedClientLink>
           </div>
 
-          <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
-
+          <div className="flex items-center gap-x-4 h-full flex-1 basis-0 justify-end">
+            <SearchBar />
           <Suspense
               fallback={
                 <LocalizedClientLink
