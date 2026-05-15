@@ -3,7 +3,6 @@ import { getProductPrice } from "@lib/util/get-product-price"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Thumbnail from "../thumbnail"
-import PreviewPrice from "./price"
 import AddToCartButton from "./add-to-cart-button"
 
 export default async function ProductPreview({
@@ -20,26 +19,27 @@ export default async function ProductPreview({
   })
 
   return (
-    <div data-testid="product-wrapper" className="group">
-      <LocalizedClientLink href={`/products/${product.handle}`}>
-        <Thumbnail
-          thumbnail={product.thumbnail}
-          images={product.images}
-          size="full"
-          isFeatured={isFeatured}
-        />
-        <Text
-          className="text-ui-fg-subtle text-xs mt-3 block"
-          data-testid="product-title"
-        >
-          {product.title}
-        </Text>
-      </LocalizedClientLink>
-      <div className="flex items-center justify-between mt-2">
-        <div className="flex items-center gap-x-2">
-          {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
-        </div>
-        <AddToCartButton product={product} />
+    <div data-testid="product-wrapper" className="group relative p-5">
+      <LocalizedClientLink
+        href={`/products/${product.handle}`}
+        className="absolute inset-0 z-10"
+        aria-label={product.title ?? ""}
+      />
+      <Thumbnail
+        thumbnail={product.thumbnail}
+        images={product.images}
+        size="full"
+        isFeatured={isFeatured}
+        flat
+      />
+      <Text
+        className="text-ui-fg-subtle text-xs mt-3 block"
+        data-testid="product-title"
+      >
+        {product.title}
+      </Text>
+      <div className="relative z-20 mt-2">
+        <AddToCartButton product={product} price={cheapestPrice} />
       </div>
     </div>
   )

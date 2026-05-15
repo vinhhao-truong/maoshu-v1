@@ -9,6 +9,7 @@ type ThumbnailProps = {
   images?: { url?: string }[] | null
   size?: "small" | "medium" | "large" | "full" | "square"
   isFeatured?: boolean
+  flat?: boolean
   className?: string
   "data-testid"?: string
 }
@@ -18,6 +19,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
   images,
   size = "small",
   isFeatured,
+  flat,
   className,
   "data-testid": dataTestid,
 }) => {
@@ -26,10 +28,11 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
   return (
     <Container
       className={clx(
-        "relative w-full bg-ui-bg-subtle border border-gray-200 shadow-elevation-card-rest rounded-md group-hover:shadow-elevation-card-hover transition-shadow ease-in-out duration-150",
+        "relative w-full aspect-[1/1]",
+        !flat &&
+          "bg-ui-bg-subtle border border-gray-200 shadow-elevation-card-rest rounded-md group-hover:shadow-elevation-card-hover transition-shadow ease-in-out duration-150",
         className,
         {
-          "aspect-[1/1]": true,
           "w-[180px]": size === "small",
           "w-[290px]": size === "medium",
           "w-[440px]": size === "large",
@@ -38,7 +41,9 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
       )}
       data-testid={dataTestid}
     >
-      <div className="absolute inset-[4px] overflow-hidden rounded-sm">
+      <div
+        className={clx("absolute overflow-hidden", flat ? "inset-0" : "inset-[4px] rounded-sm")}
+      >
         <ImageOrPlaceholder image={initialImage} size={size} />
       </div>
     </Container>

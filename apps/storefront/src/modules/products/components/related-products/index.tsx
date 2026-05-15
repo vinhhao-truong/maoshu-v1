@@ -57,9 +57,9 @@ export default async function RelatedProducts({
         </p>
       </div>
 
-      <ul className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8">
+      <ul className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-4 border-l border-t border-gray-200">
         {products.map((product) => (
-          <li key={product.id}>
+          <li key={product.id} className="border-r border-b border-gray-200 transition-shadow duration-300 hover:ring-1 hover:ring-inset hover:ring-black">
             <Product region={region} product={product} />
           </li>
         ))}
