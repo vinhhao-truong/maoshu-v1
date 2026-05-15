@@ -55,18 +55,23 @@ export async function generateStaticParams() {
 function getImagesForVariant(
   product: HttpTypes.StoreProduct,
   selectedVariantId?: string
-) {
-  if (!selectedVariantId || !product.variants) {
-    return product.images
+): HttpTypes.StoreProductImage[] {
+  let images: HttpTypes.StoreProductImage[] | null | undefined = product.images
+
+  if (selectedVariantId && product.variants) {
+    const variant = product.variants.find((v) => v.id === selectedVariantId)
+    if (variant?.images?.length) {
+      const imageIdsMap = new Map(variant.images.map((i) => [i.id, true]))
+      images = product.images?.filter((i) => imageIdsMap.has(i.id))
+    }
   }
 
-  const variant = product.variants!.find((v) => v.id === selectedVariantId)
-  if (!variant || !variant.images?.length) {
-    return product.images
+  // Fall back to thumbnail when no product images exist (e.g. CSV-imported products)
+  if ((!images || images.length === 0) && product.thumbnail) {
+    return [{ id: "thumbnail", url: product.thumbnail, created_at: "", updated_at: "", deleted_at: null, rank: 0 }]
   }
 
-  const imageIdsMap = new Map(variant.images!.map((i) => [i.id, true]))
-  return product.images?.filter((i) => imageIdsMap.has(i.id)) ?? null
+  return images ?? []
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -125,7 +130,7 @@ export default async function ProductPage(props: Props) {
       product={pricedProduct}
       region={region}
       countryCode={params.countryCode}
-      images={images ?? []}
+      images={images}
     />
   )
 }

@@ -67,7 +67,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const escape = (v: string) =>
     v.includes(",") || v.includes('"') ? `"${v.replace(/"/g, '""')}"` : v
 
-  const csv = [
+  const csv = "﻿" + [
     headers.map(escape).join(","),
     exampleRow.map(escape).join(","),
   ].join("\n")

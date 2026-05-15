@@ -1,6 +1,6 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk"
 import { Button, Checkbox, toast } from "@medusajs/ui"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 type Product = {
   id: string
@@ -182,6 +182,34 @@ const ProductBulkActionsWidget = () => {
   const [showModal, setShowModal] = useState(false)
   const [deletingAll, setDeletingAll] = useState(false)
   const [confirmAll, setConfirmAll] = useState(false)
+  const [importing, setImporting] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!fileInputRef.current) return
+    fileInputRef.current.value = ""
+    if (!file) return
+
+    setImporting(true)
+    try {
+      const form = new FormData()
+      form.append("file", file)
+      const res = await fetch(`${BACKEND_URL}/admin/product-import`, {
+        method: "POST",
+        credentials: "include",
+        body: form,
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.message ?? "Import failed")
+      toast.success(`Imported: ${data.created} created, ${data.updated} updated${data.errors?.length ? `, ${data.errors.length} errors` : ""}`)
+      window.location.reload()
+    } catch (err: any) {
+      toast.error(err.message ?? "Import failed")
+    } finally {
+      setImporting(false)
+    }
+  }
 
   const handleDeleteAll = async () => {
     if (!confirmAll) {
@@ -217,15 +245,44 @@ const ProductBulkActionsWidget = () => {
     window.open(`${BACKEND_URL}/admin/product-import-template`, "_blank")
   }
 
+  const exportProducts = () => {
+    window.open(`${BACKEND_URL}/admin/product-export`, "_blank")
+  }
+
   return (
     <>
       <div className="flex items-center gap-2 mb-4">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".csv"
+          className="hidden"
+          onChange={handleImport}
+        />
+
         <Button
           variant="secondary"
           size="small"
           onClick={downloadTemplate}
         >
           Download Import Template
+        </Button>
+
+        <Button
+          variant="secondary"
+          size="small"
+          onClick={() => fileInputRef.current?.click()}
+          isLoading={importing}
+        >
+          Import Products
+        </Button>
+
+        <Button
+          variant="secondary"
+          size="small"
+          onClick={exportProducts}
+        >
+          Export Products
         </Button>
 
         <Button
