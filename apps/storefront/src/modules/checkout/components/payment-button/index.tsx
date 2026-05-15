@@ -7,6 +7,7 @@ import { Button } from "@modules/common/components/ui"
 import { useElements, useStripe } from "@stripe/react-stripe-js"
 import React, { useState } from "react"
 import ErrorMessage from "../error-message"
+import { useTranslations } from "next-intl"
 
 type PaymentButtonProps = {
   cart: HttpTypes.StoreCart
@@ -17,6 +18,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   cart,
   "data-testid": dataTestId,
 }) => {
+  const t = useTranslations("checkout")
   const notReady =
     !cart ||
     !cart.shipping_address ||
@@ -40,7 +42,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
         <ManualTestPaymentButton notReady={notReady} data-testid={dataTestId} />
       )
     default:
-      return <Button disabled>Select a payment method</Button>
+      return <Button disabled>{t("selectPaymentMethod")}</Button>
   }
 }
 
@@ -55,6 +57,7 @@ const StripePaymentButton = ({
 }) => {
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const t = useTranslations("checkout")
 
   const onPaymentCompleted = async () => {
     await placeOrder()
@@ -141,7 +144,7 @@ const StripePaymentButton = ({
         isLoading={submitting}
         data-testid={dataTestId}
       >
-        Place order
+        {t("placeOrder")}
       </Button>
       <ErrorMessage
         error={errorMessage}
@@ -154,6 +157,7 @@ const StripePaymentButton = ({
 const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const t = useTranslations("checkout")
 
   const onPaymentCompleted = async () => {
     await placeOrder()
@@ -180,7 +184,7 @@ const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
         size="large"
         data-testid="submit-order-button"
       >
-        Place order
+        {t("placeOrder")}
       </Button>
       <ErrorMessage
         error={errorMessage}

@@ -32,7 +32,7 @@ export default async function ProductGrid({
   return (
     <div className="content-container py-12">
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-2xl-semi">All Products</h2>
+        <h2 className="text-2xl-semi">Tất Cả Sản Phẩm</h2>
         <LocalizedClientLink
           href="/store"
           className="text-ui-fg-subtle hover:text-ui-fg-base text-small-regular transition-colors"
