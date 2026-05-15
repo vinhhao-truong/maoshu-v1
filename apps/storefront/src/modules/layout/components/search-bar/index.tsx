@@ -1,6 +1,7 @@
 "use client"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import { normalizeText, scoreMatch } from "@lib/util/normalize-text"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 
@@ -15,24 +16,6 @@ const BACKEND_URL =
   process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL ?? "http://localhost:9000"
 const PUB_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY ?? ""
 
-function normalizeText(str: string): string {
-  return str
-    .normalize("NFD")
-    .replace(/\p{M}/gu, "")
-    .replace(/[đĐ]/g, (c) => (c === "đ" ? "d" : "D"))
-    .toLowerCase()
-}
-
-function scoreProduct(title: string, normalizedQ: string, queryWords: string[]): number {
-  const titleNorm = normalizeText(title)
-
-  // Full phrase match → highest score
-  if (titleNorm.includes(normalizedQ)) return 1
-
-  // Word-level match: score = fraction of query words found in title
-  const matched = queryWords.filter((w) => titleNorm.includes(w)).length
-  return matched / queryWords.length
-}
 
 async function searchProducts(q: string): Promise<ProductResult[]> {
   if (!q.trim()) return []
@@ -52,7 +35,7 @@ async function searchProducts(q: string): Promise<ProductResult[]> {
   return (products ?? [] as ProductResult[])
     .map((p: ProductResult) => ({
       p,
-      score: scoreProduct(p.title, normalizedQ, queryWords),
+      score: scoreMatch(p.title, normalizedQ, queryWords),
     }))
     .filter(({ score }: { score: number }) => score > 0)
     .sort((a: { score: number }, b: { score: number }) => b.score - a.score)

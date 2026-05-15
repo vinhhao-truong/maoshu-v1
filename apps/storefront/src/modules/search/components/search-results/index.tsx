@@ -1,5 +1,7 @@
-import { listProductsWithSort } from "@lib/data/products"
+import { listProducts } from "@lib/data/products"
 import { getRegion } from "@lib/data/regions"
+import { normalizeText, scoreMatch } from "@lib/util/normalize-text"
+import { sortProducts } from "@lib/util/sort-products"
 import ProductPreview from "@modules/products/components/product-preview"
 import { Pagination } from "@modules/store/components/pagination"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
@@ -18,15 +20,26 @@ export default async function SearchResults({ query, sortBy, page, countryCode }
   if (!region) return null
 
   const {
-    response: { products, count },
-  } = await listProductsWithSort({
-    page,
-    queryParams: { limit: PRODUCT_LIMIT, q: query } as any,
-    sortBy,
+    response: { products: allProducts },
+  } = await listProducts({
+    pageParam: 0,
+    queryParams: { limit: 200 },
     countryCode,
   })
 
-  const totalPages = Math.ceil(count / PRODUCT_LIMIT)
+  const normalizedQ = normalizeText(query)
+  const queryWords = normalizedQ.split(/\s+/).filter(Boolean)
+
+  const scored = allProducts
+    .map((p) => ({ p, score: scoreMatch(p.title ?? "", normalizedQ, queryWords) }))
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map(({ p }) => p)
+
+  const sorted = sortProducts(scored, sortBy)
+  const totalPages = Math.ceil(sorted.length / PRODUCT_LIMIT)
+  const offset = (page - 1) * PRODUCT_LIMIT
+  const products = sorted.slice(offset, offset + PRODUCT_LIMIT)
 
   if (!products.length) {
     return (
@@ -39,11 +52,11 @@ export default async function SearchResults({ query, sortBy, page, countryCode }
   return (
     <>
       <ul
-        className="grid grid-cols-2 w-full small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8"
+        className="grid grid-cols-2 w-full small:grid-cols-3 medium:grid-cols-4 border-l border-t border-gray-200"
         data-testid="search-results-list"
       >
         {products.map((p) => (
-          <li key={p.id}>
+          <li key={p.id} className="border-r border-b border-gray-200 transition-shadow duration-300 hover:ring-1 hover:ring-inset hover:ring-black">
             <ProductPreview product={p} region={region} />
           </li>
         ))}
