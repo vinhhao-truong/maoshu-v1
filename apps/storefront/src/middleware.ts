@@ -105,6 +105,16 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Design-system routes are admin-only and don't need a region prefix
+  if (request.nextUrl.pathname.startsWith("/design-system")) {
+    const hasToken = !!request.cookies.get("_medusa_admin_jwt")?.value
+    const isLogin = request.nextUrl.pathname === "/design-system/login"
+    if (!hasToken && !isLogin) {
+      return NextResponse.redirect(new URL("/design-system/login", request.url))
+    }
+    return NextResponse.next()
+  }
+
   const cacheIdCookie = request.cookies.get("_medusa_cache_id")
   const cacheId = cacheIdCookie?.value || crypto.randomUUID()
 
