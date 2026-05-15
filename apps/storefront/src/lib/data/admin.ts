@@ -20,16 +20,16 @@ export const loginAdmin = async (formData: FormData) => {
       secure: process.env.NODE_ENV === "production",
     })
   } catch {
-    redirect("/design-system/login?error=1")
+    redirect("/admin/login?error=1")
   }
 
-  redirect("/design-system")
+  redirect("/admin")
 }
 
 export const logoutAdmin = async () => {
   const cookies = await nextCookies()
   cookies.set(COOKIE_NAME, "", { maxAge: -1 })
-  redirect("/design-system/login")
+  redirect("/admin/login")
 }
 
 export const verifyAdminSession = async (): Promise<boolean> => {

@@ -105,18 +105,34 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Design-system routes are admin-only and don't need a region prefix
-  if (request.nextUrl.pathname.startsWith("/design-system")) {
+  // Admin routes are admin-only and don't need a region prefix
+  if (request.nextUrl.pathname.startsWith("/admin")) {
     const hasToken = !!request.cookies.get("_medusa_admin_jwt")?.value
-    const isLogin = request.nextUrl.pathname === "/design-system/login"
+    const isLogin = request.nextUrl.pathname === "/admin/login"
     if (!hasToken && !isLogin) {
-      return NextResponse.redirect(new URL("/design-system/login", request.url))
+      return NextResponse.redirect(new URL("/admin/login", request.url))
     }
     return NextResponse.next()
   }
 
-  const cacheIdCookie = request.cookies.get("_medusa_cache_id")
-  const cacheId = cacheIdCookie?.value || crypto.randomUUID()
+  // Generate a fresh cache ID on every request so server components always
+  // get a cache miss and fetch live data from the backend.
+  const cacheId = crypto.randomUUID()
+
+  // Inject the new ID into the request's cookie header so that getCacheTag()
+  // inside server components reads it during this render (not the old cookie).
+  const requestHeaders = new Headers(request.headers)
+  const existingCookies = request.headers.get("cookie") ?? ""
+  const filteredCookies = existingCookies
+    .split(";")
+    .filter((c) => !c.trim().startsWith("_medusa_cache_id="))
+    .join(";")
+  requestHeaders.set(
+    "cookie",
+    filteredCookies
+      ? `${filteredCookies}; _medusa_cache_id=${cacheId}`
+      : `_medusa_cache_id=${cacheId}`
+  )
 
   const regionMap = await getRegionMap(cacheId)
   const countryCode = await getCountryCode(request, regionMap)
@@ -127,14 +143,11 @@ export async function middleware(request: NextRequest) {
   const urlHasCountry = firstPathSegment === country.toLowerCase()
 
   if (urlHasCountry) {
-    if (!cacheIdCookie) {
-      const response = NextResponse.next()
-      response.cookies.set("_medusa_cache_id", cacheId, {
-        maxAge: 60 * 60 * 24,
-      })
-      return response
-    }
-    return NextResponse.next()
+    const response = NextResponse.next({ request: { headers: requestHeaders } })
+    response.cookies.set("_medusa_cache_id", cacheId, {
+      maxAge: 60 * 60 * 24,
+    })
+    return response
   }
 
   // if the url doesn't have the country, redirect to it

@@ -114,10 +114,10 @@ export default async function Footer() {
               <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
                 <li>
                   <Link
-                    href="/design-system"
+                    href="/admin"
                     className="hover:text-ui-fg-base"
                   >
-                    Design System
+                    Maoshu Admin
                   </Link>
                 </li>
               </ul>

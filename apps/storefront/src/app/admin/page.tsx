@@ -2,7 +2,7 @@ import { logoutAdmin, verifyAdminSession } from "@lib/data/admin"
 import { redirect } from "next/navigation"
 
 export const metadata = {
-  title: "Design System",
+  title: "Maoshu Admin",
 }
 
 // ─── Color data ──────────────────────────────────────────────────────────────
@@ -43,9 +43,9 @@ const COLOR_PALETTE: ColorGroup[] = [
 
 // ─── Page ────────────────────────────────────────────────────────────────────
 
-export default async function DesignSystemPage() {
+export default async function AdminPage() {
   const isValid = await verifyAdminSession()
-  if (!isValid) redirect("/design-system/login")
+  if (!isValid) redirect("/admin/login")
 
   return (
     <div className="min-h-screen bg-grey-5 font-sans">
@@ -53,7 +53,7 @@ export default async function DesignSystemPage() {
       <header className="sticky top-0 z-10 bg-grey-0 border-b border-grey-20 px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h1 className="text-sm font-semibold text-grey-90 tracking-tight">
-            Design System
+            Maoshu Admin
           </h1>
           <span className="text-xs bg-grey-10 text-grey-60 rounded-circle px-2 py-0.5 border border-grey-20">
             Admin

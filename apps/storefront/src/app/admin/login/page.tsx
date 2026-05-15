@@ -1,10 +1,11 @@
 import { loginAdmin } from "@lib/data/admin"
+import Link from "next/link"
 
 export const metadata = {
-  title: "Design System — Admin Login",
+  title: "Admin Login",
 }
 
-export default function DesignSystemLoginPage({
+export default function AdminLoginPage({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string }>
@@ -17,7 +18,7 @@ export default function DesignSystemLoginPage({
           <p className="text-xs uppercase tracking-widest text-grey-50 mb-2">
             Maoshu Store
           </p>
-          <h1 className="text-2xl font-semibold text-grey-90">Design System</h1>
+          <h1 className="text-2xl font-semibold text-grey-90">Maoshu Admin</h1>
           <p className="text-sm text-grey-50 mt-1">Admin access only</p>
         </div>
 
@@ -74,6 +75,11 @@ export default function DesignSystemLoginPage({
         <p className="text-center text-xs text-grey-40 mt-6">
           Use your Medusa admin credentials
         </p>
+        <Link href="/" className="">
+          <p className="text-center text-xs text-grey-40 mt-6">
+            Back to store
+          </p>
+        </Link>
       </div>
     </div>
   )
