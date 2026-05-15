@@ -40,6 +40,39 @@ export default async function Nav() {
           </div>
 
           <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
+
+          <Suspense
+              fallback={
+                <LocalizedClientLink
+                  className="hover:text-ui-fg-base flex items-center"
+                  href="/cart"
+                  data-testid="nav-cart-link"
+                >
+                  <div className="relative">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="22"
+                      height="22"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                      <line x1="3" y1="6" x2="21" y2="6" />
+                      <path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg>
+                    <span className="absolute -bottom-1.5 -right-1.5 flex items-center justify-center w-4 h-4 rounded-full bg-black text-white text-[9px] font-medium leading-none">
+                      0
+                    </span>
+                  </div>
+                </LocalizedClientLink>
+              }
+            >
+              <CartButton />
+            </Suspense>
             <div className="hidden small:flex items-center gap-x-6 h-full">
               {customer ? (
                 <LocalizedClientLink
@@ -48,7 +81,9 @@ export default async function Nav() {
                   data-testid="nav-account-link"
                 >
                   {customer.first_name
-                    ? t("greeting", { name: customer.first_name })
+                    ? <div>
+                      {t("greeting")}<b>{customer.first_name}</b>
+                    </div>
                     : t("account")}
                 </LocalizedClientLink>
               ) : (
@@ -61,19 +96,7 @@ export default async function Nav() {
                 </LocalizedClientLink>
               )}
             </div>
-            <Suspense
-              fallback={
-                <LocalizedClientLink
-                  className="hover:text-ui-fg-base flex gap-2"
-                  href="/cart"
-                  data-testid="nav-cart-link"
-                >
-                  {t("cart", { count: 0 })}
-                </LocalizedClientLink>
-              }
-            >
-              <CartButton />
-            </Suspense>
+
           </div>
         </nav>
       </header>

@@ -116,7 +116,17 @@ export default async function Footer() {
               <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
                 <li>
                   <Link href="/admin" className="hover:text-ui-fg-base">
-                    Maoshu Admin
+                    {t("adminShop")}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href={`${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/app`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-ui-fg-base"
+                  >
+                    {t("adminSeller")}
                   </Link>
                 </li>
               </ul>

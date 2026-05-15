@@ -1,6 +1,6 @@
 {
   "nav": {
-    "greeting": "Xin chào, {name}",
+    "greeting": "Xin chào, ",
     "account": "Tài Khoản",
     "signIn": "Đăng Nhập",
     "cart": "Giỏ Hàng ({count})"
@@ -9,6 +9,8 @@
     "categories": "Danh mục",
     "collections": "Bộ sưu tập",
     "storeName": "Maoshu Store",
+    "adminShop": "Maoshu Admin",
+    "adminSeller": "Maoshu Admin Bán Hàng",
     "copyright": "© {year} Maoshu Store. Bảo lưu mọi quyền."
   },
   "cart": {

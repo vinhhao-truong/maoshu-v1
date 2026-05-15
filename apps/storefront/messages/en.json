@@ -9,6 +9,8 @@
     "categories": "Categories",
     "collections": "Collections",
     "storeName": "Maoshu Store",
+    "adminShop": "Maoshu Admin",
+    "adminSeller": "Maoshu Admin Seller",
     "copyright": "© {year} Maoshu Store. All rights reserved."
   },
   "cart": {

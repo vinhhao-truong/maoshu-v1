@@ -19,8 +19,7 @@ export const listCategories = async (query?: Record<string, unknown>) => {
           limit,
           ...query,
         },
-        next,
-        cache: "force-cache",
+        next: { ...next, revalidate: 0 },
       }
     )
     .then(({ product_categories }) => product_categories)
