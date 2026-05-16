@@ -55,7 +55,7 @@ const DeleteButton = ({
       <div className={clx("flex items-center gap-x-1 text-small-regular", className)}>
         <button
           onClick={handleDelete}
-          className="flex-1 h-6 px-2 text-xs bg-black text-white hover:bg-gray-800 transition-colors whitespace-nowrap"
+          className="flex-1 h-6 px-2 text-xs bg-danger text-danger-fg hover:bg-danger-hover transition-colors whitespace-nowrap"
         >
           {t("removeConfirm")}
         </button>
@@ -95,7 +95,7 @@ const DeleteButton = ({
             </button>
             <button
               onClick={handleDelete}
-              className="flex-1 h-7 text-xs bg-black text-white hover:bg-gray-800 transition-colors"
+              className="flex-1 h-7 text-xs bg-danger text-danger-fg hover:bg-danger-hover transition-colors"
             >
               {t("removeConfirm")}
             </button>

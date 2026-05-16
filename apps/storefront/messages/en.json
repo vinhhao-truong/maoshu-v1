@@ -3,7 +3,10 @@
     "greeting": "Hello, {name}",
     "account": "Account",
     "signIn": "Sign In",
-    "cart": "Cart ({count})"
+    "cart": "Cart ({count})",
+    "cartTooltip": "Cart",
+    "accountTooltip": "My Account",
+    "signInTooltip": "Sign In"
   },
   "footer": {
     "categories": "Categories",
@@ -38,7 +41,11 @@
     "variant": "Variant: {title}",
     "removeConfirmTitle": "Remove item?",
     "removeConfirm": "Remove",
-    "removeCancel": "Keep"
+    "removeCancel": "Keep",
+    "switchCategoryTitle": "Switch category?",
+    "switchCategoryDesc": "Switching categories will clear your current cart. This cannot be undone.",
+    "switchCategoryConfirm": "Clear & Switch",
+    "switchCategoryCancel": "Keep Cart"
   },
   "account": {
     "welcomeBack": "Welcome back",

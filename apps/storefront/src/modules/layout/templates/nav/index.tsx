@@ -57,7 +57,8 @@ export default async function Nav() {
           <div className="flex items-center h-full flex-1 basis-0">
             <div className="flex items-center gap-x-4 ml-auto">
             <SearchBar categories={allCategories ?? []} />
-          <Suspense
+          <div className="relative group/cart-tip">
+            <Suspense
               fallback={
                 <LocalizedClientLink
                   className="hover:text-ui-fg-base flex items-center"
@@ -80,7 +81,7 @@ export default async function Nav() {
                       <line x1="3" y1="6" x2="21" y2="6" />
                       <path d="M16 10a4 4 0 0 1-8 0" />
                     </svg>
-                    <span className="absolute -bottom-1.5 -right-1.5 flex items-center justify-center w-4 h-4 rounded-full bg-black text-white text-[9px] font-medium leading-none">
+                    <span className="absolute -bottom-1.5 -right-1.5 flex items-center justify-center w-4 h-4 rounded-full bg-primary text-primary-fg text-[9px] font-medium leading-none">
                       0
                     </span>
                   </div>
@@ -89,28 +90,37 @@ export default async function Nav() {
             >
               <CartButton />
             </Suspense>
+            <span className="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 rounded text-[11px] bg-gray-900 text-white whitespace-nowrap opacity-0 group-hover/cart-tip:opacity-100 transition-opacity duration-150">
+              {t("cartTooltip")}
+            </span>
+          </div>
             <div className="hidden small:flex items-center gap-x-6 h-full">
-              {customer ? (
-                <LocalizedClientLink
-                  className="hover:text-ui-fg-base"
-                  href="/account"
-                  data-testid="nav-account-link"
-                >
-                  {customer.first_name
-                    ? <div>
-                      {t("greeting")}<b>{customer.first_name}</b>
-                    </div>
-                    : t("account")}
-                </LocalizedClientLink>
-              ) : (
-                <LocalizedClientLink
-                  className="hover:text-ui-fg-base"
-                  href="/account"
-                  data-testid="nav-sign-in-link"
-                >
-                  {t("signIn")}
-                </LocalizedClientLink>
-              )}
+              <div className="relative group/account-tip">
+                {customer ? (
+                  <LocalizedClientLink
+                    className="hover:text-ui-fg-base"
+                    href="/account"
+                    data-testid="nav-account-link"
+                  >
+                    {customer.first_name
+                      ? <div>{t("greeting")}<b>{customer.first_name}</b></div>
+                      : t("account")}
+                  </LocalizedClientLink>
+                ) : (
+                  <LocalizedClientLink
+                    className="hover:text-ui-fg-base"
+                    href="/account"
+                    data-testid="nav-sign-in-link"
+                  >
+                    {t("signIn")}
+                  </LocalizedClientLink>
+                )}
+                {customer && (
+                  <span className="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 rounded text-[11px] bg-gray-900 text-white whitespace-nowrap opacity-0 group-hover/account-tip:opacity-100 transition-opacity duration-150">
+                    {t("accountTooltip")}
+                  </span>
+                )}
+              </div>
             </div>
             </div>
           </div>

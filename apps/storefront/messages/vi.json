@@ -3,7 +3,10 @@
     "greeting": "Xin chào, ",
     "account": "Tài Khoản",
     "signIn": "Đăng Nhập",
-    "cart": "Giỏ Hàng ({count})"
+    "cart": "Giỏ Hàng ({count})",
+    "cartTooltip": "Giỏ Hàng",
+    "accountTooltip": "Tài Khoản",
+    "signInTooltip": "Đăng Nhập"
   },
   "footer": {
     "categories": "Danh mục",
@@ -38,7 +41,11 @@
     "variant": "Phân loại: {title}",
     "removeConfirmTitle": "Xóa sản phẩm?",
     "removeConfirm": "Xóa",
-    "removeCancel": "Giữ lại"
+    "removeCancel": "Giữ lại",
+    "switchCategoryTitle": "Đổi danh mục?",
+    "switchCategoryDesc": "Di chuyển sang shop khác sẽ xóa giỏ hàng hiện tại của bạn. Hành động này không thể hoàn tác.",
+    "switchCategoryConfirm": "Xóa & Chuyển",
+    "switchCategoryCancel": "Giữ Giỏ Hàng"
   },
   "account": {
     "welcomeBack": "Chào mừng trở lại",

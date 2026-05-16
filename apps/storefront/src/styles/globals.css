@@ -44,9 +44,9 @@
   --color-success-fg:     255 255 255;
 
   /* Danger */
-  --color-danger:         239  68  68;  /* red-500     #EF4444 */
-  --color-danger-hover:   220  38  38;  /* red-600     #DC2626 */
-  --color-danger-light:   254 226 226;  /* red-100     #FEE2E2 */
+  --color-danger:         185  28  28;  /* red-700     #B91C1C */
+  --color-danger-hover:   153  27  27;  /* red-800     #991B1B */
+  --color-danger-light:   254 202 202;  /* red-200     #FECACA */
   --color-danger-fg:      255 255 255;
 }
 

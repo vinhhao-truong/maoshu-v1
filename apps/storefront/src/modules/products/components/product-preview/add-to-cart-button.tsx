@@ -72,8 +72,8 @@ export default function AddToCartButton({ product, price }: Props) {
                 </span>
               )}
               <span
-                className={clx("text-xs font-medium", {
-                  "text-red-600": price.price_type === "sale",
+                className={clx("text-xs font-medium text-primary", {
+                  "text-danger": price.price_type === "sale",
                 })}
               >
                 {price.calculated_price}

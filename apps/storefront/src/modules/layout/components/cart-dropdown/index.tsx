@@ -85,7 +85,7 @@ const CartDropdown = ({
             <line x1="3" y1="6" x2="21" y2="6" />
             <path d="M16 10a4 4 0 0 1-8 0" />
           </svg>
-          <span className="absolute -bottom-1.5 -right-1.5 flex items-center justify-center w-4 h-4 rounded-full bg-black text-white text-[9px] font-medium leading-none">
+          <span className="absolute -bottom-1.5 -right-1.5 flex items-center justify-center w-4 h-4 rounded-full bg-primary text-primary-fg text-[9px] font-medium leading-none">
             {totalItems}
           </span>
         </div>
@@ -204,9 +204,6 @@ const CartDropdown = ({
             </>
           ) : (
             <div className="flex-1 flex flex-col gap-y-3 items-center justify-center text-center px-6">
-              <div className="bg-white/20 text-small-regular flex items-center justify-center w-6 h-6 rounded-full">
-                <span>0</span>
-              </div>
               <span>{t("empty")}</span>
               <LocalizedClientLink href="/store">
                 <Button onClick={close}>{t("explore")}</Button>
