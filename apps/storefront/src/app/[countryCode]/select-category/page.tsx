@@ -6,7 +6,7 @@ export default async function SelectCategoryPage() {
   const topLevel = (categories ?? []).filter((c) => !c.parent_category)
 
   return (
-    <div className="min-h-screen w-full p-6">
+    <div className="w-screen h-screen overflow-hidden">
       <CategoryGrid categories={topLevel} />
     </div>
   )

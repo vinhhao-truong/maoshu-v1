@@ -13,6 +13,7 @@ export default function CollectionTemplate({
   countryCode,
   priceMin,
   priceMax,
+  categoryIds,
 }: {
   sortBy?: SortOptions
   collection: HttpTypes.StoreCollection
@@ -20,6 +21,7 @@ export default function CollectionTemplate({
   countryCode: string
   priceMin?: number
   priceMax?: number
+  categoryIds?: string[]
 }) {
   const pageNumber = page ? parseInt(page) : 1
   const sort = sortBy || "created_at"
@@ -45,6 +47,7 @@ export default function CollectionTemplate({
             countryCode={countryCode}
             priceMin={priceMin}
             priceMax={priceMax}
+            categoryIds={categoryIds}
           />
         </Suspense>
       </div>

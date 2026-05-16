@@ -15,17 +15,21 @@ type Props = {
   countryCode: string
   priceMin?: number
   priceMax?: number
+  categoryIds?: string[]
 }
 
-export default async function SearchResults({ query, sortBy, page, countryCode, priceMin, priceMax }: Props) {
+export default async function SearchResults({ query, sortBy, page, countryCode, priceMin, priceMax, categoryIds }: Props) {
   const region = await getRegion(countryCode)
   if (!region) return null
+
+  const queryParams: Record<string, unknown> = { limit: 200 }
+  if (categoryIds?.length) queryParams.category_id = categoryIds
 
   const {
     response: { products: allProducts },
   } = await listProducts({
     pageParam: 0,
-    queryParams: { limit: 200 },
+    queryParams,
     countryCode,
   })
 

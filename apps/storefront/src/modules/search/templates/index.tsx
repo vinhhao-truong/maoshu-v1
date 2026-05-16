@@ -11,9 +11,10 @@ type Props = {
   countryCode: string
   priceMin?: number
   priceMax?: number
+  categoryIds?: string[]
 }
 
-export default function SearchTemplate({ query, sortBy, page, countryCode, priceMin, priceMax }: Props) {
+export default function SearchTemplate({ query, sortBy, page, countryCode, priceMin, priceMax, categoryIds }: Props) {
   const sort = sortBy || "created_at"
 
   return (
@@ -43,6 +44,7 @@ export default function SearchTemplate({ query, sortBy, page, countryCode, price
               countryCode={countryCode}
               priceMin={priceMin}
               priceMax={priceMax}
+              categoryIds={categoryIds}
             />
           </Suspense>
         )}

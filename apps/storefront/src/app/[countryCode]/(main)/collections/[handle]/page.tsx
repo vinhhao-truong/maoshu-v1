@@ -1,8 +1,11 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
+import { cookies } from "next/headers"
 
 import { getCollectionByHandle, listCollections } from "@lib/data/collections"
+import { listCategories } from "@lib/data/categories"
 import { listRegions } from "@lib/data/regions"
+import { getRootCategoryIds } from "@lib/util/category-ids"
 import { StoreCollection, StoreRegion } from "@medusajs/types"
 import CollectionTemplate from "@modules/collections/templates"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
@@ -83,6 +86,9 @@ export default async function CollectionPage(props: Props) {
     notFound()
   }
 
+  const [cookieStore, allCategories] = await Promise.all([cookies(), listCategories({ limit: 100 })])
+  const categoryIds = await getRootCategoryIds(cookieStore, allCategories ?? [])
+
   return (
     <CollectionTemplate
       collection={collection}
@@ -91,6 +97,7 @@ export default async function CollectionPage(props: Props) {
       countryCode={params.countryCode}
       priceMin={priceMin}
       priceMax={priceMax}
+      categoryIds={categoryIds}
     />
   )
 }

@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import { Suspense } from "react"
+import { cookies } from "next/headers"
 
 import FeaturedProducts from "@modules/home/components/featured-products"
 import Hero from "@modules/home/components/hero"
@@ -40,12 +41,33 @@ export default async function Home(props: {
   }
 
   const selectedCategory = categories?.find((c) => c.handle === categoryHandle)
+  const categoryIds = selectedCategory
+    ? [
+        selectedCategory.id,
+        ...(selectedCategory.category_children?.map((c) => c.id) ?? []),
+      ]
+    : undefined
+
+  // Root category from cookie — used to filter collections server-side
+  const cookieStore = await cookies()
+  const rootCategoryId = cookieStore.get("selectedCategoryId")?.value
+  const rootCategory = categories?.find((c) => c.id === rootCategoryId)
+  const rootCategoryIds = rootCategory
+    ? [
+        rootCategory.id,
+        ...(rootCategory.category_children?.flatMap((c) => [
+          c.id,
+          ...(c.category_children?.map((d) => d.id) ?? []),
+        ]) ?? []),
+      ]
+    : undefined
+
   const t = await getTranslations("store")
 
   return (
     <>
       <Hero />
-      <FeaturedProducts collections={collections} countryCode={countryCode} />
+      <FeaturedProducts collections={collections} countryCode={countryCode} categoryIds={rootCategoryIds} />
       <div className="content-container py-12 flex flex-col small:flex-row gap-8">
         <CategorySidebar
           categories={categories ?? []}
@@ -77,7 +99,7 @@ export default async function Home(props: {
           <Suspense fallback={<SkeletonProductGrid />}>
             <ProductGrid
               countryCode={countryCode}
-              categoryId={selectedCategory?.id}
+              categoryIds={categoryIds}
             />
           </Suspense>
         </div>

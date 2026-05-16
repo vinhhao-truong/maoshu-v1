@@ -5,11 +5,11 @@ import ProductPreview from "@modules/products/components/product-preview"
 export default async function ProductGrid({
   countryCode,
   limit = 12,
-  categoryId,
+  categoryIds,
 }: {
   countryCode: string
   limit?: number
-  categoryId?: string
+  categoryIds?: string[]
 }) {
   const region = await getRegion(countryCode)
 
@@ -18,8 +18,8 @@ export default async function ProductGrid({
   }
 
   const queryParams: Record<string, unknown> = { limit }
-  if (categoryId) {
-    queryParams.category_id = [categoryId]
+  if (categoryIds?.length) {
+    queryParams.category_id = categoryIds
   }
 
   const {

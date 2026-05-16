@@ -2,6 +2,7 @@
 
 import { HttpTypes } from "@medusajs/types"
 import { useEffect, useRef, useState } from "react"
+import { useParams } from "next/navigation"
 
 type Props = {
   categories: HttpTypes.StoreProductCategory[]
@@ -11,6 +12,8 @@ export default function CategoryDropdown({ categories }: Props) {
   const [selected, setSelected] = useState<HttpTypes.StoreProductCategory | null>(null)
   const [open, setOpen] = useState(false)
   const closeTimer = useRef<number | undefined>(undefined)
+  const params = useParams()
+  const countryCode = params.countryCode as string
 
   useEffect(() => {
     const id = localStorage.getItem("selectedCategoryId")
@@ -30,8 +33,11 @@ export default function CategoryDropdown({ categories }: Props) {
 
   const handleSelect = (category: HttpTypes.StoreProductCategory) => {
     localStorage.setItem("selectedCategoryId", category.id)
+    document.cookie = `selectedCategoryId=${category.id}; path=/; max-age=31536000`
+    window.dispatchEvent(new CustomEvent("selectedCategoryChanged", { detail: { id: category.id } }))
     setSelected(category)
     setOpen(false)
+    window.location.href = `/${countryCode}`
   }
 
   return (
@@ -41,11 +47,11 @@ export default function CategoryDropdown({ categories }: Props) {
       onMouseLeave={scheduleClose}
     >
       {/* Trigger */}
-      <button className="flex items-center gap-1 text-xs text-ui-fg-subtle hover:text-ui-fg-base transition-colors">
+      <button className="flex items-center gap-0.5 text-[10px] text-ui-fg-subtle hover:text-ui-fg-base transition-colors">
         <span>{selected?.name ?? "—"}</span>
         <svg
-          width="11"
-          height="11"
+          width="9"
+          height="9"
           viewBox="0 0 14 14"
           fill="none"
           className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
@@ -71,7 +77,7 @@ export default function CategoryDropdown({ categories }: Props) {
             <button
               key={category.id}
               onClick={() => handleSelect(category)}
-              className={`w-full text-left px-4 py-2.5 text-sm transition-colors hover:bg-ui-bg-subtle ${
+              className={`w-full text-center px-4 py-2.5 text-sm transition-colors hover:bg-ui-bg-subtle ${
                 selected?.id === category.id
                   ? "font-semibold text-ui-fg-base"
                   : "text-ui-fg-subtle"

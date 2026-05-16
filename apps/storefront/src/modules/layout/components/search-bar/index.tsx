@@ -4,6 +4,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import { normalizeText, scoreMatch } from "@lib/util/normalize-text"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
+import { HttpTypes } from "@medusajs/types"
 
 type ProductResult = {
   id: string
@@ -12,19 +13,38 @@ type ProductResult = {
   thumbnail: string | null
 }
 
+type Props = {
+  categories: HttpTypes.StoreProductCategory[]
+}
+
 const BACKEND_URL =
   process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL ?? "http://localhost:9000"
 const PUB_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY ?? ""
 
+function collectDescendantIds(
+  root: HttpTypes.StoreProductCategory
+): string[] {
+  const ids: string[] = [root.id]
+  for (const child of root.category_children ?? []) {
+    ids.push(...collectDescendantIds(child))
+  }
+  return ids
+}
 
-async function searchProducts(q: string): Promise<ProductResult[]> {
+async function searchProducts(
+  q: string,
+  categoryIds: string[]
+): Promise<ProductResult[]> {
   if (!q.trim()) return []
 
   const normalizedQ = normalizeText(q)
   const queryWords = normalizedQ.split(/\s+/).filter(Boolean)
   if (queryWords.length === 0) return []
 
-  const url = `${BACKEND_URL}/store/products?limit=200&fields=id,title,handle,thumbnail`
+  const params = new URLSearchParams({ limit: "200", fields: "id,title,handle,thumbnail" })
+  categoryIds.forEach((id) => params.append("category_id[]", id))
+
+  const url = `${BACKEND_URL}/store/products?${params.toString()}`
   const res = await fetch(url, {
     headers: { "x-publishable-api-key": PUB_KEY },
     cache: "no-store",
@@ -43,7 +63,7 @@ async function searchProducts(q: string): Promise<ProductResult[]> {
     .map(({ p }: { p: ProductResult }) => p)
 }
 
-export default function SearchBar() {
+export default function SearchBar({ categories }: Props) {
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<ProductResult[]>([])
   const [open, setOpen] = useState(false)
@@ -68,7 +88,10 @@ export default function SearchBar() {
     }
     timerRef.current = setTimeout(async () => {
       setLoading(true)
-      const found = await searchProducts(query)
+      const rootId = localStorage.getItem("selectedCategoryId")
+      const root = rootId ? categories.find((c) => c.id === rootId) : null
+      const categoryIds = root ? collectDescendantIds(root) : []
+      const found = await searchProducts(query, categoryIds)
       setResults(found)
       setOpen(true)
       setLoading(false)
@@ -76,7 +99,7 @@ export default function SearchBar() {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current)
     }
-  }, [query])
+  }, [query, categories])
 
   // Close on outside click
   useEffect(() => {

@@ -3,7 +3,7 @@
 import { HttpTypes } from "@medusajs/types"
 import { Text } from "@modules/common/components/ui"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useCallback } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 type Props = {
   categories: HttpTypes.StoreProductCategory[]
@@ -14,6 +14,21 @@ export default function CategorySidebar({ categories, selectedHandle }: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const [rootCategory, setRootCategory] = useState<HttpTypes.StoreProductCategory | null>(null)
+
+  useEffect(() => {
+    const sync = (id: string) => {
+      const match = categories.find((c) => c.id === id)
+      setRootCategory(match ?? null)
+    }
+
+    const stored = localStorage.getItem("selectedCategoryId")
+    if (stored) sync(stored)
+
+    const handler = (e: Event) => sync((e as CustomEvent<{ id: string }>).detail.id)
+    window.addEventListener("selectedCategoryChanged", handler)
+    return () => window.removeEventListener("selectedCategoryChanged", handler)
+  }, [categories])
 
   const setCategory = useCallback(
     (handle: string | undefined) => {
@@ -28,7 +43,18 @@ export default function CategorySidebar({ categories, selectedHandle }: Props) {
     [router, pathname, searchParams]
   )
 
-  const topLevel = categories.filter((c) => !c.parent_category)
+  const topLevel = rootCategory
+    ? (rootCategory.category_children ?? [])
+    : categories.filter((c) => !c.parent_category)
+
+  const prevRootIdRef = useRef<string | null>(null)
+  useEffect(() => {
+    if (!rootCategory) return
+    if (prevRootIdRef.current === rootCategory.id) return
+    prevRootIdRef.current = rootCategory.id
+    const first = rootCategory.category_children?.[0]
+    if (first) setCategory(first.handle)
+  }, [rootCategory, setCategory])
 
   return (
     <div className="small:w-52 small:flex-shrink-0">
@@ -36,27 +62,6 @@ export default function CategorySidebar({ categories, selectedHandle }: Props) {
         Danh Mục
       </Text>
       <div className="flex flex-col gap-y-3">
-        {/* All products */}
-        <div
-          className={`flex items-center gap-x-2 ${
-            !selectedHandle ? "ml-[-23px]" : ""
-          }`}
-        >
-          {!selectedHandle && (
-            <span className="text-ui-fg-base text-sm leading-none">•</span>
-          )}
-          <button
-            onClick={() => setCategory(undefined)}
-            className={`txt-compact-small text-left transition-colors ${
-              !selectedHandle
-                ? "text-ui-fg-base"
-                : "text-ui-fg-subtle hover:text-ui-fg-base"
-            }`}
-          >
-            Tất Cả Sản Phẩm
-          </button>
-        </div>
-
         {topLevel.map((cat) => {
           const isSelected = cat.handle === selectedHandle
           const subCategories = cat.category_children ?? []
@@ -90,23 +95,50 @@ export default function CategorySidebar({ categories, selectedHandle }: Props) {
                 </button>
               </div>
 
-              {/* Subcategories */}
+              {/* Subcategories (depth 1) */}
               {subCategories.length > 0 && (
                 <div className="flex flex-col gap-y-2 ml-2 pl-3 border-l border-gray-200">
                   {subCategories.map((sub) => {
                     const isSubSelected = sub.handle === selectedHandle
+                    const deepSubs = sub.category_children ?? []
+                    const isDeepChildSelected = deepSubs.some(
+                      (d) => d.handle === selectedHandle
+                    )
+                    const isSubActive = isSubSelected || isDeepChildSelected
                     return (
-                      <div key={sub.id}>
+                      <div key={sub.id} className="flex flex-col gap-y-2">
                         <button
                           onClick={() => setCategory(sub.handle)}
                           className={`txt-compact-small text-left truncate transition-colors ${
-                            isSubSelected
+                            isSubActive
                               ? "text-ui-fg-base font-medium"
                               : "text-ui-fg-subtle hover:text-ui-fg-base"
                           }`}
                         >
                           {sub.name}
                         </button>
+
+                        {/* Subcategories (depth 2) */}
+                        {deepSubs.length > 0 && (
+                          <div className="flex flex-col gap-y-2 ml-2 pl-3 border-l border-gray-200">
+                            {deepSubs.map((deep) => {
+                              const isDeepSelected = deep.handle === selectedHandle
+                              return (
+                                <button
+                                  key={deep.id}
+                                  onClick={() => setCategory(deep.handle)}
+                                  className={`txt-compact-small text-left truncate transition-colors ${
+                                    isDeepSelected
+                                      ? "text-ui-fg-base font-medium"
+                                      : "text-ui-fg-subtle hover:text-ui-fg-base"
+                                  }`}
+                                >
+                                  {deep.name}
+                                </button>
+                              )
+                            })}
+                          </div>
+                        )}
                       </div>
                     )
                   })}

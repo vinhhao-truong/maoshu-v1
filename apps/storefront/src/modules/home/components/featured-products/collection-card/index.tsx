@@ -7,22 +7,31 @@ import { getTranslations } from "next-intl/server"
 export default async function CollectionCard({
   collection,
   countryCode,
+  categoryIds,
 }: {
   collection: HttpTypes.StoreCollection
   countryCode: string
+  categoryIds?: string[]
 }) {
   const t = await getTranslations("store")
+
+  const queryParams: Record<string, unknown> = {
+    collection_id: collection.id,
+    limit: 4,
+    fields: "id,handle,title,thumbnail,+images",
+  }
+  if (categoryIds?.length) {
+    queryParams.category_id = categoryIds
+  }
 
   const {
     response: { products },
   } = await listProducts({
     countryCode,
-    queryParams: {
-      collection_id: collection.id,
-      limit: 4,
-      fields: "id,handle,title,thumbnail,+images",
-    },
+    queryParams,
   })
+
+  if (categoryIds?.length && products.length === 0) return null
 
   return (
     <div className="border border-gray-200 overflow-hidden flex flex-col h-full">

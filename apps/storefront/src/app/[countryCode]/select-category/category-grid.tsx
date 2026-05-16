@@ -14,6 +14,7 @@ export default function CategoryGrid({ categories }: Props) {
 
   const handleSelect = (id: string) => {
     localStorage.setItem("selectedCategoryId", id)
+    document.cookie = `selectedCategoryId=${id}; path=/; max-age=31536000`
 
     const returnPath = sessionStorage.getItem("selectCategoryReturnPath")
     sessionStorage.removeItem("selectCategoryReturnPath")
@@ -22,12 +23,12 @@ export default function CategoryGrid({ categories }: Props) {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 h-full">
+    <div className="grid grid-cols-2 w-full h-full">
       {categories.map((category) => (
         <button
           key={category.id}
           onClick={() => handleSelect(category.id)}
-          className="flex items-center justify-center p-8 border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 transition-colors text-center"
+          className="flex items-center justify-center bg-white hover:bg-gray-50 active:bg-gray-100 transition-colors text-center"
         >
           <span className="text-lg font-medium text-ui-fg-base">
             {category.name}

@@ -48,7 +48,7 @@ export default async function Nav() {
 
           <div className="flex items-center h-full flex-1 basis-0">
             <div className="flex items-center gap-x-4 ml-auto">
-            <SearchBar />
+            <SearchBar categories={allCategories ?? []} />
           <Suspense
               fallback={
                 <LocalizedClientLink

@@ -1,7 +1,10 @@
 import { Metadata } from "next"
+import { cookies } from "next/headers"
 
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import StoreTemplate from "@modules/store/templates"
+import { listCategories } from "@lib/data/categories"
+import { getRootCategoryIds } from "@lib/util/category-ids"
 
 export const metadata: Metadata = {
   title: "Store",
@@ -27,6 +30,9 @@ export default async function StorePage(props: Params) {
   const priceMin = priceMinStr ? parseFloat(priceMinStr) : undefined
   const priceMax = priceMaxStr ? parseFloat(priceMaxStr) : undefined
 
+  const [cookieStore, allCategories] = await Promise.all([cookies(), listCategories({ limit: 100 })])
+  const categoryIds = await getRootCategoryIds(cookieStore, allCategories ?? [])
+
   return (
     <StoreTemplate
       sortBy={sortBy}
@@ -34,6 +40,7 @@ export default async function StorePage(props: Params) {
       countryCode={params.countryCode}
       priceMin={priceMin}
       priceMax={priceMax}
+      categoryIds={categoryIds}
     />
   )
 }
