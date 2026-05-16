@@ -119,6 +119,7 @@
     "from": "Từ "
   },
   "store": {
+    "viewAll": "Xem tất cả",
     "sortBy": "Sắp xếp theo",
     "latestArrivals": "Mới nhất",
     "priceLowHigh": "Giá: Thấp → Cao",
@@ -128,6 +129,19 @@
     "priceRange": "Khoảng Giá",
     "minPrice": "Tối thiểu",
     "maxPrice": "Tối đa"
+  },
+  "addToCartModal": {
+    "title": "Thêm vào giỏ hàng",
+    "inCart": "Đang có trong giỏ",
+    "adding": "Sẽ thêm",
+    "totalAfter": "Tổng sau khi thêm",
+    "items": "{count} sản phẩm",
+    "cancel": "Hủy",
+    "addToCart": "Thêm vào giỏ"
+  },
+  "relatedProducts": {
+    "heading": "Sản phẩm liên quan",
+    "subheading": "Bạn cũng có thể thích những sản phẩm này."
   },
   "order": {
     "thankYou": "Cảm ơn!",

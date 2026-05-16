@@ -6,6 +6,7 @@ import { HttpTypes } from "@medusajs/types"
 import { Button } from "@modules/common/components/ui"
 import Divider from "@modules/common/components/divider"
 import OptionSelect from "@modules/products/components/product-actions/option-select"
+import AddToCartModal from "@modules/products/components/add-to-cart-modal"
 import { isEqual } from "lodash"
 import { useParams, usePathname, useSearchParams } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
@@ -40,6 +41,7 @@ export default function ProductActions({
 
   const [options, setOptions] = useState<Record<string, string | undefined>>({})
   const [isAdding, setIsAdding] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
   const countryCode = useParams().countryCode as string
 
   // If there is only 1 variant, preselect the options
@@ -122,15 +124,19 @@ export default function ProductActions({
 
   const inView = useIntersection(actionsRef, "0px")
 
-  // add the selected variant to the cart
-  const handleAddToCart = async () => {
-    if (!selectedVariant?.id) return null
+  const openModal = () => {
+    if (!selectedVariant?.id) return
+    setModalOpen(true)
+  }
+
+  const handleAddToCart = async (qty: number) => {
+    if (!selectedVariant?.id) return
 
     setIsAdding(true)
 
     await addToCart({
       variantId: selectedVariant.id,
-      quantity: 1,
+      quantity: qty,
       countryCode,
     })
 
@@ -165,7 +171,7 @@ export default function ProductActions({
         <ProductPrice product={product} variant={selectedVariant} />
 
         <Button
-          onClick={handleAddToCart}
+          onClick={openModal}
           disabled={
             !inStock ||
             !selectedVariant ||
@@ -190,11 +196,21 @@ export default function ProductActions({
           options={options}
           updateOptions={setOptionValue}
           inStock={inStock}
-          handleAddToCart={handleAddToCart}
+          handleAddToCart={openModal}
           isAdding={isAdding}
           show={!inView}
           optionsDisabled={!!disabled || isAdding}
         />
+        {selectedVariant && (
+          <AddToCartModal
+            open={modalOpen}
+            onClose={() => setModalOpen(false)}
+            onConfirm={handleAddToCart}
+            product={product}
+            variant={selectedVariant}
+            isAdding={isAdding}
+          />
+        )}
       </div>
     </>
   )

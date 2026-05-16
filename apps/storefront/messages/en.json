@@ -119,6 +119,7 @@
     "from": "From "
   },
   "store": {
+    "viewAll": "View all",
     "sortBy": "Sort by",
     "latestArrivals": "Latest Arrivals",
     "priceLowHigh": "Price: Low -> High",
@@ -128,6 +129,19 @@
     "priceRange": "Price Range",
     "minPrice": "Min",
     "maxPrice": "Max"
+  },
+  "addToCartModal": {
+    "title": "Add to Cart",
+    "inCart": "Currently in cart",
+    "adding": "Adding",
+    "totalAfter": "Total after adding",
+    "items": "{count, plural, one {# item} other {# items}}",
+    "cancel": "Cancel",
+    "addToCart": "Add to Cart"
+  },
+  "relatedProducts": {
+    "heading": "Related products",
+    "subheading": "You might also want to check out these products."
   },
   "order": {
     "thankYou": "Thank you!",

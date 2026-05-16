@@ -4,20 +4,23 @@ import SkeletonProductPreview from "@modules/skeletons/components/skeleton-produ
 const SkeletonRelatedProducts = () => {
   return (
     <div className="product-page-constraint">
-      <div className="flex flex-col gap-8 items-center text-center mb-8">
-        <div className="w-20 h-6 animate-pulse bg-gray-100"></div>
-        <div className="flex flex-col gap-4 items-center text-center mb-16">
-          <div className="w-96 h-10 animate-pulse bg-gray-100"></div>
-          <div className="w-48 h-10 animate-pulse bg-gray-100"></div>
+      <div className="flex items-end justify-between mb-8">
+        <div className="flex flex-col gap-2">
+          <div className="w-20 h-5 animate-pulse bg-gray-100"></div>
+          <div className="w-72 h-8 animate-pulse bg-gray-100"></div>
+        </div>
+        <div className="flex gap-2">
+          <div className="w-9 h-9 animate-pulse bg-gray-100"></div>
+          <div className="w-9 h-9 animate-pulse bg-gray-100"></div>
         </div>
       </div>
-      <ul className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8 flex-1">
-        {repeat(3).map((index) => (
-          <li key={index}>
+      <div className="flex border-l border-t border-b border-gray-200 overflow-hidden">
+        {repeat(4).map((index) => (
+          <div key={index} className="flex-none w-1/2 small:w-1/3 medium:w-1/4 border-r border-gray-200">
             <SkeletonProductPreview />
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   )
 }
