@@ -4,6 +4,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCallback } from "react"
 
 import SortProducts, { SortOptions } from "./sort-products"
+import PriceRangeFilter from "./price-range-filter"
 
 type RefinementListProps = {
   sortBy: SortOptions
@@ -19,8 +20,11 @@ const RefinementList = ({ sortBy, 'data-testid': dataTestId }: RefinementListPro
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams)
-      params.set(name, value)
-
+      if (value) {
+        params.set(name, value)
+      } else {
+        params.delete(name)
+      }
       return params.toString()
     },
     [searchParams]
@@ -31,9 +35,13 @@ const RefinementList = ({ sortBy, 'data-testid': dataTestId }: RefinementListPro
     router.push(`${pathname}?${query}`)
   }
 
+  const priceMin = searchParams.get("priceMin") ?? ""
+  const priceMax = searchParams.get("priceMax") ?? ""
+
   return (
     <div className="flex small:flex-col gap-12 py-4 mb-8 small:px-0 pl-6 small:min-w-[250px] small:ml-[1.675rem]">
       <SortProducts sortBy={sortBy} setQueryParams={setQueryParams} data-testid={dataTestId} />
+      <PriceRangeFilter priceMin={priceMin} priceMax={priceMax} setQueryParams={setQueryParams} />
     </div>
   )
 }

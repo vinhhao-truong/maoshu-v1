@@ -1,6 +1,26 @@
 "use server"
 
 import { sdk } from "@lib/config"
+
+export type ProductBrand = {
+  id: string
+  name: string
+  handle: string
+  description: string | null
+  logo_url: string | null
+  is_active: boolean
+}
+
+export const getProductBrand = async (
+  productId: string
+): Promise<ProductBrand | null> => {
+  return sdk.client
+    .fetch<{ brand: ProductBrand | null }>(`/store/products/${productId}/brand`, {
+      method: "GET",
+    })
+    .then(({ brand }) => brand)
+    .catch(() => null)
+}
 import { sortProducts } from "@lib/util/sort-products"
 import { HttpTypes } from "@medusajs/types"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
@@ -94,11 +114,15 @@ export const listProductsWithSort = async ({
   queryParams,
   sortBy = "created_at",
   countryCode,
+  priceMin,
+  priceMax,
 }: {
   page?: number
   queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams
   sortBy?: SortOptions
   countryCode: string
+  priceMin?: number
+  priceMax?: number
 }): Promise<{
   response: { products: HttpTypes.StoreProduct[]; count: number }
   nextPage: number | null
@@ -107,7 +131,7 @@ export const listProductsWithSort = async ({
   const limit = queryParams?.limit || 12
 
   const {
-    response: { products, count },
+    response: { products },
   } = await listProducts({
     pageParam: 0,
     queryParams: {
@@ -119,16 +143,32 @@ export const listProductsWithSort = async ({
 
   const sortedProducts = sortProducts(products, sortBy)
 
+  const filteredProducts =
+    priceMin !== undefined || priceMax !== undefined
+      ? sortedProducts.filter((product) => {
+          const minVariantPrice =
+            product.variants && product.variants.length > 0
+              ? Math.min(
+                  ...product.variants.map(
+                    (v) => v?.calculated_price?.calculated_amount || 0
+                  )
+                )
+              : Infinity
+          if (priceMin !== undefined && minVariantPrice < priceMin) return false
+          if (priceMax !== undefined && minVariantPrice > priceMax) return false
+          return true
+        })
+      : sortedProducts
+
   const pageParam = (page - 1) * limit
-
-  const nextPage = count > pageParam + limit ? pageParam + limit : null
-
-  const paginatedProducts = sortedProducts.slice(pageParam, pageParam + limit)
+  const filteredCount = filteredProducts.length
+  const nextPage = filteredCount > pageParam + limit ? pageParam + limit : null
+  const paginatedProducts = filteredProducts.slice(pageParam, pageParam + limit)
 
   return {
     response: {
       products: paginatedProducts,
-      count,
+      count: filteredCount,
     },
     nextPage,
     queryParams,

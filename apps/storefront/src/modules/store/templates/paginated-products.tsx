@@ -21,6 +21,8 @@ export default async function PaginatedProducts({
   categoryId,
   productsIds,
   countryCode,
+  priceMin,
+  priceMax,
 }: {
   sortBy?: SortOptions
   page: number
@@ -28,6 +30,8 @@ export default async function PaginatedProducts({
   categoryId?: string
   productsIds?: string[]
   countryCode: string
+  priceMin?: number
+  priceMax?: number
 }) {
   const queryParams: PaginatedProductsParams = {
     limit: 12,
@@ -62,6 +66,8 @@ export default async function PaginatedProducts({
     queryParams,
     sortBy,
     countryCode,
+    priceMin,
+    priceMax,
   })
 
   const totalPages = Math.ceil(count / PRODUCT_LIMIT)

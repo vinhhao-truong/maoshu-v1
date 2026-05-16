@@ -122,7 +122,12 @@
     "sortBy": "Sắp xếp theo",
     "latestArrivals": "Mới nhất",
     "priceLowHigh": "Giá: Thấp → Cao",
-    "priceHighLow": "Giá: Cao → Thấp"
+    "priceHighLow": "Giá: Cao → Thấp",
+    "nameAZ": "Tên: A → Z",
+    "nameZA": "Tên: Z → A",
+    "priceRange": "Khoảng Giá",
+    "minPrice": "Tối thiểu",
+    "maxPrice": "Tối đa"
   },
   "order": {
     "thankYou": "Cảm ơn!",

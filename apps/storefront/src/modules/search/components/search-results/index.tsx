@@ -13,9 +13,11 @@ type Props = {
   sortBy: SortOptions
   page: number
   countryCode: string
+  priceMin?: number
+  priceMax?: number
 }
 
-export default async function SearchResults({ query, sortBy, page, countryCode }: Props) {
+export default async function SearchResults({ query, sortBy, page, countryCode, priceMin, priceMax }: Props) {
   const region = await getRegion(countryCode)
   if (!region) return null
 
@@ -37,9 +39,27 @@ export default async function SearchResults({ query, sortBy, page, countryCode }
     .map(({ p }) => p)
 
   const sorted = sortProducts(scored, sortBy)
-  const totalPages = Math.ceil(sorted.length / PRODUCT_LIMIT)
+
+  const filtered =
+    priceMin !== undefined || priceMax !== undefined
+      ? sorted.filter((product) => {
+          const minVariantPrice =
+            product.variants && product.variants.length > 0
+              ? Math.min(
+                  ...product.variants.map(
+                    (v) => v?.calculated_price?.calculated_amount || 0
+                  )
+                )
+              : Infinity
+          if (priceMin !== undefined && minVariantPrice < priceMin) return false
+          if (priceMax !== undefined && minVariantPrice > priceMax) return false
+          return true
+        })
+      : sorted
+
+  const totalPages = Math.ceil(filtered.length / PRODUCT_LIMIT)
   const offset = (page - 1) * PRODUCT_LIMIT
-  const products = sorted.slice(offset, offset + PRODUCT_LIMIT)
+  const products = filtered.slice(offset, offset + PRODUCT_LIMIT)
 
   if (!products.length) {
     return (

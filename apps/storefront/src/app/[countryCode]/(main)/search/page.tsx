@@ -4,7 +4,7 @@ import SearchTemplate from "@modules/search/templates"
 
 type Props = {
   params: Promise<{ countryCode: string }>
-  searchParams: Promise<{ q?: string; sortBy?: SortOptions; page?: string }>
+  searchParams: Promise<{ q?: string; sortBy?: SortOptions; page?: string; priceMin?: string; priceMax?: string }>
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -16,7 +16,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 export default async function SearchPage(props: Props) {
   const { countryCode } = await props.params
-  const { q = "", sortBy, page } = await props.searchParams
+  const { q = "", sortBy, page, priceMin: priceMinStr, priceMax: priceMaxStr } = await props.searchParams
+  const priceMin = priceMinStr ? parseFloat(priceMinStr) : undefined
+  const priceMax = priceMaxStr ? parseFloat(priceMaxStr) : undefined
 
   return (
     <SearchTemplate
@@ -24,6 +26,8 @@ export default async function SearchPage(props: Props) {
       sortBy={sortBy}
       page={page ? parseInt(page) : 1}
       countryCode={countryCode}
+      priceMin={priceMin}
+      priceMax={priceMax}
     />
   )
 }

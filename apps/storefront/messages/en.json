@@ -122,7 +122,12 @@
     "sortBy": "Sort by",
     "latestArrivals": "Latest Arrivals",
     "priceLowHigh": "Price: Low -> High",
-    "priceHighLow": "Price: High -> Low"
+    "priceHighLow": "Price: High -> Low",
+    "nameAZ": "Name: A → Z",
+    "nameZA": "Name: Z → A",
+    "priceRange": "Price Range",
+    "minPrice": "Min",
+    "maxPrice": "Max"
   },
   "order": {
     "thankYou": "Thank you!",
