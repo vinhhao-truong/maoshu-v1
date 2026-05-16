@@ -33,6 +33,48 @@ module.exports = {
           80: "#1F2937",
           90: "#111827",
         },
+        primary: {
+          DEFAULT: "rgb(var(--color-primary) / <alpha-value>)",
+          hover:   "rgb(var(--color-primary-hover) / <alpha-value>)",
+          light:   "rgb(var(--color-primary-light) / <alpha-value>)",
+          fg:      "rgb(var(--color-primary-fg) / <alpha-value>)",
+        },
+        secondary: {
+          DEFAULT: "rgb(var(--color-secondary) / <alpha-value>)",
+          hover:   "rgb(var(--color-secondary-hover) / <alpha-value>)",
+          light:   "rgb(var(--color-secondary-light) / <alpha-value>)",
+          fg:      "rgb(var(--color-secondary-fg) / <alpha-value>)",
+        },
+        inverse: {
+          DEFAULT: "rgb(var(--color-inverse) / <alpha-value>)",
+          hover:   "rgb(var(--color-inverse-hover) / <alpha-value>)",
+          light:   "rgb(var(--color-inverse-light) / <alpha-value>)",
+          fg:      "rgb(var(--color-inverse-fg) / <alpha-value>)",
+        },
+        info: {
+          DEFAULT: "rgb(var(--color-info) / <alpha-value>)",
+          hover:   "rgb(var(--color-info-hover) / <alpha-value>)",
+          light:   "rgb(var(--color-info-light) / <alpha-value>)",
+          fg:      "rgb(var(--color-info-fg) / <alpha-value>)",
+        },
+        warning: {
+          DEFAULT: "rgb(var(--color-warning) / <alpha-value>)",
+          hover:   "rgb(var(--color-warning-hover) / <alpha-value>)",
+          light:   "rgb(var(--color-warning-light) / <alpha-value>)",
+          fg:      "rgb(var(--color-warning-fg) / <alpha-value>)",
+        },
+        success: {
+          DEFAULT: "rgb(var(--color-success) / <alpha-value>)",
+          hover:   "rgb(var(--color-success-hover) / <alpha-value>)",
+          light:   "rgb(var(--color-success-light) / <alpha-value>)",
+          fg:      "rgb(var(--color-success-fg) / <alpha-value>)",
+        },
+        danger: {
+          DEFAULT: "rgb(var(--color-danger) / <alpha-value>)",
+          hover:   "rgb(var(--color-danger-hover) / <alpha-value>)",
+          light:   "rgb(var(--color-danger-light) / <alpha-value>)",
+          fg:      "rgb(var(--color-danger-fg) / <alpha-value>)",
+        },
       },
       borderRadius: {
         none: "0px",

@@ -2,6 +2,80 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+/* ─── Design System Color Tokens ─────────────────────────────────────────── */
+/* Values are space-separated RGB channels so Tailwind can inject opacity:    */
+/* bg-primary/50  →  rgb(var(--color-primary) / 0.5)                          */
+
+:root {
+  /* Primary — defaults to pet/orange; overridden per theme below */
+  --color-primary:        194  65 12;   /* orange-700  #C2410C */
+  --color-primary-hover:  154  52 18;   /* orange-800  #9A3412 */
+  --color-primary-light:  254 215 170;  /* orange-200  #FED7AA */
+  --color-primary-fg:     255 255 255;
+
+  /* Secondary */
+  --color-secondary:       180  83  9;  /* amber-700   #B45309 */
+  --color-secondary-hover: 146  64 14;  /* amber-800   #92400E */
+  --color-secondary-light: 253 230 138; /* amber-200   #FDE68A */
+  --color-secondary-fg:    255 255 255;
+
+  /* Inverse — dark surface / light text */
+  --color-inverse:        17  24  39;   /* gray-900    #111827 */
+  --color-inverse-hover:  31  41  55;   /* gray-800    #1F2937 */
+  --color-inverse-light:  243 244 246;  /* gray-100    #F3F4F6 */
+  --color-inverse-fg:     255 255 255;
+
+  /* Info */
+  --color-info:            14 165 233;  /* sky-500     #0EA5E9 */
+  --color-info-hover:       2 132 199;  /* sky-600     #0284C7 */
+  --color-info-light:     224 242 254;  /* sky-100     #E0F2FE */
+  --color-info-fg:        255 255 255;
+
+  /* Warning */
+  --color-warning:        245 158 11;   /* amber-500   #F59E0B */
+  --color-warning-hover:  217 119  6;   /* amber-600   #D97706 */
+  --color-warning-light:  254 243 199;  /* amber-100   #FEF3C7 */
+  --color-warning-fg:      92  45   0;  /* dark brown for legibility */
+
+  /* Success */
+  --color-success:         16 185 129;  /* emerald-500 #10B981 */
+  --color-success-hover:    5 150 105;  /* emerald-600 #059669 */
+  --color-success-light:  209 250 229;  /* emerald-100 #D1FAE5 */
+  --color-success-fg:     255 255 255;
+
+  /* Danger */
+  --color-danger:         239  68  68;  /* red-500     #EF4444 */
+  --color-danger-hover:   220  38  38;  /* red-600     #DC2626 */
+  --color-danger-light:   254 226 226;  /* red-100     #FEE2E2 */
+  --color-danger-fg:      255 255 255;
+}
+
+/* Pet store — warm orange + amber */
+[data-theme="pet"] {
+  --color-primary:        194  65 12;   /* orange-700  #C2410C */
+  --color-primary-hover:  154  52 18;   /* orange-800  #9A3412 */
+  --color-primary-light:  254 215 170;  /* orange-200  #FED7AA */
+  --color-primary-fg:     255 255 255;
+
+  --color-secondary:       180  83  9;  /* amber-700   #B45309 */
+  --color-secondary-hover: 146  64 14;  /* amber-800   #92400E */
+  --color-secondary-light: 253 230 138; /* amber-200   #FDE68A */
+  --color-secondary-fg:    255 255 255;
+}
+
+/* Grocery store — trustworthy blue + fresh green */
+[data-theme="grocery"] {
+  --color-primary:         30  64 175;  /* blue-800    #1E40AF */
+  --color-primary-hover:   30  58 138;  /* blue-900    #1E3A8A */
+  --color-primary-light:  191 219 254;  /* blue-200    #BFDBFE */
+  --color-primary-fg:     255 255 255;
+
+  --color-secondary:       22 101  52;  /* green-800   #166534 */
+  --color-secondary-hover: 20  83  45;  /* green-900   #14532D */
+  --color-secondary-light: 187 247 208; /* green-200   #BBF7D0 */
+  --color-secondary-fg:    255 255 255;
+}
+
 @layer utilities {
   /* Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {

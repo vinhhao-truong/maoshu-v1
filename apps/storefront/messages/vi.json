@@ -35,6 +35,7 @@
     "total": "Tổng cộng",
     "discount": "Giảm giá",
     "totalInclTax": "Tổng (đã bao gồm thuế)",
+    "variant": "Phân loại: {title}",
     "removeConfirmTitle": "Xóa sản phẩm?",
     "removeConfirm": "Xóa",
     "removeCancel": "Giữ lại"
@@ -132,7 +133,12 @@
     "nameZA": "Tên: Z → A",
     "priceRange": "Khoảng Giá",
     "minPrice": "Tối thiểu",
-    "maxPrice": "Tối đa"
+    "maxPrice": "Tối đa",
+    "apply": "Áp dụng",
+    "clear": "Xóa",
+    "priceRangeError": "Giá tối thiểu phải nhỏ hơn tối đa",
+    "subcategories": "Danh Mục Con",
+    "perPage": "Mỗi trang"
   },
   "addToCartModal": {
     "title": "Thêm vào giỏ hàng",
@@ -146,6 +152,14 @@
   "relatedProducts": {
     "heading": "Sản phẩm liên quan",
     "subheading": "Bạn cũng có thể thích những sản phẩm này."
+  },
+  "sideMenu": {
+    "menu": "Menu",
+    "home": "Trang Chủ",
+    "store": "Cửa Hàng",
+    "account": "Tài Khoản",
+    "collections": "Bộ Sưu Tập",
+    "categories": "Danh Mục"
   },
   "order": {
     "thankYou": "Cảm ơn!",

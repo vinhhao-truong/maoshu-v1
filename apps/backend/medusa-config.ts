@@ -17,5 +17,11 @@ module.exports = defineConfig({
     {
       resolve: "./src/modules/brand",
     },
+    {
+      resolve: "./src/modules/system-color",
+    },
+    {
+      resolve: "./src/modules/color-group",
+    },
   ],
 })

@@ -1,5 +1,6 @@
 import { Metadata } from "next"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
+import { cookies } from "next/headers"
 
 import { getCategoryByHandle, listCategories } from "@lib/data/categories"
 import { listRegions } from "@lib/data/regions"
@@ -14,6 +15,8 @@ type Props = {
     page?: string
     priceMin?: string
     priceMax?: string
+    subcategoryId?: string
+    limit?: string
   }>
 }
 
@@ -68,14 +71,23 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 export default async function CategoryPage(props: Props) {
   const searchParams = await props.searchParams
   const params = await props.params
-  const { sortBy, page, priceMin: priceMinStr, priceMax: priceMaxStr } = searchParams
+  const { sortBy, page, priceMin: priceMinStr, priceMax: priceMaxStr, subcategoryId, limit: limitStr } = searchParams
   const priceMin = priceMinStr ? parseFloat(priceMinStr) : undefined
   const priceMax = priceMaxStr ? parseFloat(priceMaxStr) : undefined
+  const limit = limitStr ? parseInt(limitStr) : undefined
 
   const productCategory = await getCategoryByHandle(params.category)
 
   if (!productCategory) {
     notFound()
+  }
+
+  const cookieStore = await cookies()
+  const rootCategoryId = cookieStore.get("selectedCategoryId")?.value
+
+  const parent = productCategory.parent_category
+  if (parent && parent.id !== rootCategoryId && parent.handle) {
+    redirect(`/${params.countryCode}/categories/${parent.handle}?subcategoryId=${productCategory.id}`)
   }
 
   return (
@@ -86,6 +98,9 @@ export default async function CategoryPage(props: Props) {
       countryCode={params.countryCode}
       priceMin={priceMin}
       priceMax={priceMax}
+      subcategoryId={subcategoryId}
+      rootCategoryId={rootCategoryId}
+      limit={limit}
     />
   )
 }

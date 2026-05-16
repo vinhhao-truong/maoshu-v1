@@ -14,6 +14,7 @@ export default function CollectionTemplate({
   priceMin,
   priceMax,
   categoryIds,
+  limit,
 }: {
   sortBy?: SortOptions
   collection: HttpTypes.StoreCollection
@@ -22,6 +23,7 @@ export default function CollectionTemplate({
   priceMin?: number
   priceMax?: number
   categoryIds?: string[]
+  limit?: number
 }) {
   const pageNumber = page ? parseInt(page) : 1
   const sort = sortBy || "created_at"
@@ -48,6 +50,7 @@ export default function CollectionTemplate({
             priceMin={priceMin}
             priceMax={priceMax}
             categoryIds={categoryIds}
+            limit={limit}
           />
         </Suspense>
       </div>

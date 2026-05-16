@@ -19,7 +19,7 @@ export default async function ProductPreview({
   })
 
   return (
-    <div data-testid="product-wrapper" className="group relative p-5">
+    <div data-testid="product-wrapper" className="group relative p-5 border border-transparent hover:border-black transition-colors duration-200">
       <LocalizedClientLink
         href={`/products/${product.handle}`}
         className="absolute inset-0 z-10"

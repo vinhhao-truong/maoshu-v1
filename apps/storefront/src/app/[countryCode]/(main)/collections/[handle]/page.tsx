@@ -17,6 +17,7 @@ type Props = {
     sortBy?: SortOptions
     priceMin?: string
     priceMax?: string
+    limit?: string
   }>
 }
 
@@ -74,9 +75,10 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 export default async function CollectionPage(props: Props) {
   const searchParams = await props.searchParams
   const params = await props.params
-  const { sortBy, page, priceMin: priceMinStr, priceMax: priceMaxStr } = searchParams
+  const { sortBy, page, priceMin: priceMinStr, priceMax: priceMaxStr, limit: limitStr } = searchParams
   const priceMin = priceMinStr ? parseFloat(priceMinStr) : undefined
   const priceMax = priceMaxStr ? parseFloat(priceMaxStr) : undefined
+  const limit = limitStr ? parseInt(limitStr) : undefined
 
   const collection = await getCollectionByHandle(params.handle).then(
     (collection) => collection
@@ -98,6 +100,7 @@ export default async function CollectionPage(props: Props) {
       priceMin={priceMin}
       priceMax={priceMax}
       categoryIds={categoryIds}
+      limit={limit}
     />
   )
 }

@@ -38,6 +38,11 @@ function injectBrandFields(
 export default defineMiddlewares({
   routes: [
     {
+      matcher: "/admin/uploads",
+      method: ["POST"],
+      bodyParser: { sizeLimit: "10mb" },
+    },
+    {
       matcher: "/store/products",
       method: ["GET"],
       middlewares: [injectBrandFields],

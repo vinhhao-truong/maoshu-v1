@@ -93,6 +93,28 @@ NEXT_PUBLIC_STRIPE_KEY=       # optional, Stripe payments
 MEDUSA_CLOUD_S3_HOSTNAME=     # optional, S3 image hosting
 ```
 
+## Design System
+
+### Color Theming
+
+The storefront uses a CSS-variable-based design token system defined in `src/styles/globals.css` and mapped to Tailwind classes in `tailwind.config.js`.
+
+**Semantic tokens** (each has `DEFAULT`, `hover`, `light`, `fg` shades):
+`primary`, `secondary`, `inverse`, `info`, `warning`, `success`, `danger`
+
+Usage: `bg-primary`, `text-primary-fg`, `bg-danger/50`, etc.
+
+**Category-based theme switching:**
+
+The active root category is stored in `localStorage` (key: `selectedCategoryId`) and mirrored to the `selectedCategoryId` cookie. The main layout (`src/app/[countryCode]/(main)/layout.tsx`) reads this cookie, fetches the matching root category from the backend, resolves its handle, and sets `data-theme` on the top-level wrapper div — scoping the theme to the entire page including Nav and Footer.
+
+**Theme resolution rule (in `src/lib/util/theme.ts`):**
+- If the root category handle is `"pet"` (or any handle mapped to `"pet"` in `HANDLE_TO_THEME`) → apply `data-theme="pet"` → orange primary, amber secondary
+- Otherwise (including grocery or any unmapped handle) → apply `data-theme="grocery"` → blue primary, green secondary
+- If no category is selected yet → no `data-theme` attribute → falls back to `:root` defaults (orange/pet palette)
+
+**To add a new theme:** add a `[data-theme="name"]` block to `globals.css` overriding `--color-primary*` and `--color-secondary*`, then add the handle mapping to `HANDLE_TO_THEME` in `src/lib/util/theme.ts`.
+
 ## Key Notes
 
 - **No Prisma** — Medusa uses its own data layer. Define models with `@medusajs/framework/utils` utilities and manage schema via `medusa db:generate / db:migrate`.

@@ -1,9 +1,11 @@
 import { Metadata } from "next"
+import { cookies } from "next/headers"
 
 import { listCartOptions, retrieveCart } from "@lib/data/cart"
 import { retrieveCustomer } from "@lib/data/customer"
 import { listCategories } from "@lib/data/categories"
 import { getBaseURL } from "@lib/util/env"
+import { themeForCategory } from "@lib/util/theme"
 import { StoreCartShippingOption } from "@medusajs/types"
 import CartMismatchBanner from "@modules/layout/components/cart-mismatch-banner"
 import CategoryGuard from "@modules/layout/components/category-guard"
@@ -31,12 +33,16 @@ export default async function PageLayout(props: {
   }
 
   const categories = await listCategories({ limit: 100 })
-  const validIds = (categories ?? [])
-    .filter((c) => !c.parent_category)
-    .map((c) => c.id)
+  const rootCategories = (categories ?? []).filter((c) => !c.parent_category)
+  const validIds = rootCategories.map((c) => c.id)
+
+  const cookieStore = await cookies()
+  const selectedCategoryId = cookieStore.get("selectedCategoryId")?.value
+  const activeRoot = rootCategories.find((c) => c.id === selectedCategoryId)
+  const theme = activeRoot ? themeForCategory(activeRoot) : undefined
 
   return (
-    <>
+    <div data-theme={theme}>
       <CategoryGuard validIds={validIds} countryCode={countryCode} />
       <Nav />
       {customer && cart && (
@@ -52,6 +58,6 @@ export default async function PageLayout(props: {
       )}
       {props.children}
       <Footer />
-    </>
+    </div>
   )
 }

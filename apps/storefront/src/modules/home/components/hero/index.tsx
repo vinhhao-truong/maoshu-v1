@@ -3,7 +3,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 const Hero = () => {
   return (
     <div
-      className="h-[75vh] w-full relative"
+      className="h-[37.5vh] w-full relative"
       style={{
         backgroundImage:
           "url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1920&q=80')",

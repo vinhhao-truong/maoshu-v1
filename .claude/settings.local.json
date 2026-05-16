@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(gh auth *)"
+      "PowerShell(gh auth *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\vinhh\\\\OneDrive\\\\Desktop\\\\Coding Projects\\\\maoshu-store-v1\\\\maoshu-v1\\\\apps\\\\backend\\\\src\\\\admin\" -Recurse)",
+      "Bash(Select-Object FullName)",
+      "Bash(xargs grep -l \"image\\\\|media\\\\|storage\\\\|file\")"
     ]
   }
 }

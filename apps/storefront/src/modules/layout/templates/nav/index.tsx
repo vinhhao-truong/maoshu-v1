@@ -5,6 +5,7 @@ import { getLocale } from "@lib/data/locale-actions"
 import { listRegions } from "@lib/data/regions"
 import { retrieveCustomer } from "@lib/data/customer"
 import { listCategories } from "@lib/data/categories"
+import { listCollections } from "@lib/data/collections"
 import { StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
@@ -14,13 +15,14 @@ import SearchBar from "@modules/layout/components/search-bar"
 import { getTranslations } from "next-intl/server"
 
 export default async function Nav() {
-  const [regions, locales, currentLocale, customer, t, allCategories] = await Promise.all([
+  const [regions, locales, currentLocale, customer, t, allCategories, { collections }] = await Promise.all([
     listRegions().then((regions: StoreRegion[]) => regions),
     listLocales(),
     getLocale(),
     retrieveCustomer(),
     getTranslations("nav"),
     listCategories({ limit: 100 }),
+    listCollections(),
   ])
 
   const topLevelCategories = (allCategories ?? []).filter((c) => !c.parent_category)
@@ -31,7 +33,13 @@ export default async function Nav() {
         <nav className="content-container txt-xsmall-plus text-ui-fg-subtle flex items-center justify-between w-full h-full text-small-regular">
           <div className="flex-1 basis-0 h-full flex items-center">
             <div className="h-full">
-              <SideMenu regions={regions} locales={locales} currentLocale={currentLocale} />
+              <SideMenu
+                regions={regions}
+                locales={locales}
+                currentLocale={currentLocale}
+                allCategories={allCategories ?? []}
+                collections={collections ?? []}
+              />
             </div>
           </div>
 

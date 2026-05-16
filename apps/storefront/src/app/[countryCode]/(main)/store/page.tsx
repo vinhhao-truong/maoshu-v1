@@ -17,6 +17,7 @@ type Params = {
     page?: string
     priceMin?: string
     priceMax?: string
+    limit?: string
   }>
   params: Promise<{
     countryCode: string
@@ -26,9 +27,10 @@ type Params = {
 export default async function StorePage(props: Params) {
   const params = await props.params;
   const searchParams = await props.searchParams;
-  const { sortBy, page, priceMin: priceMinStr, priceMax: priceMaxStr } = searchParams
+  const { sortBy, page, priceMin: priceMinStr, priceMax: priceMaxStr, limit: limitStr } = searchParams
   const priceMin = priceMinStr ? parseFloat(priceMinStr) : undefined
   const priceMax = priceMaxStr ? parseFloat(priceMaxStr) : undefined
+  const limit = limitStr ? parseInt(limitStr) : undefined
 
   const [cookieStore, allCategories] = await Promise.all([cookies(), listCategories({ limit: 100 })])
   const categoryIds = await getRootCategoryIds(cookieStore, allCategories ?? [])
@@ -41,6 +43,7 @@ export default async function StorePage(props: Params) {
       priceMin={priceMin}
       priceMax={priceMax}
       categoryIds={categoryIds}
+      limit={limit}
     />
   )
 }

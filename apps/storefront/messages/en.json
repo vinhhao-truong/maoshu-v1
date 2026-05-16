@@ -35,6 +35,7 @@
     "total": "Total",
     "discount": "Discount",
     "totalInclTax": "Total (incl. taxes)",
+    "variant": "Variant: {title}",
     "removeConfirmTitle": "Remove item?",
     "removeConfirm": "Remove",
     "removeCancel": "Keep"
@@ -132,7 +133,12 @@
     "nameZA": "Name: Z → A",
     "priceRange": "Price Range",
     "minPrice": "Min",
-    "maxPrice": "Max"
+    "maxPrice": "Max",
+    "apply": "Apply",
+    "clear": "Clear",
+    "priceRangeError": "Min must be less than max",
+    "subcategories": "Subcategories",
+    "perPage": "Per page"
   },
   "addToCartModal": {
     "title": "Add to Cart",
@@ -146,6 +152,14 @@
   "relatedProducts": {
     "heading": "Related products",
     "subheading": "You might also want to check out these products."
+  },
+  "sideMenu": {
+    "menu": "Menu",
+    "home": "Home",
+    "store": "Store",
+    "account": "Account",
+    "collections": "Collections",
+    "categories": "Categories"
   },
   "order": {
     "thankYou": "Thank you!",
