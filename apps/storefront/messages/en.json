@@ -29,11 +29,15 @@
     "signIn": "Sign in",
     "summary": "Summary",
     "goToCheckout": "Go to checkout",
-    "itemSubtotal": "Subtotal (excl. shipping and taxes)",
+    "itemSubtotal": "Total Product Price",
     "shipping": "Shipping",
     "taxes": "Taxes",
     "total": "Total",
-    "discount": "Discount"
+    "discount": "Discount",
+    "totalInclTax": "Total (incl. taxes)",
+    "removeConfirmTitle": "Remove item?",
+    "removeConfirm": "Remove",
+    "removeCancel": "Keep"
   },
   "account": {
     "welcomeBack": "Welcome back",

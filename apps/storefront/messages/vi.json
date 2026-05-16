@@ -29,11 +29,15 @@
     "signIn": "Đăng nhập",
     "summary": "Tóm tắt",
     "goToCheckout": "Tiến hành thanh toán",
-    "itemSubtotal": "Tạm tính (chưa phí vận chuyển và thuế)",
+    "itemSubtotal": "Tổng Giá Sản Phẩm",
     "shipping": "Vận chuyển",
     "taxes": "Thuế",
     "total": "Tổng cộng",
-    "discount": "Giảm giá"
+    "discount": "Giảm giá",
+    "totalInclTax": "Tổng (đã bao gồm thuế)",
+    "removeConfirmTitle": "Xóa sản phẩm?",
+    "removeConfirm": "Xóa",
+    "removeCancel": "Giữ lại"
   },
   "account": {
     "welcomeBack": "Chào mừng trở lại",

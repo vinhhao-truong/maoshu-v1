@@ -52,13 +52,13 @@ export default function CategoryTemplate({
             parents.map((parent) => (
               <span key={parent.id} className="text-ui-fg-subtle">
                 <LocalizedClientLink
-                  className="mr-4 hover:text-black"
+                  className="mr-4 text-gray-500 hover:text-black"
                   href={`/categories/${parent.handle}`}
                   data-testid="sort-by-link"
                 >
                   {parent.name}
                 </LocalizedClientLink>
-                /
+                &gt;
               </span>
             ))}
           <h1 data-testid="category-page-title">{category.name}</h1>

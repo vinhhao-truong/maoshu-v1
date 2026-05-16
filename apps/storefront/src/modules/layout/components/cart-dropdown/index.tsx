@@ -36,7 +36,7 @@ const CartDropdown = ({
 
   const totalItems = cartState?.items?.length || 0
 
-  const subtotal = cartState?.subtotal ?? 0
+  const subtotal = cartState?.total ?? 0
   const itemRef = useRef<number>(totalItems || 0)
 
   const timedOpen = () => {
@@ -131,12 +131,12 @@ const CartDropdown = ({
             className="hidden small:block absolute top-[calc(100%+1px)] right-0 bg-white border-x border-b border-gray-200 w-[420px] text-ui-fg-base z-[50]"
             data-testid="nav-cart-dropdown"
           >
-            <div className="p-4 flex items-center justify-center">
+            <div className="px-4 py-2 flex items-center justify-center border-b border-gray-100">
               <h3 className="text-large-semi">{t("title")}</h3>
             </div>
             {cartState && cartState.items?.length ? (
               <>
-                <div className="overflow-y-scroll max-h-[402px] px-4 grid grid-cols-1 gap-y-8 no-scrollbar p-px">
+                <div className="overflow-y-scroll max-h-[402px] px-3 grid grid-cols-1 gap-y-4 no-scrollbar p-px">
                   {cartState.items
                     .sort((a, b) => {
                       return (a.created_at ?? "") > (b.created_at ?? "")
@@ -195,6 +195,7 @@ const CartDropdown = ({
                           <DeleteButton
                             id={item.id}
                             className="mt-1"
+                            withConfirm="inline"
                             data-testid="cart-item-remove-button"
                           >
                             {t("remove")}
@@ -203,10 +204,10 @@ const CartDropdown = ({
                       </div>
                     ))}
                 </div>
-                <div className="p-4 flex flex-col gap-y-4 text-small-regular">
+                <div className="px-3 py-3 flex flex-col gap-y-3 text-small-regular">
                   <div className="flex items-center justify-between">
                     <span className="text-ui-fg-base font-semibold">
-                      {t("subtotal")}
+                      {t("totalInclTax")}
                     </span>
                     <span
                       className="text-large-semi"
@@ -232,19 +233,17 @@ const CartDropdown = ({
               </>
             ) : (
               <div>
-                <div className="flex py-16 flex-col gap-y-4 items-center justify-center">
+                <div className="flex py-8 flex-col gap-y-3 items-center justify-center text-center">
                   <div className="bg-gray-900 text-small-regular flex items-center justify-center w-6 h-6 rounded-full text-white">
                     <span>0</span>
                   </div>
-                  <span>{t("empty")}</span>
-                  <div>
-                    <LocalizedClientLink href="/store">
-                      <>
-                        <span className="sr-only">{t("explore")}</span>
-                        <Button onClick={close}>{t("explore")}</Button>
-                      </>
-                    </LocalizedClientLink>
-                  </div>
+                  <span className="text-center">{t("empty")}</span>
+                  <LocalizedClientLink href="/store">
+                    <>
+                      <span className="sr-only">{t("explore")}</span>
+                      <Button onClick={close}>{t("explore")}</Button>
+                    </>
+                  </LocalizedClientLink>
                 </div>
               </div>
             )}

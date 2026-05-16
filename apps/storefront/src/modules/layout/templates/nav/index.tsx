@@ -4,21 +4,26 @@ import { listLocales } from "@lib/data/locales"
 import { getLocale } from "@lib/data/locale-actions"
 import { listRegions } from "@lib/data/regions"
 import { retrieveCustomer } from "@lib/data/customer"
+import { listCategories } from "@lib/data/categories"
 import { StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
+import CategoryDropdown from "@modules/layout/components/category-dropdown"
 import SideMenu from "@modules/layout/components/side-menu"
 import SearchBar from "@modules/layout/components/search-bar"
 import { getTranslations } from "next-intl/server"
 
 export default async function Nav() {
-  const [regions, locales, currentLocale, customer, t] = await Promise.all([
+  const [regions, locales, currentLocale, customer, t, allCategories] = await Promise.all([
     listRegions().then((regions: StoreRegion[]) => regions),
     listLocales(),
     getLocale(),
     retrieveCustomer(),
     getTranslations("nav"),
+    listCategories({ limit: 100 }),
   ])
+
+  const topLevelCategories = (allCategories ?? []).filter((c) => !c.parent_category)
 
   return (
     <div className="sticky top-0 inset-x-0 z-50 group">
@@ -30,17 +35,19 @@ export default async function Nav() {
             </div>
           </div>
 
-          <div className="flex items-center h-full">
+          <div className="flex flex-col items-center justify-center h-full gap-y-0.5">
             <LocalizedClientLink
               href="/"
-              className="txt-compact-xlarge-plus hover:text-ui-fg-base uppercase"
+              className="txt-compact-xlarge-plus hover:text-ui-fg-base uppercase leading-none"
               data-testid="nav-store-link"
             >
               Maoshu
             </LocalizedClientLink>
+            <CategoryDropdown categories={topLevelCategories} />
           </div>
 
-          <div className="flex items-center gap-x-4 h-full flex-1 basis-0 justify-end">
+          <div className="flex items-center h-full flex-1 basis-0">
+            <div className="flex items-center gap-x-4 ml-auto">
             <SearchBar />
           <Suspense
               fallback={
@@ -97,7 +104,7 @@ export default async function Nav() {
                 </LocalizedClientLink>
               )}
             </div>
-
+            </div>
           </div>
         </nav>
       </header>
