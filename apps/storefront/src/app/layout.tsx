@@ -15,7 +15,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang={locale} data-mode="light">
       <body>
-        <NextTopLoader color="#111827" height={3} showSpinner={false} />
+        <NextTopLoader color="#ffffff" height={3} showSpinner={false} />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <main className="relative">{props.children}</main>
         </NextIntlClientProvider>

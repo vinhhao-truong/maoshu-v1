@@ -73,7 +73,7 @@ const PriceRangeFilter = ({ priceMin, priceMax, onApply }: PriceRangeFilterProps
         <button
           onClick={tryApply}
           disabled={isInvalid}
-          className="text-[11px] bg-gray-900 text-white px-2 py-0.5 hover:bg-gray-700 transition-colors duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="text-[11px] bg-primary text-primary-fg px-2 py-0.5 hover:bg-primary-hover transition-colors duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {t("apply")}
         </button>

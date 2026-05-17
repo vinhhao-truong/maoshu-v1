@@ -137,6 +137,8 @@ export default async function Nav() {
         rootCategory={activeRoot}
         allCategories={allCategories ?? []}
         collections={collections ?? []}
+        locales={locales ?? []}
+        currentLocale={currentLocale ?? "vi"}
       />
     </div>
   )

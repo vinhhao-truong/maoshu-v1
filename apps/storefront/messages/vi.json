@@ -45,7 +45,15 @@
     "switchCategoryTitle": "Đổi danh mục?",
     "switchCategoryDesc": "Di chuyển sang shop khác sẽ xóa giỏ hàng hiện tại của bạn. Hành động này không thể hoàn tác.",
     "switchCategoryConfirm": "Xóa & Chuyển",
-    "switchCategoryCancel": "Giữ Giỏ Hàng"
+    "switchCategoryCancel": "Giữ Giỏ Hàng",
+    "colItem": "Sản phẩm",
+    "colQuantity": "Số lượng",
+    "colPrice": "Đơn giá",
+    "colTotal": "Thành tiền",
+    "decreaseQty": "Giảm số lượng",
+    "increaseQty": "Tăng số lượng",
+    "quantityLabel": "Số lượng",
+    "selectPlaceholder": "Chọn..."
   },
   "account": {
     "welcomeBack": "Chào mừng trở lại",

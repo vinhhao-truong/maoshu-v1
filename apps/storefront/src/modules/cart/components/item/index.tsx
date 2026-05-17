@@ -12,6 +12,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import Spinner from "@modules/common/icons/spinner"
 import Thumbnail from "@modules/products/components/thumbnail"
 import { useEffect, useState } from "react"
+import { useTranslations } from "next-intl"
 
 type ItemProps = {
   item: HttpTypes.StoreCartLineItem
@@ -20,6 +21,7 @@ type ItemProps = {
 }
 
 const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
+  const t = useTranslations("cart")
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [qty, setQty] = useState(item.quantity)
@@ -96,7 +98,7 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
                 onClick={() => applyQty(qty - 1)}
                 disabled={qty <= 1 || updating}
                 className="w-7 h-7 flex items-center justify-center border border-gray-300 text-base hover:border-black disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                aria-label="Decrease quantity"
+                aria-label={t("decreaseQty")}
               >
                 −
               </button>
@@ -109,13 +111,13 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
                 disabled={updating}
                 className="w-12 h-7 border border-gray-300 text-center text-sm font-semibold text-ui-fg-base focus:border-black focus:outline-none tabular-nums disabled:opacity-50 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 data-testid="product-select-button"
-                aria-label="Quantity"
+                aria-label={t("quantityLabel")}
               />
               <button
                 onClick={() => applyQty(qty + 1)}
                 disabled={updating}
                 className="w-7 h-7 flex items-center justify-center border border-gray-300 text-base hover:border-black disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                aria-label="Increase quantity"
+                aria-label={t("increaseQty")}
               >
                 +
               </button>

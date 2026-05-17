@@ -1,6 +1,6 @@
 {
   "nav": {
-    "greeting": "Hello, {name}",
+    "greeting": "Hello, ",
     "account": "Account",
     "signIn": "Sign In",
     "cart": "Cart ({count})",
@@ -45,7 +45,15 @@
     "switchCategoryTitle": "Switch category?",
     "switchCategoryDesc": "Switching categories will clear your current cart. This cannot be undone.",
     "switchCategoryConfirm": "Clear & Switch",
-    "switchCategoryCancel": "Keep Cart"
+    "switchCategoryCancel": "Keep Cart",
+    "colItem": "Item",
+    "colQuantity": "Quantity",
+    "colPrice": "Price",
+    "colTotal": "Total",
+    "decreaseQty": "Decrease quantity",
+    "increaseQty": "Increase quantity",
+    "quantityLabel": "Quantity",
+    "selectPlaceholder": "Select..."
   },
   "account": {
     "welcomeBack": "Welcome back",

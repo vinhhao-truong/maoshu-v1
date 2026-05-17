@@ -1,10 +1,12 @@
+"use client"
+
 import { Heading } from "@modules/common/components/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import { getTranslations } from "next-intl/server"
+import { useTranslations } from "next-intl"
 import React from "react"
 
-const Help = async () => {
-  const t = await getTranslations("order")
+const Help = () => {
+  const t = useTranslations("order")
 
   return (
     <div className="mt-6">
