@@ -127,7 +127,7 @@ export default function SearchBar({ categories }: Props) {
 
   return (
     <div ref={containerRef} className="relative flex items-center h-full">
-      <div className="flex items-center gap-1 border border-gray-200 rounded-md px-2 py-1 bg-white focus-within:border-gray-400 transition-colors">
+      <div className="flex items-center gap-1 border border-gray-200 rounded-sm px-2 py-2 bg-white focus-within:border-gray-400 transition-colors">
         {/* Search icon */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +139,7 @@ export default function SearchBar({ categories }: Props) {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="text-gray-400 shrink-0"
+          className="text-primary shrink-0"
         >
           <circle cx="11" cy="11" r="8" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -150,12 +150,12 @@ export default function SearchBar({ categories }: Props) {
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Tìm sản phẩm..."
-          className="w-36 sm:w-48 text-xs outline-none bg-transparent placeholder-gray-400"
+          className="w-36 sm:w-48 text-xs text-primary outline-none bg-transparent placeholder-primary/40"
         />
         {query && (
           <button
             onClick={handleClose}
-            className="text-gray-400 hover:text-gray-600 leading-none text-sm"
+            className="text-primary/60 hover:text-primary leading-none text-sm"
           >
             ×
           </button>
@@ -186,7 +186,7 @@ export default function SearchBar({ categories }: Props) {
                   <li key={p.id}>
                     <LocalizedClientLink
                       href={`/products/${p.handle}`}
-                      className="flex items-center gap-3 px-2 py-2 hover:bg-gray-50 transition-colors"
+                      className="flex items-center gap-3 px-2 py-2 hover:bg-primary/5 transition-colors"
                       onClick={handleClose}
                     >
                       {p.thumbnail ? (

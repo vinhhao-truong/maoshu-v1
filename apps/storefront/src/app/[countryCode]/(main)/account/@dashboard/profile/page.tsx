@@ -29,21 +29,13 @@ export default async function Profile() {
         <h1 className="text-2xl-semi">{t("profile")}</h1>
         <p className="text-base-regular">{t("profileDesc")}</p>
       </div>
-      <div className="flex flex-col gap-y-8 w-full">
+      <div className="flex flex-col gap-y-3 w-full">
         <ProfileName customer={customer} />
-        <Divider />
         <ProfileEmail customer={customer} />
-        <Divider />
         <ProfilePhone customer={customer} />
-        <Divider />
-        {/* <ProfilePassword customer={customer} />
-        <Divider /> */}
+        {/* <ProfilePassword customer={customer} /> */}
         <ProfileBillingAddress customer={customer} regions={regions} />
       </div>
     </div>
   )
-}
-
-const Divider = () => {
-  return <div className="w-full h-px bg-gray-200" />
 }

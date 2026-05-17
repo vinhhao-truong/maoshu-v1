@@ -44,8 +44,9 @@ export function Pagination({
   const renderPageButton = (p: number, label: string | number, isCurrent: boolean) => (
     <button
       key={p}
-      className={clx("txt-xlarge-plus text-ui-fg-muted", {
-        "text-ui-fg-base": isCurrent,
+      className={clx("txt-xlarge-plus text-primary/50 transition-colors", {
+        "bg-primary text-primary-fg px-1.5": isCurrent,
+        "hover:text-primary": !isCurrent,
       })}
       disabled={isCurrent}
       onClick={() => handlePageChange(p)}
@@ -55,7 +56,7 @@ export function Pagination({
   )
 
   const renderEllipsis = (key: string) => (
-    <span key={key} className="txt-xlarge-plus text-ui-fg-muted cursor-default">
+    <span key={key} className="txt-xlarge-plus text-primary/50 cursor-default">
       ...
     </span>
   )
@@ -91,7 +92,7 @@ export function Pagination({
             <button
               onClick={() => handlePageChange(page - 1)}
               disabled={page <= 1}
-              className="txt-xlarge-plus text-ui-fg-muted hover:text-ui-fg-base disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
+              className="txt-xlarge-plus text-primary/50 hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               aria-label="Previous page"
             >
               ←
@@ -100,7 +101,7 @@ export function Pagination({
             <button
               onClick={() => handlePageChange(page + 1)}
               disabled={page >= totalPages}
-              className="txt-xlarge-plus text-ui-fg-muted hover:text-ui-fg-base disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
+              className="txt-xlarge-plus text-primary/50 hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               aria-label="Next page"
             >
               →
@@ -111,22 +112,22 @@ export function Pagination({
 
       {/* Right: per-page selector + page count */}
       <div className="flex items-center gap-x-4">
-        <div className="flex items-center gap-x-2 text-xs text-ui-fg-muted">
+        <div className="flex items-center gap-x-2 text-xs text-primary/50">
           <span>{t("perPage")}:</span>
           {PAGE_SIZE_OPTIONS.map((size) => (
             <button
               key={size}
               onClick={() => handleLimitChange(size)}
               className={clx("px-2 py-0.5 transition-colors duration-150", {
-                "bg-gray-900 text-white": size === limit,
-                "text-ui-fg-subtle hover:text-ui-fg-base": size !== limit,
+                "bg-primary text-primary-fg": size === limit,
+                "text-primary/50 hover:text-primary": size !== limit,
               })}
             >
               {size}
             </button>
           ))}
         </div>
-        <span className="text-xs text-ui-fg-muted tabular-nums">
+        <span className="text-xs text-primary/50 tabular-nums">
           {page} / {totalPages}
         </span>
       </div>

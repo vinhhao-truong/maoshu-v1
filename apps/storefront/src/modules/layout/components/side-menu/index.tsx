@@ -62,7 +62,7 @@ const SideMenu = ({ allCategories, collections }: SideMenuProps) => {
           <div className="flex h-full">
             <PopoverButton
               data-testid="nav-menu-button"
-              className="relative h-full flex items-center transition-all ease-out duration-200 outline-none focus:outline-none hover:text-ui-fg-base"
+              className="relative h-full flex items-center transition-all ease-out duration-200 outline-none focus:outline-none hover:text-primary-fg/80"
               onClick={menuToggleState.toggle}
             >
               <div className="flex flex-col items-center gap-y-1">

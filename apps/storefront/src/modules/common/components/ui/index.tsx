@@ -85,8 +85,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           "inline-flex gap-2 items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
           variant === "primary" && "bg-black text-white hover:bg-gray-800",
           variant === "secondary" &&
-            "bg-white text-black border border-gray-200 hover:bg-gray-50",
-          variant === "transparent" && "bg-transparent hover:bg-gray-100",
+            "bg-white text-black border border-gray-200 hover:bg-primary/5",
+          variant === "transparent" && "bg-transparent hover:bg-primary/10",
           size === "small" && "h-8 px-3 text-sm",
           size === "medium" && "h-10 px-4",
           size === "large" && "h-12 px-6 text-lg",
@@ -178,7 +178,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       <button
         ref={ref}
         className={clsx(
-          "inline-flex items-center justify-center rounded-md p-2 hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2",
+          "inline-flex items-center justify-center rounded-md p-2 hover:bg-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2",
           className
         )}
         {...props}
@@ -292,7 +292,7 @@ const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
       <tr
         ref={ref}
         className={clsx(
-          "border-b transition-colors hover:bg-gray-50",
+          "border-b transition-colors hover:bg-primary/5",
           className
         )}
         {...props}

@@ -60,38 +60,37 @@ export default function AddToCartButton({ product, price }: Props) {
       <button
         onClick={handleClick}
         disabled={!!singleVariant && (!inStock || isAdding)}
-        className="group/btn w-full flex items-stretch border border-black rounded-sm overflow-hidden disabled:opacity-50 disabled:pointer-events-none"
+        className="group/btn w-full flex items-stretch border border-primary rounded-sm overflow-hidden disabled:opacity-50 disabled:pointer-events-none"
         data-testid="add-to-cart-preview-button"
       >
-        <span className="flex-1 h-8 px-3 flex items-center bg-white text-black">
+        <span className="flex-1 h-8 px-3 flex items-center bg-primary text-primary-fg">
           {price && (
             <span className="flex items-center gap-x-1">
               {price.price_type === "sale" && (
-                <span className="line-through text-xs opacity-50">
+                <span className="line-through text-xs opacity-60">
                   {price.original_price}
                 </span>
               )}
-              <span
-                className={clx("text-xs font-medium text-primary", {
-                  "text-danger": price.price_type === "sale",
-                })}
-              >
+              <span className="text-xs font-medium text-primary-fg">
                 {price.calculated_price}
               </span>
             </span>
           )}
         </span>
         <span
-          className="h-8 pr-3 pl-10 -ml-8 flex items-center bg-black text-white text-xs whitespace-nowrap transition-colors duration-200 group-hover/btn:bg-gray-800"
+          className="h-8 pr-3 pl-10 -ml-8 flex items-center bg-white text-primary text-xs whitespace-nowrap"
           style={{ clipPath: "path('M 32 0 A 16 16 0 0 0 32 32 L 9999 32 L 9999 0 Z')" }}
         >
-          <span className="relative flex items-center justify-center">
+          <span className="relative flex items-center justify-center gap-x-1">
             <span className={isAdding ? "invisible" : ""}>{label}</span>
+            {!isAdding && (
+              <span className="opacity-0 -translate-x-2 group-hover/btn:opacity-100 group-hover/btn:translate-x-0 transition-all duration-200 text-sm leading-none">+</span>
+            )}
             {isAdding && (
               <span className="absolute flex items-center gap-x-0.5">
-                <span className="w-1 h-1 bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
-                <span className="w-1 h-1 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
-                <span className="w-1 h-1 bg-white rounded-full animate-bounce" />
+                <span className="w-1 h-1 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]" />
+                <span className="w-1 h-1 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]" />
+                <span className="w-1 h-1 bg-primary rounded-full animate-bounce" />
               </span>
             )}
           </span>

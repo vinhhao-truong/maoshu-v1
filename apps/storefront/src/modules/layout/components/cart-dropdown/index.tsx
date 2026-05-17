@@ -66,7 +66,7 @@ const CartDropdown = ({
       {/* Trigger */}
       <button
         onClick={toggle}
-        className="hover:text-ui-fg-base flex items-center h-full"
+        className="hover:text-primary-fg/80 flex items-center h-full"
         data-testid="nav-cart-link"
       >
         <div className="relative">
@@ -85,7 +85,7 @@ const CartDropdown = ({
             <line x1="3" y1="6" x2="21" y2="6" />
             <path d="M16 10a4 4 0 0 1-8 0" />
           </svg>
-          <span className="absolute -bottom-1.5 -right-1.5 flex items-center justify-center w-4 h-4 rounded-full bg-primary text-primary-fg text-[9px] font-medium leading-none">
+          <span className="absolute -bottom-1.5 -right-1.5 flex items-center justify-center w-4 h-4 rounded-full bg-white text-primary text-[9px] font-medium leading-none">
             {totalItems}
           </span>
         </div>

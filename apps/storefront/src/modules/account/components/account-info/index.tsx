@@ -1,6 +1,5 @@
 "use client"
 
-import { Disclosure } from "@headlessui/react"
 import { Badge, Button, clx } from "@modules/common/components/ui"
 import { useEffect } from "react"
 
@@ -16,7 +15,7 @@ type AccountInfoProps = {
   errorMessage?: string
   clearState: () => void
   children?: React.ReactNode
-  'data-testid'?: string
+  "data-testid"?: string
 }
 
 const AccountInfo = ({
@@ -27,16 +26,19 @@ const AccountInfo = ({
   clearState,
   errorMessage,
   children,
-  'data-testid': dataTestid
+  "data-testid": dataTestid,
 }: AccountInfoProps) => {
   const t = useTranslations("account")
-  const { state, close, toggle } = useToggleState()
+  const { state: isEditing, close, toggle } = useToggleState()
 
-  const { pending } = useFormStatus()
-
-  const handleToggle = () => {
+  const handleEdit = () => {
     clearState()
     setTimeout(() => toggle(), 100)
+  }
+
+  const handleCancel = () => {
+    clearState()
+    close()
   }
 
   useEffect(() => {
@@ -46,97 +48,99 @@ const AccountInfo = ({
   }, [isSuccess, close])
 
   return (
-    <div className="text-small-regular" data-testid={dataTestid}>
-      <div className="flex items-end justify-between">
-        <div className="flex flex-col">
-          <span className="uppercase text-ui-fg-base">{label}</span>
-          <div className="flex items-center flex-1 basis-0 justify-end gap-x-4">
-            {typeof currentInfo === "string" ? (
-              <span className="font-semibold" data-testid="current-info">{currentInfo}</span>
-            ) : (
-              currentInfo
-            )}
-          </div>
-        </div>
-        <div>
-          <Button
-            variant="secondary"
-            className="w-[100px] min-h-[25px] py-1"
-            onClick={handleToggle}
-            type={state ? "reset" : "button"}
-            data-testid="edit-button"
-            data-active={state}
-          >
-            {state ? t("cancel") : t("edit")}
-          </Button>
-        </div>
-      </div>
-
-      {/* Success state */}
-      <Disclosure>
-        <Disclosure.Panel
-          static
-          className={clx(
-            "transition-[max-height,opacity] duration-300 ease-in-out overflow-hidden",
-            {
-              "max-h-[1000px] opacity-100": isSuccess,
-              "max-h-0 opacity-0": !isSuccess,
-            }
-          )}
-          data-testid="success-message"
-        >
-          <Badge className="p-2 my-4" color="green">
-            <span>{t("updateSuccess", { label })}</span>
-          </Badge>
-        </Disclosure.Panel>
-      </Disclosure>
-
-      {/* Error state  */}
-      <Disclosure>
-        <Disclosure.Panel
-          static
-          className={clx(
-            "transition-[max-height,opacity] duration-300 ease-in-out overflow-hidden",
-            {
-              "max-h-[1000px] opacity-100": isError,
-              "max-h-0 opacity-0": !isError,
-            }
-          )}
-          data-testid="error-message"
-        >
-          <Badge className="p-2 my-4" color="red">
-            <span>{errorMessage ?? t("updateError")}</span>
-          </Badge>
-        </Disclosure.Panel>
-      </Disclosure>
-
-      <Disclosure>
-        <Disclosure.Panel
-          static
-          className={clx(
-            "transition-[max-height,opacity] duration-300 ease-in-out overflow-visible",
-            {
-              "max-h-[1000px] opacity-100": state,
-              "max-h-0 opacity-0": !state,
-            }
-          )}
-        >
-          <div className="flex flex-col gap-y-2 py-4">
-            <div>{children}</div>
-            <div className="flex items-center justify-end mt-2">
-              <Button
-                isLoading={pending}
-                className="w-full small:max-w-[140px]"
-                type="submit"
-                data-testid="save-button"
-              >
-                {t("saveChanges")}
-              </Button>
+    <div
+      className={clx(
+        "rounded-xl border transition-colors duration-200",
+        isEditing
+          ? "border-gray-300 bg-gray-50/60"
+          : "border-gray-200 bg-white"
+      )}
+      data-testid={dataTestid}
+    >
+      {!isEditing ? (
+        /* ── View mode ── */
+        <div className="flex items-center justify-between gap-4 px-5 py-4">
+          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+            <span className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+              {label}
+            </span>
+            <div className="text-sm font-medium text-ui-fg-base mt-0.5">
+              {typeof currentInfo === "string" ? (
+                <span data-testid="current-info">{currentInfo}</span>
+              ) : (
+                currentInfo
+              )}
             </div>
           </div>
-        </Disclosure.Panel>
-      </Disclosure>
+          <Button
+            variant="secondary"
+            className="shrink-0 h-8 px-4 text-sm"
+            onClick={handleEdit}
+            type="button"
+            data-testid="edit-button"
+            data-active={false}
+          >
+            {t("edit")}
+          </Button>
+        </div>
+      ) : (
+        /* ── Edit mode ── */
+        <div className="flex flex-col gap-5 px-5 py-5">
+          <span className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+            {label}
+          </span>
+
+          <div>{children}</div>
+
+          {isSuccess && (
+            <Badge
+              className="p-2"
+              color="green"
+              data-testid="success-message"
+            >
+              {t("updateSuccess", { label })}
+            </Badge>
+          )}
+
+          {isError && (
+            <Badge
+              className="p-2"
+              color="red"
+              data-testid="error-message"
+            >
+              {errorMessage ?? t("updateError")}
+            </Badge>
+          )}
+
+          <div className="flex items-center justify-end gap-3 pt-1 border-t border-gray-200">
+            <Button
+              variant="secondary"
+              className="h-9 px-5 text-sm"
+              onClick={handleCancel}
+              type="reset"
+              data-testid="cancel-button"
+            >
+              {t("cancel")}
+            </Button>
+            <SubmitButton saveLabel={t("saveChanges")} />
+          </div>
+        </div>
+      )}
     </div>
+  )
+}
+
+const SubmitButton = ({ saveLabel }: { saveLabel: string }) => {
+  const { pending } = useFormStatus()
+  return (
+    <Button
+      isLoading={pending}
+      className="h-9 px-5 text-sm"
+      type="submit"
+      data-testid="save-button"
+    >
+      {saveLabel}
+    </Button>
   )
 }
 
