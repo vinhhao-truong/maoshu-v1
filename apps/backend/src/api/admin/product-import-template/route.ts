@@ -41,6 +41,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
     "Variant Manage Inventory", // FALSE = no stock tracking
     "Variant Allow Backorder",
     "Variant Weight",
+    "Variant Cost",
     // ── Options (must be prefixed with "Variant") ────────────────────────
     "Variant Option 1 Name",
     "Variant Option 1 Value",

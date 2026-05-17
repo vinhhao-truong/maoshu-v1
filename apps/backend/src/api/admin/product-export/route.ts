@@ -1,14 +1,24 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils"
+import { VARIANT_COST_MODULE } from "../../../modules/variant-cost"
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
   const regionService = req.scope.resolve(Modules.REGION)
+  const variantCostService = req.scope.resolve(VARIANT_COST_MODULE)
 
   const regions = await regionService.listRegions({}, {
     select: ["id", "name", "currency_code"],
   })
   const regionMap = new Map(regions.map((r) => [r.id, r]))
+
+  const allCosts = await variantCostService.listVariantCosts(
+    {},
+    { take: 100000 }
+  )
+  const costMap = new Map<string, number | null>(
+    allCosts.map((c: any) => [c.variant_id, c.cost])
+  )
 
   // Fetch all products with variants, options and prices via query.graph
   const { data: products } = await query.graph({
@@ -74,6 +84,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
     "Variant Manage Inventory",
     "Variant Allow Backorder",
     "Variant Weight",
+    "Variant Cost",
     ...optionHeaders,
     ...priceHeaders,
   ]
@@ -120,6 +131,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
         "Variant Allow Backorder": variant?.allow_backorder != null
           ? String(variant.allow_backorder).toUpperCase() : "FALSE",
         "Variant Weight": variant?.weight ?? "",
+        "Variant Cost": variant?.id != null ? (costMap.get(variant.id) ?? "") : "",
       }
 
       // Options: match option_id → product option title

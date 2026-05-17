@@ -3,6 +3,7 @@ import { Modules } from "@medusajs/framework/utils"
 import { batchProductsWorkflow } from "@medusajs/core-flows"
 import Busboy from "busboy"
 import { parse } from "csv-parse"
+import { VARIANT_COST_MODULE } from "../../../modules/variant-cost"
 
 // Parse the multipart file upload, return CSV string
 function readUploadedCSV(req: MedusaRequest): Promise<string> {
@@ -81,6 +82,21 @@ function buildVariant(row: Record<string, string>, isUpdate: boolean) {
   variant.prices = prices
 
   return variant
+}
+
+// Extract sku→cost pairs from all rows for post-workflow cost saving
+function extractSkuCosts(
+  allRows: Record<string, string>[]
+): Map<string, number> {
+  const map = new Map<string, number>()
+  for (const row of allRows) {
+    const sku = row["Variant Sku"]?.trim()
+    const costStr = row["Variant Cost"]?.trim()
+    if (sku && costStr && !isNaN(Number(costStr))) {
+      map.set(sku, Number(costStr))
+    }
+  }
+  return map
 }
 
 // Build the product object from a group of rows (one row per variant)
@@ -239,7 +255,11 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     }
   }
 
-  // 5. Run batch workflow
+  // 5. Build sku→cost map before running workflow
+  const skuCostMap = extractSkuCosts(allRows)
+
+  // 6. Run batch workflow
+  let workflowResult: any
   try {
     const { result } = await batchProductsWorkflow(req.scope).run({
       input: {
@@ -248,13 +268,47 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
         delete: [],
       },
     })
-    res.json({
-      created: toCreate.length,
-      updated: toUpdate.length,
-      errors,
-      result,
-    })
+    workflowResult = result
   } catch (err: any) {
-    res.status(500).json({ message: err.message, errors })
+    return res.status(500).json({ message: err.message, errors })
   }
+
+  // 7. Save costs for variants that have a SKU in the CSV
+  if (skuCostMap.size > 0) {
+    try {
+      const productService = req.scope.resolve(Modules.PRODUCT)
+      const variantCostService = req.scope.resolve(VARIANT_COST_MODULE)
+      const skus = [...skuCostMap.keys()]
+
+      const variants = await productService.listProductVariants(
+        { sku: skus },
+        { select: ["id", "sku"], take: skus.length }
+      )
+
+      for (const variant of variants) {
+        const cost = skuCostMap.get(variant.sku!)
+        if (cost == null) continue
+        const [existing] = await variantCostService.listVariantCosts({
+          variant_id: variant.id,
+        })
+        if (existing) {
+          await variantCostService.updateVariantCosts(existing.id, { cost })
+        } else {
+          await variantCostService.createVariantCosts({
+            variant_id: variant.id,
+            cost,
+          })
+        }
+      }
+    } catch (err: any) {
+      errors.push(`Cost save failed: ${err.message}`)
+    }
+  }
+
+  res.json({
+    created: toCreate.length,
+    updated: toUpdate.length,
+    errors,
+    result: workflowResult,
+  })
 }
