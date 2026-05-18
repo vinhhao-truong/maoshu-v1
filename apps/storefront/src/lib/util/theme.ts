@@ -1,6 +1,6 @@
-export type ThemeName = "pet" | "grocery"
+export type ThemeName = "pet" | "convenience"
 
-// Handles that map to the pet theme — everything else defaults to grocery
+// Handles that map to the pet theme — everything else defaults to convenience
 const PET_HANDLES = new Set(["pet", "pets", "pet-supplies"])
 
 export function themeForCategory(category: {
@@ -9,8 +9,8 @@ export function themeForCategory(category: {
 }): ThemeName {
   // metadata.theme takes priority — set it in the Medusa admin if needed
   const meta = category.metadata?.theme
-  if (meta === "pet" || meta === "grocery") return meta
+  if (meta === "pet" || meta === "convenience") return meta
 
   const handle = category.handle?.toLowerCase() ?? ""
-  return PET_HANDLES.has(handle) ? "pet" : "grocery"
+  return PET_HANDLES.has(handle) ? "pet" : "convenience"
 }

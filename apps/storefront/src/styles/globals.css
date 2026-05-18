@@ -63,8 +63,8 @@
   --color-secondary-fg:    255 255 255;
 }
 
-/* Grocery store — trustworthy blue + fresh green */
-[data-theme="grocery"] {
+/* Convenience store — trustworthy blue + fresh green */
+[data-theme="convenience"] {
   --color-primary:         30  64 175;  /* blue-800    #1E40AF */
   --color-primary-hover:   30  58 138;  /* blue-900    #1E3A8A */
   --color-primary-light:  191 219 254;  /* blue-200    #BFDBFE */
@@ -182,5 +182,61 @@
 
   .text-3xl-semi {
     @apply text-[32px] leading-[44px] font-semibold;
+  }
+
+  /* Rich text body — rendered HTML from the content editor */
+  .rich-text-body {
+    @apply text-base leading-7 text-gray-700;
+  }
+  .rich-text-body h1 {
+    @apply text-3xl font-semibold text-gray-900 mt-10 mb-4;
+  }
+  .rich-text-body h2 {
+    @apply text-2xl font-semibold text-gray-900 mt-8 mb-3;
+  }
+  .rich-text-body h3 {
+    @apply text-xl font-semibold text-gray-900 mt-6 mb-2;
+  }
+  .rich-text-body p {
+    @apply mb-5;
+  }
+  .rich-text-body strong {
+    @apply font-semibold text-gray-900;
+  }
+  .rich-text-body em {
+    @apply italic;
+  }
+  .rich-text-body u {
+    @apply underline;
+  }
+  .rich-text-body s {
+    @apply line-through;
+  }
+  .rich-text-body a {
+    @apply text-blue-600 underline hover:text-blue-800 transition-colors;
+  }
+  .rich-text-body ul {
+    @apply mb-5 list-disc pl-6 space-y-1;
+  }
+  .rich-text-body ol {
+    @apply mb-5 list-decimal pl-6 space-y-1;
+  }
+  .rich-text-body li {
+    @apply leading-7;
+  }
+  .rich-text-body blockquote {
+    @apply my-6 border-l-4 border-gray-300 pl-4 italic text-gray-500;
+  }
+  .rich-text-body code {
+    @apply rounded bg-gray-100 px-1.5 py-0.5 font-mono text-sm text-gray-800;
+  }
+  .rich-text-body pre {
+    @apply mb-5 overflow-x-auto rounded-lg bg-gray-900 p-4;
+  }
+  .rich-text-body pre code {
+    @apply bg-transparent p-0 text-sm text-gray-100;
+  }
+  .rich-text-body hr {
+    @apply my-8 border-gray-200;
   }
 }

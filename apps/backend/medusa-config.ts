@@ -26,5 +26,11 @@ module.exports = defineConfig({
     {
       resolve: "./src/modules/variant-cost",
     },
+    {
+      resolve: "./src/modules/content",
+    },
+    {
+      resolve: "./src/modules/business-info",
+    },
   ],
 })
