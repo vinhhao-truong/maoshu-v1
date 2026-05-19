@@ -73,7 +73,7 @@ const ProductInfoTab = ({ product }: ProductTabsProps) => {
             <span className="font-semibold">{t("dimensions")}</span>
             <p>
               {product.length && product.width && product.height
-                ? `${product.length}L x ${product.width}W x ${product.height}H`
+                ? `${product.length} cm x ${product.width} cm x ${product.height} cm`
                 : "-"}
             </p>
           </div>

@@ -35,6 +35,7 @@ type ContentItem = {
   seo_title: string | null
   seo_description: string | null
   is_active: boolean
+  in_footer: boolean
   created_at: string
 }
 
@@ -51,6 +52,7 @@ type ContentForm = {
   seo_title: string
   seo_description: string
   is_active: boolean
+  in_footer: boolean
 }
 
 const CONTENT_TYPES = [
@@ -235,6 +237,7 @@ const emptyForm = (): ContentForm => ({
   seo_title: "",
   seo_description: "",
   is_active: true,
+  in_footer: false,
 })
 
 function ToolbarButton({
@@ -425,6 +428,7 @@ function ContentFormModal({
           seo_title: item.seo_title ?? "",
           seo_description: item.seo_description ?? "",
           is_active: item.is_active,
+          in_footer: item.in_footer,
         }
       : emptyForm()
   )
@@ -461,6 +465,7 @@ function ContentFormModal({
         seo_title: form.seo_title.trim() || null,
         seo_description: form.seo_description.trim() || null,
         is_active: form.is_active,
+        in_footer: form.in_footer,
       }
 
       if (item) {
@@ -561,6 +566,19 @@ function ContentFormModal({
                 <Switch
                   checked={form.is_active}
                   onCheckedChange={(v) => set("is_active")(v)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-y-0.5">
+                  <Label>Show in Footer</Label>
+                  <Text size="small" className="text-ui-fg-subtle">
+                    Display this content as a link in the storefront footer
+                  </Text>
+                </div>
+                <Switch
+                  checked={form.in_footer}
+                  onCheckedChange={(v) => set("in_footer")(v)}
                 />
               </div>
             </div>

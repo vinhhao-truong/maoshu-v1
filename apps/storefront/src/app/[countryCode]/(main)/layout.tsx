@@ -59,7 +59,7 @@ export default async function PageLayout(props: {
         />
       )}
       {props.children}
-      <Footer />
+      <Footer categoryLogoUrl={activeRoot?.metadata?.logo_image as string | undefined} />
     </div>
   )
 }

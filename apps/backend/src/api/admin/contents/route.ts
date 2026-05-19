@@ -32,6 +32,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     seo_description?: string
     metadata?: Record<string, unknown>
     is_active?: boolean
+    in_footer?: boolean
   }
 
   if (!body.title || !body.handle || !body.type) {

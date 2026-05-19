@@ -5,7 +5,8 @@
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\vinhh\\\\OneDrive\\\\Desktop\\\\Coding Projects\\\\maoshu-store-v1\\\\maoshu-v1\\\\apps\\\\backend\\\\src\\\\admin\" -Recurse)",
       "Bash(Select-Object FullName)",
       "Bash(xargs grep -l \"image\\\\|media\\\\|storage\\\\|file\")",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(xargs grep -l \"product.*category\\\\|category\")"
     ]
   }
 }

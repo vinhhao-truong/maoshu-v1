@@ -106,20 +106,22 @@ const CategoryImagesWidget = ({ data }: { data: CategoryData }) => {
   const [metadata, setMetadata] = useState<Record<string, any>>(
     data.metadata ?? {}
   )
-  const [uploading, setUploading] = useState({ horizontal: false, vertical: false })
+  const [uploading, setUploading] = useState({ horizontal: false, vertical: false, logo: false })
 
   const hRef = useRef<HTMLInputElement>(null!)
   const vRef = useRef<HTMLInputElement>(null!)
+  const lRef = useRef<HTMLInputElement>(null!)
 
-  const handleUpload = async (file: File, type: "horizontal" | "vertical") => {
-    const field = type === "horizontal" ? "horizontal_image" : "vertical_image"
+  const handleUpload = async (file: File, type: "horizontal" | "vertical" | "logo") => {
+    const field = type === "horizontal" ? "horizontal_image" : type === "vertical" ? "vertical_image" : "logo_image"
     setUploading((u) => ({ ...u, [type]: true }))
     try {
       const url = await uploadFile(file)
       const newMeta = { ...metadata, [field]: url }
       await saveCategoryMetadata(data.id, newMeta)
       setMetadata(newMeta)
-      toast.success(`${type === "horizontal" ? "Horizontal" : "Vertical"} image saved`)
+      const label = type === "horizontal" ? "Horizontal" : type === "vertical" ? "Vertical" : "Logo"
+      toast.success(`${label} image saved`)
     } catch (e: any) {
       toast.error(e?.message ?? "Upload failed")
     } finally {
@@ -147,6 +149,14 @@ const CategoryImagesWidget = ({ data }: { data: CategoryData }) => {
         uploading={uploading.vertical}
         inputRef={vRef}
         onFileSelect={(f) => handleUpload(f, "vertical")}
+      />
+
+      <ImageUploadField
+        label="Logo"
+        imageUrl={metadata.logo_image}
+        uploading={uploading.logo}
+        inputRef={lRef}
+        onFileSelect={(f) => handleUpload(f, "logo")}
       />
     </div>
   )

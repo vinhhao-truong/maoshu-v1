@@ -46,3 +46,15 @@ export const listPublishedContent = async (
     .then(({ contents }) => contents)
     .catch(() => [])
 }
+
+export const listFooterContent = async (): Promise<ContentItem[]> =>
+  sdk.client
+    .fetch<{ contents: ContentItem[]; count: number }>(`/store/contents`, {
+      method: "GET",
+      query: { in_footer: "true" },
+      cache: "no-store",
+    })
+    .then(({ contents }) =>
+      contents.filter((c) => c.type !== "news" && c.type !== "announcement")
+    )
+    .catch(() => [])

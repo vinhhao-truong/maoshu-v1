@@ -7,6 +7,7 @@ import { listRegions } from "@lib/data/regions"
 import { retrieveCustomer } from "@lib/data/customer"
 import { listCategories } from "@lib/data/categories"
 import { listCollections } from "@lib/data/collections"
+import { getBusinessInfo } from "@lib/data/business-info"
 import { StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
@@ -17,7 +18,7 @@ import SubNav from "@modules/layout/components/sub-nav"
 import { getTranslations } from "next-intl/server"
 
 export default async function Nav() {
-  const [regions, locales, currentLocale, customer, t, allCategories, { collections }, cookieStore] = await Promise.all([
+  const [regions, locales, currentLocale, customer, t, allCategories, { collections }, cookieStore, businessInfo] = await Promise.all([
     listRegions().then((regions: StoreRegion[]) => regions),
     listLocales(),
     getLocale(),
@@ -26,6 +27,7 @@ export default async function Nav() {
     listCategories({ limit: 100 }),
     listCollections(),
     cookies(),
+    getBusinessInfo(),
   ])
 
   const topLevelCategories = (allCategories ?? []).filter((c) => !c.parent_category)
@@ -49,10 +51,20 @@ export default async function Nav() {
             </div>
             <LocalizedClientLink
               href="/"
-              className="txt-compact-xlarge-plus hover:text-primary-fg/80 uppercase leading-none"
+              className="hover:opacity-80 transition-opacity leading-none"
               data-testid="nav-store-link"
             >
-              Maoshu
+              {businessInfo?.logo_url ? (
+                <img
+                  src={businessInfo.logo_url}
+                  alt={businessInfo.store_name ?? "Store logo"}
+                  className="h-8 w-auto object-contain"
+                />
+              ) : (
+                <span className="txt-compact-xlarge-plus uppercase">
+                  {businessInfo?.store_name ?? "Maoshu"}
+                </span>
+              )}
             </LocalizedClientLink>
           </div>
 

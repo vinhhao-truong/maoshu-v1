@@ -12,6 +12,12 @@
     "categories": "Categories",
     "collections": "Collections",
     "storeName": "Maoshu Store",
+    "about": "About",
+    "aboutUs": "About Us",
+    "contact": "Contact",
+    "news": "News",
+    "announcements": "Announcements",
+    "support": "Support",
     "adminShop": "Maoshu Admin",
     "adminSeller": "Maoshu Admin Seller",
     "copyright": "© {year} Maoshu Store. All rights reserved."

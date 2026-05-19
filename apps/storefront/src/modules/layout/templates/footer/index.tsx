@@ -1,5 +1,6 @@
 import { listCategories } from "@lib/data/categories";
 import { listCollections } from "@lib/data/collections";
+import { listFooterContent } from "@lib/data/content";
 import { Text, clx } from "@modules/common/components/ui";
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link";
@@ -8,11 +9,12 @@ import MedusaCTA from "@modules/layout/components/medusa-cta";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
-export default async function Footer() {
-  const [{ collections }, productCategories, t] = await Promise.all([
+export default async function Footer({ categoryLogoUrl }: { categoryLogoUrl?: string }) {
+  const [{ collections }, productCategories, t, footerContent] = await Promise.all([
     listCollections({ fields: "*products" }),
     listCategories(),
     getTranslations("footer"),
+    listFooterContent(),
   ]);
 
   return (
@@ -22,12 +24,22 @@ export default async function Footer() {
           <div>
             <LocalizedClientLink
               href="/"
-              className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase"
+              className="hover:opacity-80 transition-opacity"
             >
-              {t("storeName")}
+              {categoryLogoUrl ? (
+                <img
+                  src={categoryLogoUrl}
+                  alt={t("storeName")}
+                  className="h-40 w-auto object-contain"
+                />
+              ) : (
+                <span className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase">
+                  {t("storeName")}
+                </span>
+              )}
             </LocalizedClientLink>
           </div>
-          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3">
+          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-5">
             <div className="flex flex-col gap-y-2">
               <span className="txt-small-plus txt-ui-fg-base">
                 {t("categories")}
@@ -60,6 +72,50 @@ export default async function Footer() {
                 </ul>
               </div>
             )}
+            <div className="flex flex-col gap-y-2">
+              <span className="txt-small-plus txt-ui-fg-base">{t("about")}</span>
+              <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
+                <li>
+                  <LocalizedClientLink href="/about-us" className="hover:text-ui-fg-base">
+                    {t("aboutUs")}
+                  </LocalizedClientLink>
+                </li>
+                <li>
+                  <LocalizedClientLink href="/contact" className="hover:text-ui-fg-base">
+                    {t("contact")}
+                  </LocalizedClientLink>
+                </li>
+                <li>
+                  <LocalizedClientLink href="/news" className="hover:text-ui-fg-base">
+                    {t("news")}
+                  </LocalizedClientLink>
+                </li>
+                <li>
+                  <LocalizedClientLink href="/announcement" className="hover:text-ui-fg-base">
+                    {t("announcements")}
+                  </LocalizedClientLink>
+                </li>
+              </ul>
+            </div>
+
+            {footerContent.length > 0 && (
+              <div className="flex flex-col gap-y-2">
+                <span className="txt-small-plus txt-ui-fg-base">{t("support")}</span>
+                <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
+                  {footerContent.map((item) => (
+                    <li key={item.id}>
+                      <LocalizedClientLink
+                        href={`/content/${item.handle}`}
+                        className="hover:text-ui-fg-base"
+                      >
+                        {item.title}
+                      </LocalizedClientLink>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             <div className="flex flex-col gap-y-2">
               <span className="txt-small-plus txt-ui-fg-base">Maoshu</span>
               <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">

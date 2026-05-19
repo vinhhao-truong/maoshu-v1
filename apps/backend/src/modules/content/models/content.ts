@@ -17,6 +17,7 @@ const Content = model.define("content", {
   seo_description: model.text().nullable(),
   metadata: model.json().nullable(),
   is_active: model.boolean().default(true),
+  in_footer: model.boolean().default(false),
 })
 
 export default Content

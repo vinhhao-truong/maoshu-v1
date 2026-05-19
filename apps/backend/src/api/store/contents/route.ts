@@ -5,6 +5,14 @@ import ContentModuleService from "../../../modules/content/service"
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const contentService: ContentModuleService = req.scope.resolve(CONTENT_MODULE)
 
+  if (req.query.in_footer === "true") {
+    const [contents, count] = await contentService.listAndCountContents(
+      { in_footer: true },
+      { skip: 0, take: 100, order: { title: "ASC" } }
+    )
+    return res.json({ contents, count })
+  }
+
   const filters: Record<string, unknown> = {
     status: "published",
     is_active: true,
