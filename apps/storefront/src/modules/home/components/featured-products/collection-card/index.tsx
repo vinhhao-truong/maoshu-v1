@@ -41,9 +41,9 @@ export default async function CollectionCard({
             <LocalizedClientLink
               key={product.id}
               href={`/products/${product.handle}`}
-              className="block border-b border-r border-gray-200 last:border-r-0 [&:nth-child(2)]:border-r-0 hover:opacity-90 transition-opacity pb-2"
+              className="block border-b border-r border-gray-200 [&:nth-child(2n)]:border-r-0 hover:opacity-90 transition-opacity pb-1"
             >
-              <div className="aspect-square overflow-hidden">
+              <div className="aspect-[3/2] overflow-hidden">
                 <Thumbnail
                   thumbnail={product.thumbnail}
                   images={product.images}

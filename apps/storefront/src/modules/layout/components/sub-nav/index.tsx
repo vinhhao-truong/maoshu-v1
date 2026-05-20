@@ -1,8 +1,8 @@
 import { HttpTypes } from "@medusajs/types"
 import { Locale } from "@lib/data/locales"
-import CollectionsDropdown from "./collections-dropdown"
 import CategoriesDropdown from "./categories-dropdown"
 import LocaleDropdown from "./locale-dropdown"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
 function getDescendantIds(
   rootId: string,
@@ -45,9 +45,15 @@ export default function SubNav({ rootCategory, allCategories, collections, local
     <div className="hidden small:block bg-white shadow-sm">
       <div className="content-container h-8 flex items-center justify-between">
         <div className="flex items-center h-full">
-          {filteredCollections.length > 0 && (
-            <CollectionsDropdown collections={filteredCollections} />
-          )}
+          {filteredCollections.map((col) => (
+            <LocalizedClientLink
+              key={col.id}
+              href={`/collections/${col.handle}`}
+              className="h-full px-4 flex items-center text-sm font-medium text-gray-700 hover:bg-primary hover:text-primary-fg transition-colors"
+            >
+              {col.title}
+            </LocalizedClientLink>
+          ))}
           {subcategories.length > 0 && (
             <CategoriesDropdown categories={subcategories} />
           )}

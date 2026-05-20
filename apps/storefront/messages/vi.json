@@ -9,7 +9,7 @@
     "signInTooltip": "Đăng Nhập"
   },
   "footer": {
-    "categories": "Danh mục",
+    "categories": "Sản phẩm",
     "collections": "Bộ sưu tập",
     "storeName": "Maoshu Store",
     "about": "Về Chúng Tôi",
@@ -48,7 +48,7 @@
     "removeConfirmTitle": "Xóa sản phẩm?",
     "removeConfirm": "Xóa",
     "removeCancel": "Giữ lại",
-    "switchCategoryTitle": "Đổi danh mục?",
+    "switchCategoryTitle": "Đổi Shop?",
     "switchCategoryDesc": "Di chuyển sang shop khác sẽ xóa giỏ hàng hiện tại của bạn. Hành động này không thể hoàn tác.",
     "switchCategoryConfirm": "Xóa & Chuyển",
     "switchCategoryCancel": "Giữ Giỏ Hàng",
@@ -227,7 +227,7 @@
     "store": "Cửa Hàng",
     "account": "Tài Khoản",
     "collections": "Bộ Sưu Tập",
-    "categories": "Danh Mục"
+    "categories": "Sản Phẩm"
   },
   "order": {
     "thankYou": "Cảm ơn!",
