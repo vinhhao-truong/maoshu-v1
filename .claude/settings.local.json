@@ -6,7 +6,8 @@
       "Bash(Select-Object FullName)",
       "Bash(xargs grep -l \"image\\\\|media\\\\|storage\\\\|file\")",
       "Bash(npm install *)",
-      "Bash(xargs grep -l \"product.*category\\\\|category\")"
+      "Bash(xargs grep -l \"product.*category\\\\|category\")",
+      "Bash(npx medusa *)"
     ]
   }
 }

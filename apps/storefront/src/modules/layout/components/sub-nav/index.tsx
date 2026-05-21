@@ -58,7 +58,7 @@ export default function SubNav({ rootCategory, allCategories, collections, local
             <CategoriesDropdown categories={subcategories} />
           )}
         </div>
-        {locales.length > 1 && (
+        {false && locales.length > 1 && (
           <LocaleDropdown locales={locales} currentLocale={currentLocale} />
         )}
       </div>

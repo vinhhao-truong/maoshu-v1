@@ -1,0 +1,305 @@
+{
+  "common": {
+    "save": "Lưu",
+    "saveChanges": "Lưu thay đổi",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "cancel": "Hủy",
+    "loading": "Đang tải…",
+    "none": "Không có",
+    "active": "Hoạt động",
+    "noImage": "Chưa có ảnh",
+    "replace": "Thay thế",
+    "upload": "Tải lên",
+    "apply": "Áp dụng",
+    "name": "Tên",
+    "handle": "Handle",
+    "status": "Trạng thái",
+    "type": "Loại"
+  },
+  "brands": {
+    "title": "Thương hiệu",
+    "add": "Thêm thương hiệu",
+    "editTitle": "Sửa thương hiệu",
+    "newTitle": "Thương hiệu mới",
+    "namePlaceholder": "VD: Nike",
+    "handleHint": "Dùng trong URL. Tự động tạo từ tên.",
+    "handlePlaceholder": "VD: nike",
+    "description": "Mô tả",
+    "descriptionPlaceholder": "Mô tả (không bắt buộc)",
+    "logoUrl": "URL logo",
+    "empty": "Chưa có thương hiệu nào. Nhấn \"Thêm thương hiệu\" để bắt đầu.",
+    "deleteConfirm": "Xóa thương hiệu \"{{name}}\"? Không thể hoàn tác.",
+    "toast": {
+      "loadError": "Không thể tải danh sách thương hiệu",
+      "validationError": "Tên và handle là bắt buộc",
+      "created": "Đã tạo thương hiệu",
+      "updated": "Đã cập nhật thương hiệu",
+      "saveError": "Không thể lưu thương hiệu",
+      "deleted": "Đã xóa thương hiệu",
+      "deleteError": "Không thể xóa thương hiệu"
+    }
+  },
+  "productBrand": {
+    "title": "Thương hiệu",
+    "selectPlaceholder": "Chọn thương hiệu…",
+    "toast": {
+      "loadError": "Không thể tải dữ liệu thương hiệu",
+      "updated": "Đã cập nhật thương hiệu",
+      "updateError": "Không thể cập nhật thương hiệu"
+    }
+  },
+  "bulkActions": {
+    "downloadTemplate": "Tải mẫu nhập hàng",
+    "import": "Nhập sản phẩm",
+    "export": "Xuất sản phẩm",
+    "deleteSelected": "Xóa đã chọn",
+    "deleteAll": "Xóa tất cả sản phẩm",
+    "confirmDeleteAll": "Xác nhận xóa tất cả?",
+    "cancelLink": "Hủy",
+    "modal": {
+      "title": "Xóa sản phẩm đã chọn",
+      "loadingProducts": "Đang tải sản phẩm…",
+      "noProducts": "Không có sản phẩm nào.",
+      "selectAll": "Chọn tất cả ({{count}})",
+      "selectedCount": "Đã chọn {{count}}",
+      "delete": "Xóa",
+      "deleteWithCount": "Xóa ({{count}})"
+    },
+    "toast": {
+      "loadError": "Không thể tải sản phẩm",
+      "importSuccess": "Đã nhập: {{created}} tạo mới, {{updated}} cập nhật",
+      "importSuccessWithErrors": "Đã nhập: {{created}} tạo mới, {{updated}} cập nhật, {{errors}} lỗi",
+      "importError": "Nhập thất bại",
+      "deletePartialError": "Không thể xóa {{count}} sản phẩm.",
+      "deleteAllSuccess": "Đã xóa tất cả {{count}} sản phẩm.",
+      "deleteSomeSuccess": "Đã xóa {{count}} sản phẩm.",
+      "fetchError": "Không thể tải sản phẩm."
+    }
+  },
+  "collectionImages": {
+    "title": "Ảnh bộ sưu tập",
+    "horizontalImage": "Ảnh ngang",
+    "verticalImage": "Ảnh dọc",
+    "toast": {
+      "horizontalSaved": "Đã lưu ảnh ngang",
+      "verticalSaved": "Đã lưu ảnh dọc",
+      "uploadError": "Tải lên thất bại"
+    }
+  },
+  "categoryColorGroup": {
+    "title": "Nhóm màu",
+    "selectPlaceholder": "Chọn nhóm màu…",
+    "toast": {
+      "loadError": "Không thể tải nhóm màu",
+      "saved": "Đã lưu nhóm màu",
+      "saveError": "Không thể lưu nhóm màu"
+    }
+  },
+  "variantCosts": {
+    "title": "Giá vốn biến thể",
+    "noVariants": "Không có biến thể.",
+    "toast": {
+      "loadError": "Không thể tải giá vốn: {{message}}",
+      "saved": "Đã lưu giá vốn",
+      "saveError": "Không thể lưu: {{message}}"
+    }
+  },
+  "categoryImages": {
+    "title": "Ảnh danh mục",
+    "horizontalImage": "Ảnh ngang",
+    "verticalImage": "Ảnh dọc",
+    "logo": "Logo",
+    "toast": {
+      "horizontalSaved": "Đã lưu ảnh ngang",
+      "verticalSaved": "Đã lưu ảnh dọc",
+      "logoSaved": "Đã lưu ảnh logo",
+      "uploadError": "Tải lên thất bại"
+    }
+  },
+  "systemColors": {
+    "title": "Màu hệ thống",
+    "add": "Thêm màu",
+    "editTitle": "Sửa màu",
+    "newTitle": "Màu mới",
+    "hex": "Mã hex",
+    "color": "Màu",
+    "empty": "Chưa có màu nào. Nhấn \"Thêm màu\" để bắt đầu.",
+    "deleteConfirm": "Xóa \"{{name}}\"? Không thể hoàn tác.",
+    "toast": {
+      "loadError": "Không thể tải danh sách màu",
+      "validationError": "Tên và mã hex là bắt buộc",
+      "created": "Đã tạo màu",
+      "updated": "Đã cập nhật màu",
+      "saveError": "Không thể lưu màu",
+      "deleted": "Đã xóa màu",
+      "deleteError": "Không thể xóa màu"
+    }
+  },
+  "colorGroups": {
+    "title": "Nhóm màu",
+    "add": "Thêm nhóm",
+    "editTitle": "Sửa nhóm màu",
+    "newTitle": "Nhóm màu mới",
+    "empty": "Chưa có nhóm màu nào. Nhấn \"Thêm nhóm\" để bắt đầu.",
+    "deleteConfirm": "Xóa \"{{name}}\"? Không thể hoàn tác.",
+    "roles": {
+      "primary": "Chính",
+      "secondary": "Phụ",
+      "inverse": "Đảo ngược",
+      "neutral": "Trung tính",
+      "success": "Thành công",
+      "warning": "Cảnh báo",
+      "danger": "Nguy hiểm",
+      "info": "Thông tin"
+    },
+    "toast": {
+      "loadError": "Không thể tải dữ liệu",
+      "validationError": "Tên là bắt buộc",
+      "created": "Đã tạo nhóm màu",
+      "updated": "Đã cập nhật nhóm màu",
+      "saveError": "Không thể lưu nhóm màu",
+      "deleted": "Đã xóa nhóm màu",
+      "deleteError": "Không thể xóa nhóm màu"
+    }
+  },
+  "businessInfo": {
+    "title": "Thông tin doanh nghiệp",
+    "subtitle": "Hiển thị trên cửa hàng — footer, trang liên hệ, hóa đơn và nhiều nơi khác.",
+    "sections": {
+      "brand": "Thương hiệu",
+      "contact": "Liên hệ",
+      "address": "Địa chỉ",
+      "socialMedia": "Mạng xã hội",
+      "aboutUs": "Về chúng tôi",
+      "other": "Khác"
+    },
+    "fields": {
+      "logo": "Logo",
+      "logoHint": "Hiển thị ở header và footer",
+      "storeName": "Tên cửa hàng *",
+      "tagline": "Khẩu hiệu",
+      "taglineHint": "Mô tả ngắn hiển thị dưới logo hoặc trên banner",
+      "email": "Email",
+      "phone": "Số điện thoại",
+      "addressLine1": "Địa chỉ dòng 1",
+      "addressLine2": "Địa chỉ dòng 2",
+      "cityStatePostal": "Thành phố / Tỉnh / Mã bưu điện",
+      "country": "Quốc gia",
+      "businessHours": "Giờ làm việc",
+      "businessHoursHint": "Văn bản tự do — VD: Thứ 2–6 9:00–18:00",
+      "taxId": "Mã số thuế / Mã đăng ký kinh doanh",
+      "aboutUsHint": "Nội dung văn bản phong phú hiển thị trên trang Về chúng tôi."
+    },
+    "logo": {
+      "clickToUpload": "Nhấn để tải lên",
+      "replaceLogo": "Thay logo",
+      "uploadLogo": "Tải logo lên"
+    },
+    "placeholders": {
+      "storeName": "VD: Maoshu Store",
+      "tagline": "VD: Thực phẩm tươi, giao hàng nhanh",
+      "email": "hello@yourstore.com",
+      "phone": "+84 xxx xxx xxx",
+      "addressLine1": "Địa chỉ đường phố",
+      "addressLine2": "Căn hộ, tòa nhà (không bắt buộc)",
+      "city": "Thành phố",
+      "state": "Tỉnh / Thành",
+      "postalCode": "Mã bưu điện",
+      "country": "VD: Việt Nam",
+      "taxId": "VD: MST 0123456789"
+    },
+    "toast": {
+      "loadError": "Không thể tải thông tin doanh nghiệp",
+      "validationError": "Tên cửa hàng là bắt buộc",
+      "saved": "Đã lưu thông tin doanh nghiệp",
+      "saveError": "Không thể lưu",
+      "uploadError": "Tải lên thất bại"
+    }
+  },
+  "contents": {
+    "title": "Nội dung",
+    "add": "Thêm nội dung",
+    "editTitle": "Sửa nội dung",
+    "newTitle": "Nội dung mới",
+    "filters": {
+      "type": "Loại",
+      "status": "Trạng thái",
+      "allTypes": "Tất cả loại",
+      "allStatuses": "Tất cả trạng thái",
+      "showing": "{{filtered}} / {{total}}"
+    },
+    "types": {
+      "news": "Tin tức",
+      "terms": "Điều khoản & Điều kiện",
+      "privacy": "Chính sách bảo mật",
+      "return_policy": "Chính sách hoàn trả",
+      "faq": "Câu hỏi thường gặp",
+      "announcement": "Thông báo"
+    },
+    "statuses": {
+      "draft": "Nháp",
+      "published": "Đã xuất bản",
+      "archived": "Đã lưu trữ"
+    },
+    "empty": "Chưa có nội dung nào. Nhấn \"Thêm nội dung\" để bắt đầu.",
+    "emptyFiltered": "Không có nội dung phù hợp với bộ lọc hiện tại.",
+    "deleteConfirm": "Xóa \"{{title}}\"? Không thể hoàn tác.",
+    "table": {
+      "title": "Tiêu đề",
+      "type": "Loại",
+      "status": "Trạng thái",
+      "published": "Ngày xuất bản",
+      "active": "Hoạt động"
+    },
+    "form": {
+      "basicInfo": "Thông tin cơ bản",
+      "content": "Nội dung",
+      "mediaAuthor": "Media & Tác giả",
+      "seo": "SEO",
+      "title": "Tiêu đề *",
+      "handle": "Handle *",
+      "handleHint": "Dùng trong URL. Tự động tạo từ tiêu đề.",
+      "type": "Loại *",
+      "status": "Trạng thái",
+      "active": "Hoạt động",
+      "showInFooter": "Hiển thị ở Footer",
+      "showInFooterHint": "Hiển thị nội dung này dưới dạng link trong footer cửa hàng",
+      "excerpt": "Tóm tắt",
+      "excerptPlaceholder": "Tóm tắt ngắn hiển thị trong danh sách và xem trước",
+      "body": "Nội dung",
+      "thumbnail": "Ảnh đại diện",
+      "author": "Tác giả",
+      "authorPlaceholder": "Tên tác giả",
+      "publishDate": "Ngày xuất bản",
+      "seoTitle": "Tiêu đề SEO",
+      "seoTitlePlaceholder": "Ghi đè cho tab trình duyệt / kết quả tìm kiếm",
+      "seoDescription": "Mô tả SEO",
+      "seoDescriptionPlaceholder": "Meta description hiển thị trong kết quả tìm kiếm",
+      "titlePlaceholder": "VD: Chính sách bảo mật",
+      "handlePlaceholder": "VD: chinh-sach-bao-mat"
+    },
+    "thumbnail": {
+      "clickToUpload": "Nhấn để tải ảnh đại diện",
+      "formats": "PNG, JPG, WEBP",
+      "replace": "Thay ảnh",
+      "upload": "Tải ảnh lên"
+    },
+    "editor": {
+      "enterUrl": "Nhập URL",
+      "urlPlaceholder": "https://…",
+      "apply": "Áp dụng",
+      "cancel": "Hủy"
+    },
+    "toast": {
+      "loadError": "Không thể tải nội dung",
+      "validationError": "Tiêu đề, handle và loại là bắt buộc",
+      "created": "Đã tạo nội dung",
+      "updated": "Đã cập nhật nội dung",
+      "saveError": "Không thể lưu nội dung",
+      "deleted": "Đã xóa nội dung",
+      "deleteError": "Không thể xóa nội dung",
+      "uploadError": "Tải lên thất bại"
+    }
+  }
+}

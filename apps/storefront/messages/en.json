@@ -229,6 +229,12 @@
     "collections": "Collections",
     "categories": "Categories"
   },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you tried to access does not exist.",
+    "cartDescription": "The cart you tried to access does not exist. Clear your cookies and try again.",
+    "goToFrontpage": "Go to frontpage"
+  },
   "order": {
     "thankYou": "Thank you!",
     "orderPlaced": "Your order was placed successfully.",
@@ -236,5 +242,11 @@
     "needHelp": "Need help?",
     "contact": "Contact",
     "returnsExchanges": "Returns & Exchanges"
+  },
+  "aboutUs": {
+    "breadcrumbHome": "Home",
+    "breadcrumbCurrent": "About Us",
+    "title": "About Us",
+    "comingSoon": "Coming soon."
   }
 }

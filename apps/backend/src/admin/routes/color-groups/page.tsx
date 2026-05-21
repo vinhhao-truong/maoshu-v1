@@ -11,6 +11,7 @@ import {
   toast,
 } from "@medusajs/ui"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 type SystemColor = { id: string; name: string; hex: string }
 
@@ -38,17 +39,6 @@ const COLOR_ROLES = [
   "info",
 ] as const
 type ColorRole = (typeof COLOR_ROLES)[number]
-
-const ROLE_LABELS: Record<ColorRole, string> = {
-  primary: "Primary",
-  secondary: "Secondary",
-  inverse: "Inverse",
-  neutral: "Neutral",
-  success: "Success",
-  warning: "Warning",
-  danger: "Danger",
-  info: "Info",
-}
 
 const BACKEND_URL =
   (import.meta as any).env?.VITE_MEDUSA_BACKEND_URL ?? "http://localhost:9000"
@@ -102,6 +92,7 @@ function GroupFormModal({
   onClose: () => void
   onSaved: () => void
 }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState<GroupForm>(
     group
       ? {
@@ -121,7 +112,7 @@ function GroupFormModal({
 
   const handleSubmit = async () => {
     if (!form.name.trim()) {
-      toast.error("Name is required")
+      toast.error(t("colorGroups.toast.validationError"))
       return
     }
     setSaving(true)
@@ -137,18 +128,18 @@ function GroupFormModal({
           method: "POST",
           body: JSON.stringify(payload),
         })
-        toast.success("Color group updated")
+        toast.success(t("colorGroups.toast.updated"))
       } else {
         await adminFetch("/admin/color-groups", {
           method: "POST",
           body: JSON.stringify(payload),
         })
-        toast.success("Color group created")
+        toast.success(t("colorGroups.toast.created"))
       }
       onSaved()
       onClose()
     } catch {
-      toast.error("Failed to save color group")
+      toast.error(t("colorGroups.toast.saveError"))
     } finally {
       setSaving(false)
     }
@@ -159,15 +150,15 @@ function GroupFormModal({
       <FocusModal.Content>
         <FocusModal.Header>
           <Button onClick={handleSubmit} isLoading={saving}>
-            Save
+            {t("common.save")}
           </Button>
         </FocusModal.Header>
         <FocusModal.Body className="flex flex-col items-center py-10">
           <div className="flex w-full max-w-lg flex-col gap-y-6">
-            <Heading>{group ? "Edit Color Group" : "New Color Group"}</Heading>
+            <Heading>{group ? t("colorGroups.editTitle") : t("colorGroups.newTitle")}</Heading>
 
             <div className="flex flex-col gap-y-2">
-              <Label>Name *</Label>
+              <Label>{t("common.name")} *</Label>
               <Input
                 value={form.name}
                 onChange={(e) =>
@@ -179,7 +170,7 @@ function GroupFormModal({
 
             {COLOR_ROLES.map((role) => (
               <div key={role} className="flex flex-col gap-y-2">
-                <Label>{ROLE_LABELS[role]}</Label>
+                <Label>{t(`colorGroups.roles.${role}`)}</Label>
                 <Select
                   value={form[role] || "__none__"}
                   onValueChange={(val) =>
@@ -187,10 +178,10 @@ function GroupFormModal({
                   }
                 >
                   <Select.Trigger>
-                    <Select.Value placeholder="None" />
+                    <Select.Value placeholder={t("common.none")} />
                   </Select.Trigger>
                   <Select.Content>
-                    <Select.Item value="__none__">None</Select.Item>
+                    <Select.Item value="__none__">{t("common.none")}</Select.Item>
                     {systemColors.map((c) => (
                       <Select.Item key={c.id} value={c.id}>
                         <div className="flex items-center gap-x-2">
@@ -217,6 +208,7 @@ function GroupFormModal({
 }
 
 const ColorGroupsPage = () => {
+  const { t } = useTranslation()
   const [groups, setGroups] = useState<ColorGroup[]>([])
   const [systemColors, setSystemColors] = useState<SystemColor[]>([])
   const [loading, setLoading] = useState(true)
@@ -236,45 +228,43 @@ const ColorGroupsPage = () => {
         setGroups(groupsData.color_groups ?? [])
         setSystemColors(colorsData.system_colors ?? [])
       })
-      .catch(() => toast.error("Failed to load data"))
+      .catch(() => toast.error(t("colorGroups.toast.loadError")))
       .finally(() => setLoading(false))
   }
 
   useEffect(() => { load() }, [])
 
   const handleDelete = async (group: ColorGroup) => {
-    if (!confirm(`Delete "${group.name}"? This cannot be undone.`)) return
+    if (!confirm(t("colorGroups.deleteConfirm", { name: group.name }))) return
     try {
       await adminFetch(`/admin/color-groups/${group.id}`, { method: "DELETE" })
-      toast.success("Color group deleted")
+      toast.success(t("colorGroups.toast.deleted"))
       load()
     } catch {
-      toast.error("Failed to delete color group")
+      toast.error(t("colorGroups.toast.deleteError"))
     }
   }
 
   return (
     <Container className="p-0">
       <div className="flex items-center justify-between border-b px-6 py-4">
-        <Heading>Color Groups</Heading>
+        <Heading>{t("colorGroups.title")}</Heading>
         <Button size="small" onClick={() => setEditTarget("new")}>
-          Add Group
+          {t("colorGroups.add")}
         </Button>
       </div>
 
       {loading ? (
-        <p className="px-6 py-4 text-ui-fg-muted">Loading…</p>
+        <p className="px-6 py-4 text-ui-fg-muted">{t("common.loading")}</p>
       ) : groups.length === 0 ? (
-        <p className="px-6 py-4 text-ui-fg-muted">
-          No color groups yet. Click "Add Group" to get started.
-        </p>
+        <p className="px-6 py-4 text-ui-fg-muted">{t("colorGroups.empty")}</p>
       ) : (
         <Table>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Name</Table.HeaderCell>
+              <Table.HeaderCell>{t("common.name")}</Table.HeaderCell>
               {COLOR_ROLES.map((r) => (
-                <Table.HeaderCell key={r}>{ROLE_LABELS[r]}</Table.HeaderCell>
+                <Table.HeaderCell key={r}>{t(`colorGroups.roles.${r}`)}</Table.HeaderCell>
               ))}
               <Table.HeaderCell />
             </Table.Row>
@@ -295,14 +285,14 @@ const ColorGroupsPage = () => {
                       variant="secondary"
                       onClick={() => setEditTarget(group)}
                     >
-                      Edit
+                      {t("common.edit")}
                     </Button>
                     <Button
                       size="small"
                       variant="danger"
                       onClick={() => handleDelete(group)}
                     >
-                      Delete
+                      {t("common.delete")}
                     </Button>
                   </div>
                 </Table.Cell>

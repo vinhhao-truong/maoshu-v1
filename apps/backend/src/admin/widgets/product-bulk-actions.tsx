@@ -1,6 +1,7 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk"
 import { Button, Checkbox, toast } from "@medusajs/ui"
 import { useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 type Product = {
   id: string
@@ -47,6 +48,7 @@ async function deleteProduct(id: string) {
 // ── Modal ────────────────────────────────────────────────────────────────────
 
 function BulkDeleteModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation()
   const [products, setProducts] = useState<Product[]>([])
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
@@ -55,7 +57,7 @@ function BulkDeleteModal({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     fetchAllProducts()
       .then(setProducts)
-      .catch(() => toast.error("Failed to load products"))
+      .catch(() => toast.error(t("bulkActions.toast.loadError")))
       .finally(() => setLoading(false))
   }, [])
 
@@ -88,9 +90,9 @@ function BulkDeleteModal({ onClose }: { onClose: () => void }) {
     }
     setDeleting(false)
     if (failed > 0) {
-      toast.error(`${failed} product(s) could not be deleted.`)
+      toast.error(t("bulkActions.toast.deletePartialError", { count: failed }))
     } else {
-      toast.success(`${selected.size} product(s) deleted.`)
+      toast.success(t("bulkActions.toast.deleteSomeSuccess", { count: selected.size }))
     }
     onClose()
     window.location.reload()
@@ -100,7 +102,7 @@ function BulkDeleteModal({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg flex flex-col max-h-[80vh]">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-          <h2 className="text-base font-semibold">Delete Selected Products</h2>
+          <h2 className="text-base font-semibold">{t("bulkActions.modal.title")}</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 text-xl leading-none"
@@ -111,9 +113,9 @@ function BulkDeleteModal({ onClose }: { onClose: () => void }) {
 
         <div className="overflow-y-auto flex-1 px-6 py-2">
           {loading ? (
-            <p className="py-8 text-center text-sm text-gray-500">Loading products…</p>
+            <p className="py-8 text-center text-sm text-gray-500">{t("bulkActions.modal.loadingProducts")}</p>
           ) : products.length === 0 ? (
-            <p className="py-8 text-center text-sm text-gray-500">No products found.</p>
+            <p className="py-8 text-center text-sm text-gray-500">{t("bulkActions.modal.noProducts")}</p>
           ) : (
             <>
               <div className="flex items-center gap-3 py-3 border-b border-gray-100 sticky top-0 bg-white">
@@ -123,7 +125,7 @@ function BulkDeleteModal({ onClose }: { onClose: () => void }) {
                   id="select-all"
                 />
                 <label htmlFor="select-all" className="text-sm text-gray-600 cursor-pointer select-none">
-                  Select all ({products.length})
+                  {t("bulkActions.modal.selectAll", { count: products.length })}
                 </label>
               </div>
               <ul className="divide-y divide-gray-100">
@@ -155,11 +157,11 @@ function BulkDeleteModal({ onClose }: { onClose: () => void }) {
 
         <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between gap-3">
           <span className="text-sm text-gray-500">
-            {selected.size} selected
+            {t("bulkActions.modal.selectedCount", { count: selected.size })}
           </span>
           <div className="flex gap-2">
             <Button variant="secondary" onClick={onClose} disabled={deleting}>
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               variant="danger"
@@ -167,7 +169,9 @@ function BulkDeleteModal({ onClose }: { onClose: () => void }) {
               disabled={selected.size === 0 || deleting}
               isLoading={deleting}
             >
-              Delete {selected.size > 0 ? `(${selected.size})` : ""}
+              {selected.size > 0
+                ? t("bulkActions.modal.deleteWithCount", { count: selected.size })
+                : t("bulkActions.modal.delete")}
             </Button>
           </div>
         </div>
@@ -179,6 +183,7 @@ function BulkDeleteModal({ onClose }: { onClose: () => void }) {
 // ── Widget ───────────────────────────────────────────────────────────────────
 
 const ProductBulkActionsWidget = () => {
+  const { t } = useTranslation()
   const [showModal, setShowModal] = useState(false)
   const [deletingAll, setDeletingAll] = useState(false)
   const [confirmAll, setConfirmAll] = useState(false)
@@ -201,11 +206,22 @@ const ProductBulkActionsWidget = () => {
         body: form,
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.message ?? "Import failed")
-      toast.success(`Imported: ${data.created} created, ${data.updated} updated${data.errors?.length ? `, ${data.errors.length} errors` : ""}`)
+      if (!res.ok) throw new Error(data.message ?? t("bulkActions.toast.importError"))
+      if (data.errors?.length) {
+        toast.success(t("bulkActions.toast.importSuccessWithErrors", {
+          created: data.created,
+          updated: data.updated,
+          errors: data.errors.length,
+        }))
+      } else {
+        toast.success(t("bulkActions.toast.importSuccess", {
+          created: data.created,
+          updated: data.updated,
+        }))
+      }
       window.location.reload()
     } catch (err: any) {
-      toast.error(err.message ?? "Import failed")
+      toast.error(err.message ?? t("bulkActions.toast.importError"))
     } finally {
       setImporting(false)
     }
@@ -228,13 +244,13 @@ const ProductBulkActionsWidget = () => {
         }
       }
       if (failed > 0) {
-        toast.error(`${failed} product(s) could not be deleted.`)
+        toast.error(t("bulkActions.toast.deletePartialError", { count: failed }))
       } else {
-        toast.success(`All ${products.length} product(s) deleted.`)
+        toast.success(t("bulkActions.toast.deleteAllSuccess", { count: products.length }))
       }
       window.location.reload()
     } catch {
-      toast.error("Failed to fetch products.")
+      toast.error(t("bulkActions.toast.fetchError"))
     } finally {
       setDeletingAll(false)
       setConfirmAll(false)
@@ -265,7 +281,7 @@ const ProductBulkActionsWidget = () => {
           size="small"
           onClick={downloadTemplate}
         >
-          Download Import Template
+          {t("bulkActions.downloadTemplate")}
         </Button>
 
         <Button
@@ -274,7 +290,7 @@ const ProductBulkActionsWidget = () => {
           onClick={() => fileInputRef.current?.click()}
           isLoading={importing}
         >
-          Import Products
+          {t("bulkActions.import")}
         </Button>
 
         <Button
@@ -282,7 +298,7 @@ const ProductBulkActionsWidget = () => {
           size="small"
           onClick={exportProducts}
         >
-          Export Products
+          {t("bulkActions.export")}
         </Button>
 
         <Button
@@ -290,7 +306,7 @@ const ProductBulkActionsWidget = () => {
           size="small"
           onClick={() => setShowModal(true)}
         >
-          Delete Selected
+          {t("bulkActions.deleteSelected")}
         </Button>
 
         <Button
@@ -299,7 +315,7 @@ const ProductBulkActionsWidget = () => {
           onClick={handleDeleteAll}
           isLoading={deletingAll}
         >
-          {confirmAll ? "Confirm Delete All?" : "Delete All Products"}
+          {confirmAll ? t("bulkActions.confirmDeleteAll") : t("bulkActions.deleteAll")}
         </Button>
 
         {confirmAll && !deletingAll && (
@@ -307,7 +323,7 @@ const ProductBulkActionsWidget = () => {
             onClick={() => setConfirmAll(false)}
             className="text-xs text-gray-500 hover:text-gray-700 underline"
           >
-            Cancel
+            {t("bulkActions.cancelLink")}
           </button>
         )}
       </div>

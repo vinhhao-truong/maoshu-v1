@@ -9,7 +9,12 @@ import {
   Textarea,
   toast,
 } from "@medusajs/ui"
+import { useEditor, EditorContent } from "@tiptap/react"
+import StarterKit from "@tiptap/starter-kit"
+import Underline from "@tiptap/extension-underline"
+import Link from "@tiptap/extension-link"
 import { useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 type BusinessInfo = {
   id?: string
@@ -29,6 +34,8 @@ type BusinessInfo = {
   twitter_url: string
   tiktok_url: string
   youtube_url: string
+  zalo_url: string
+  about_us: string
   business_hours: string
   tax_id: string
 }
@@ -84,6 +91,8 @@ const empty = (): BusinessInfo => ({
   twitter_url: "",
   tiktok_url: "",
   youtube_url: "",
+  zalo_url: "",
+  about_us: "",
   business_hours: "",
   tax_id: "",
 })
@@ -125,7 +134,157 @@ function Field({
   )
 }
 
+type ToolbarButtonProps = {
+  onClick: () => void
+  active?: boolean
+  children: React.ReactNode
+  title?: string
+}
+
+function ToolbarButton({ onClick, active, children, title }: ToolbarButtonProps) {
+  return (
+    <button
+      type="button"
+      title={title}
+      onMouseDown={(e) => {
+        e.preventDefault()
+        onClick()
+      }}
+      className={[
+        "flex h-7 min-w-[28px] items-center justify-center rounded px-1.5 text-sm font-medium transition-colors",
+        active
+          ? "bg-ui-bg-interactive text-ui-fg-on-color"
+          : "text-ui-fg-subtle hover:bg-ui-bg-subtle hover:text-ui-fg-base",
+      ].join(" ")}
+    >
+      {children}
+    </button>
+  )
+}
+
+function RichTextEditor({
+  value,
+  onChange,
+}: {
+  value: string
+  onChange: (html: string) => void
+}) {
+  const { t } = useTranslation()
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      Link.configure({ openOnClick: false }),
+    ],
+    content: value || "",
+    onUpdate({ editor }) {
+      onChange(editor.getHTML())
+    },
+  })
+
+  // Sync initial value when loaded from server
+  useEffect(() => {
+    if (editor && value && editor.isEmpty) {
+      editor.commands.setContent(value)
+    }
+  }, [editor, value])
+
+  if (!editor) return null
+
+  return (
+    <div className="overflow-hidden rounded-lg border border-ui-border-base bg-ui-bg-base">
+      {/* Toolbar */}
+      <div className="flex flex-wrap items-center gap-0.5 border-b border-ui-border-base px-2 py-1.5">
+        <ToolbarButton
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          active={editor.isActive("bold")}
+          title="Bold"
+        >
+          <strong>B</strong>
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          active={editor.isActive("italic")}
+          title="Italic"
+        >
+          <em>I</em>
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          active={editor.isActive("underline")}
+          title="Underline"
+        >
+          <span className="underline">U</span>
+        </ToolbarButton>
+        <div className="mx-1 h-4 w-px bg-ui-border-base" />
+        <ToolbarButton
+          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+          active={editor.isActive("heading", { level: 2 })}
+          title="Heading 2"
+        >
+          H2
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+          active={editor.isActive("heading", { level: 3 })}
+          title="Heading 3"
+        >
+          H3
+        </ToolbarButton>
+        <div className="mx-1 h-4 w-px bg-ui-border-base" />
+        <ToolbarButton
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          active={editor.isActive("bulletList")}
+          title="Bullet list"
+        >
+          • List
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          active={editor.isActive("orderedList")}
+          title="Ordered list"
+        >
+          1. List
+        </ToolbarButton>
+        <div className="mx-1 h-4 w-px bg-ui-border-base" />
+        <ToolbarButton
+          onClick={() => {
+            const url = window.prompt(t("contents.editor.enterUrl"))
+            if (url) editor.chain().focus().setLink({ href: url }).run()
+            else editor.chain().focus().unsetLink().run()
+          }}
+          active={editor.isActive("link")}
+          title="Link"
+        >
+          Link
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          active={editor.isActive("blockquote")}
+          title="Blockquote"
+        >
+          " "
+        </ToolbarButton>
+        <div className="ml-auto">
+          <ToolbarButton
+            onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
+            title="Clear formatting"
+          >
+            Clear
+          </ToolbarButton>
+        </div>
+      </div>
+      {/* Editor area */}
+      <EditorContent
+        editor={editor}
+        className="prose prose-sm min-h-[200px] max-w-none px-4 py-3 text-ui-fg-base focus-within:outline-none [&_.ProseMirror]:min-h-[180px] [&_.ProseMirror]:outline-none"
+      />
+    </div>
+  )
+}
+
 const BusinessInfoPage = () => {
+  const { t } = useTranslation()
   const [form, setForm] = useState<BusinessInfo>(empty())
   const [existingId, setExistingId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -159,12 +318,14 @@ const BusinessInfoPage = () => {
             twitter_url: b.twitter_url ?? "",
             tiktok_url: b.tiktok_url ?? "",
             youtube_url: b.youtube_url ?? "",
+            zalo_url: b.zalo_url ?? "",
+            about_us: b.about_us ?? "",
             business_hours: b.business_hours ?? "",
             tax_id: b.tax_id ?? "",
           })
         }
       })
-      .catch(() => toast.error("Failed to load business info"))
+      .catch(() => toast.error(t("businessInfo.toast.loadError")))
       .finally(() => setLoading(false))
   }, [])
 
@@ -174,7 +335,7 @@ const BusinessInfoPage = () => {
       const url = await uploadFile(file)
       setForm((f) => ({ ...f, logo_url: url }))
     } catch (e: any) {
-      toast.error(e?.message ?? "Upload failed")
+      toast.error(e?.message ?? t("businessInfo.toast.uploadError"))
     } finally {
       setUploading(false)
     }
@@ -182,7 +343,7 @@ const BusinessInfoPage = () => {
 
   const handleSave = async () => {
     if (!form.store_name.trim()) {
-      toast.error("Store name is required")
+      toast.error(t("businessInfo.toast.validationError"))
       return
     }
     setSaving(true)
@@ -192,14 +353,16 @@ const BusinessInfoPage = () => {
         payload[k] = (v as string).trim() || null
       }
       payload.store_name = form.store_name.trim()
+      // about_us is HTML — preserve as-is (don't trim to null)
+      payload.about_us = form.about_us || null
 
       await adminFetch("/admin/business-info", {
         method: "POST",
         body: JSON.stringify(payload),
       })
-      toast.success("Business info saved")
+      toast.success(t("businessInfo.toast.saved"))
     } catch (e: any) {
-      toast.error(e?.message ?? "Failed to save")
+      toast.error(e?.message ?? t("businessInfo.toast.saveError"))
     } finally {
       setSaving(false)
     }
@@ -208,7 +371,7 @@ const BusinessInfoPage = () => {
   if (loading) {
     return (
       <Container>
-        <p className="text-ui-fg-muted p-6">Loading…</p>
+        <p className="text-ui-fg-muted p-6">{t("common.loading")}</p>
       </Container>
     )
   }
@@ -218,19 +381,19 @@ const BusinessInfoPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between rounded-lg border border-ui-border-base bg-ui-bg-base px-6 py-4">
         <div>
-          <Heading>Business Info</Heading>
+          <Heading>{t("businessInfo.title")}</Heading>
           <Text size="small" className="text-ui-fg-subtle mt-1">
-            Used across the storefront — footer, contact page, receipts, and more.
+            {t("businessInfo.subtitle")}
           </Text>
         </div>
         <Button onClick={handleSave} isLoading={saving}>
-          Save changes
+          {t("common.saveChanges")}
         </Button>
       </div>
 
       {/* Brand */}
-      <Section title="Brand">
-        <Field label="Logo" hint="Shown in the header and footer">
+      <Section title={t("businessInfo.sections.brand")}>
+        <Field label={t("businessInfo.fields.logo")} hint={t("businessInfo.fields.logoHint")}>
           <div className="flex flex-col gap-y-3">
             {form.logo_url ? (
               <div className="relative w-fit overflow-hidden rounded-lg border border-ui-border-base bg-ui-bg-subtle p-3">
@@ -252,7 +415,9 @@ const BusinessInfoPage = () => {
                 className="flex h-20 w-48 cursor-pointer flex-col items-center justify-center gap-y-1 rounded-lg border border-dashed border-ui-border-base bg-ui-bg-subtle hover:bg-ui-bg-base"
                 onClick={() => logoInputRef.current?.click()}
               >
-                <Text size="small" className="text-ui-fg-muted">Click to upload</Text>
+                <Text size="small" className="text-ui-fg-muted">
+                  {t("businessInfo.logo.clickToUpload")}
+                </Text>
               </div>
             )}
             <input
@@ -273,84 +438,84 @@ const BusinessInfoPage = () => {
               onClick={() => logoInputRef.current?.click()}
               className="w-fit"
             >
-              {form.logo_url ? "Replace logo" : "Upload logo"}
+              {form.logo_url ? t("businessInfo.logo.replaceLogo") : t("businessInfo.logo.uploadLogo")}
             </Button>
           </div>
         </Field>
 
-        <Field label="Store name *">
+        <Field label={t("businessInfo.fields.storeName")}>
           <Input
             value={form.store_name}
             onChange={(e) => set("store_name")(e.target.value)}
-            placeholder="e.g. Maoshu Store"
+            placeholder={t("businessInfo.placeholders.storeName")}
           />
         </Field>
 
-        <Field label="Tagline" hint="Short description shown under the logo or in the hero">
+        <Field label={t("businessInfo.fields.tagline")} hint={t("businessInfo.fields.taglineHint")}>
           <Input
             value={form.tagline}
             onChange={(e) => set("tagline")(e.target.value)}
-            placeholder="e.g. Fresh groceries, delivered fast"
+            placeholder={t("businessInfo.placeholders.tagline")}
           />
         </Field>
       </Section>
 
       {/* Contact */}
-      <Section title="Contact">
-        <Field label="Email">
+      <Section title={t("businessInfo.sections.contact")}>
+        <Field label={t("businessInfo.fields.email")}>
           <Input
             type="email"
             value={form.email}
             onChange={(e) => set("email")(e.target.value)}
-            placeholder="hello@yourstore.com"
+            placeholder={t("businessInfo.placeholders.email")}
           />
         </Field>
-        <Field label="Phone">
+        <Field label={t("businessInfo.fields.phone")}>
           <Input
             value={form.phone}
             onChange={(e) => set("phone")(e.target.value)}
-            placeholder="+84 xxx xxx xxx"
+            placeholder={t("businessInfo.placeholders.phone")}
           />
         </Field>
       </Section>
 
       {/* Address */}
-      <Section title="Address">
-        <Field label="Address line 1">
+      <Section title={t("businessInfo.sections.address")}>
+        <Field label={t("businessInfo.fields.addressLine1")}>
           <Input
             value={form.address_line1}
             onChange={(e) => set("address_line1")(e.target.value)}
-            placeholder="Street address"
+            placeholder={t("businessInfo.placeholders.addressLine1")}
           />
         </Field>
-        <Field label="Address line 2">
+        <Field label={t("businessInfo.fields.addressLine2")}>
           <Input
             value={form.address_line2}
             onChange={(e) => set("address_line2")(e.target.value)}
-            placeholder="Apartment, suite, unit (optional)"
+            placeholder={t("businessInfo.placeholders.addressLine2")}
           />
         </Field>
         <div className="grid grid-cols-[200px_1fr] items-start gap-x-6">
           <div className="pt-2">
-            <Label>City / State / Postal</Label>
+            <Label>{t("businessInfo.fields.cityStatePostal")}</Label>
           </div>
           <div className="grid grid-cols-3 gap-x-3">
-            <Input value={form.city} onChange={(e) => set("city")(e.target.value)} placeholder="City" />
-            <Input value={form.state} onChange={(e) => set("state")(e.target.value)} placeholder="State / Province" />
-            <Input value={form.postal_code} onChange={(e) => set("postal_code")(e.target.value)} placeholder="Postal code" />
+            <Input value={form.city} onChange={(e) => set("city")(e.target.value)} placeholder={t("businessInfo.placeholders.city")} />
+            <Input value={form.state} onChange={(e) => set("state")(e.target.value)} placeholder={t("businessInfo.placeholders.state")} />
+            <Input value={form.postal_code} onChange={(e) => set("postal_code")(e.target.value)} placeholder={t("businessInfo.placeholders.postalCode")} />
           </div>
         </div>
-        <Field label="Country">
+        <Field label={t("businessInfo.fields.country")}>
           <Input
             value={form.country}
             onChange={(e) => set("country")(e.target.value)}
-            placeholder="e.g. Vietnam"
+            placeholder={t("businessInfo.placeholders.country")}
           />
         </Field>
       </Section>
 
       {/* Social Media */}
-      <Section title="Social Media">
+      <Section title={t("businessInfo.sections.socialMedia")}>
         {(
           [
             ["Facebook", "facebook_url", "https://facebook.com/yourpage"],
@@ -358,6 +523,7 @@ const BusinessInfoPage = () => {
             ["TikTok", "tiktok_url", "https://tiktok.com/@yourhandle"],
             ["YouTube", "youtube_url", "https://youtube.com/@yourchannel"],
             ["X / Twitter", "twitter_url", "https://x.com/yourhandle"],
+            ["Zalo", "zalo_url", "https://zalo.me/yourpage"],
           ] as [string, keyof BusinessInfo, string][]
         ).map(([label, field, placeholder]) => (
           <Field key={field} label={label}>
@@ -370,9 +536,22 @@ const BusinessInfoPage = () => {
         ))}
       </Section>
 
+      {/* About Us */}
+      <Section title={t("businessInfo.sections.aboutUs")}>
+        <div className="flex flex-col gap-y-2">
+          <Text size="small" className="text-ui-fg-subtle">
+            {t("businessInfo.fields.aboutUsHint")}
+          </Text>
+          <RichTextEditor
+            value={form.about_us}
+            onChange={set("about_us")}
+          />
+        </div>
+      </Section>
+
       {/* Other */}
-      <Section title="Other">
-        <Field label="Business hours" hint="Free text — e.g. Mon–Fri 9am–6pm">
+      <Section title={t("businessInfo.sections.other")}>
+        <Field label={t("businessInfo.fields.businessHours")} hint={t("businessInfo.fields.businessHoursHint")}>
           <Textarea
             value={form.business_hours}
             onChange={(e) => set("business_hours")(e.target.value)}
@@ -380,11 +559,11 @@ const BusinessInfoPage = () => {
             rows={3}
           />
         </Field>
-        <Field label="Tax ID / Business reg. no.">
+        <Field label={t("businessInfo.fields.taxId")}>
           <Input
             value={form.tax_id}
             onChange={(e) => set("tax_id")(e.target.value)}
-            placeholder="e.g. MST 0123456789"
+            placeholder={t("businessInfo.placeholders.taxId")}
           />
         </Field>
       </Section>
@@ -392,7 +571,7 @@ const BusinessInfoPage = () => {
       {/* Sticky save footer */}
       <div className="fixed bottom-0 left-0 right-0 flex justify-end border-t border-ui-border-base bg-ui-bg-base px-8 py-3 shadow-md">
         <Button onClick={handleSave} isLoading={saving}>
-          Save changes
+          {t("common.saveChanges")}
         </Button>
       </div>
     </div>

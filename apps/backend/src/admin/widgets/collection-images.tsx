@@ -1,6 +1,7 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk"
 import { Button, toast } from "@medusajs/ui"
 import { useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 type CollectionData = {
   id: string
@@ -58,6 +59,8 @@ function ImageUploadField({
   inputRef: React.RefObject<HTMLInputElement>
   onFileSelect: (file: File) => void
 }) {
+  const { t } = useTranslation()
+
   return (
     <div className="flex flex-col gap-y-2">
       <p className="txt-compact-small text-ui-fg-subtle font-medium">{label}</p>
@@ -73,7 +76,7 @@ function ImageUploadField({
         </div>
       ) : (
         <div className="flex h-24 items-center justify-center rounded-md border border-dashed border-ui-border-base bg-ui-bg-subtle">
-          <p className="txt-small text-ui-fg-muted">No image</p>
+          <p className="txt-small text-ui-fg-muted">{t("common.noImage")}</p>
         </div>
       )}
 
@@ -96,13 +99,14 @@ function ImageUploadField({
         onClick={() => inputRef.current?.click()}
         className="w-full"
       >
-        {imageUrl ? "Replace" : "Upload"}
+        {imageUrl ? t("common.replace") : t("common.upload")}
       </Button>
     </div>
   )
 }
 
 const CollectionImagesWidget = ({ data }: { data: CollectionData }) => {
+  const { t } = useTranslation()
   const [metadata, setMetadata] = useState<Record<string, any>>(
     data.metadata ?? {}
   )
@@ -119,9 +123,13 @@ const CollectionImagesWidget = ({ data }: { data: CollectionData }) => {
       const newMeta = { ...metadata, [field]: url }
       await saveCollectionMetadata(data.id, newMeta)
       setMetadata(newMeta)
-      toast.success(`${type === "horizontal" ? "Horizontal" : "Vertical"} image saved`)
+      toast.success(
+        type === "horizontal"
+          ? t("collectionImages.toast.horizontalSaved")
+          : t("collectionImages.toast.verticalSaved")
+      )
     } catch (e: any) {
-      toast.error(e?.message ?? "Upload failed")
+      toast.error(e?.message ?? t("collectionImages.toast.uploadError"))
     } finally {
       setUploading((u) => ({ ...u, [type]: false }))
     }
@@ -130,11 +138,11 @@ const CollectionImagesWidget = ({ data }: { data: CollectionData }) => {
   return (
     <div className="rounded-lg border bg-ui-bg-base p-4 shadow-elevation-card-rest flex flex-col gap-y-4">
       <p className="txt-compact-small-plus text-ui-fg-subtle font-medium uppercase tracking-wider">
-        Collection Images
+        {t("collectionImages.title")}
       </p>
 
       <ImageUploadField
-        label="Horizontal Image"
+        label={t("collectionImages.horizontalImage")}
         imageUrl={metadata.horizontal_image}
         uploading={uploading.horizontal}
         inputRef={hRef}
@@ -142,7 +150,7 @@ const CollectionImagesWidget = ({ data }: { data: CollectionData }) => {
       />
 
       <ImageUploadField
-        label="Vertical Image"
+        label={t("collectionImages.verticalImage")}
         imageUrl={metadata.vertical_image}
         uploading={uploading.vertical}
         inputRef={vRef}

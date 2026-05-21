@@ -21,6 +21,9 @@ const BusinessInfo = model.define("business_info", {
   twitter_url: model.text().nullable(),
   tiktok_url: model.text().nullable(),
   youtube_url: model.text().nullable(),
+  zalo_url: model.text().nullable(),
+  // Content
+  about_us: model.text().nullable(),
   // Other
   business_hours: model.text().nullable(),
   tax_id: model.text().nullable(),

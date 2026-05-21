@@ -1,6 +1,7 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk"
 import { Button, toast } from "@medusajs/ui"
 import { useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 type CategoryData = {
   id: string
@@ -58,6 +59,8 @@ function ImageUploadField({
   inputRef: React.RefObject<HTMLInputElement>
   onFileSelect: (file: File) => void
 }) {
+  const { t } = useTranslation()
+
   return (
     <div className="flex flex-col gap-y-2">
       <p className="txt-compact-small text-ui-fg-subtle font-medium">{label}</p>
@@ -73,7 +76,7 @@ function ImageUploadField({
         </div>
       ) : (
         <div className="flex h-24 items-center justify-center rounded-md border border-dashed border-ui-border-base bg-ui-bg-subtle">
-          <p className="txt-small text-ui-fg-muted">No image</p>
+          <p className="txt-small text-ui-fg-muted">{t("common.noImage")}</p>
         </div>
       )}
 
@@ -96,13 +99,14 @@ function ImageUploadField({
         onClick={() => inputRef.current?.click()}
         className="w-full"
       >
-        {imageUrl ? "Replace" : "Upload"}
+        {imageUrl ? t("common.replace") : t("common.upload")}
       </Button>
     </div>
   )
 }
 
 const CategoryImagesWidget = ({ data }: { data: CategoryData }) => {
+  const { t } = useTranslation()
   const [metadata, setMetadata] = useState<Record<string, any>>(
     data.metadata ?? {}
   )
@@ -120,10 +124,15 @@ const CategoryImagesWidget = ({ data }: { data: CategoryData }) => {
       const newMeta = { ...metadata, [field]: url }
       await saveCategoryMetadata(data.id, newMeta)
       setMetadata(newMeta)
-      const label = type === "horizontal" ? "Horizontal" : type === "vertical" ? "Vertical" : "Logo"
-      toast.success(`${label} image saved`)
+      const toastKey =
+        type === "horizontal"
+          ? "categoryImages.toast.horizontalSaved"
+          : type === "vertical"
+          ? "categoryImages.toast.verticalSaved"
+          : "categoryImages.toast.logoSaved"
+      toast.success(t(toastKey))
     } catch (e: any) {
-      toast.error(e?.message ?? "Upload failed")
+      toast.error(e?.message ?? t("categoryImages.toast.uploadError"))
     } finally {
       setUploading((u) => ({ ...u, [type]: false }))
     }
@@ -132,11 +141,11 @@ const CategoryImagesWidget = ({ data }: { data: CategoryData }) => {
   return (
     <div className="rounded-lg border bg-ui-bg-base p-4 shadow-elevation-card-rest flex flex-col gap-y-4">
       <p className="txt-compact-small-plus text-ui-fg-subtle font-medium uppercase tracking-wider">
-        Category Images
+        {t("categoryImages.title")}
       </p>
 
       <ImageUploadField
-        label="Horizontal Image"
+        label={t("categoryImages.horizontalImage")}
         imageUrl={metadata.horizontal_image}
         uploading={uploading.horizontal}
         inputRef={hRef}
@@ -144,7 +153,7 @@ const CategoryImagesWidget = ({ data }: { data: CategoryData }) => {
       />
 
       <ImageUploadField
-        label="Vertical Image"
+        label={t("categoryImages.verticalImage")}
         imageUrl={metadata.vertical_image}
         uploading={uploading.vertical}
         inputRef={vRef}
@@ -152,7 +161,7 @@ const CategoryImagesWidget = ({ data }: { data: CategoryData }) => {
       />
 
       <ImageUploadField
-        label="Logo"
+        label={t("categoryImages.logo")}
         imageUrl={metadata.logo_image}
         uploading={uploading.logo}
         inputRef={lRef}

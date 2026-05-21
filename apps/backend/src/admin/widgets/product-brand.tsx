@@ -1,6 +1,7 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk"
 import { Button, Select, toast } from "@medusajs/ui"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 type Brand = {
   id: string
@@ -25,6 +26,7 @@ async function adminFetch(path: string, options: RequestInit = {}) {
 }
 
 const ProductBrandWidget = ({ data }: { data: { id: string } }) => {
+  const { t } = useTranslation()
   const productId = data.id
   const [brands, setBrands] = useState<Brand[]>([])
   const [currentBrandId, setCurrentBrandId] = useState<string>("")
@@ -40,7 +42,7 @@ const ProductBrandWidget = ({ data }: { data: { id: string } }) => {
         setBrands(brandsData.brands ?? [])
         setCurrentBrandId(brandData.brand?.id ?? "__none__")
       })
-      .catch(() => toast.error("Failed to load brand data"))
+      .catch(() => toast.error(t("productBrand.toast.loadError")))
       .finally(() => setLoading(false))
   }, [productId])
 
@@ -53,9 +55,9 @@ const ProductBrandWidget = ({ data }: { data: { id: string } }) => {
           brand_id: currentBrandId === "__none__" ? null : currentBrandId,
         }),
       })
-      toast.success("Brand updated")
+      toast.success(t("productBrand.toast.updated"))
     } catch {
-      toast.error("Failed to update brand")
+      toast.error(t("productBrand.toast.updateError"))
     } finally {
       setSaving(false)
     }
@@ -64,18 +66,18 @@ const ProductBrandWidget = ({ data }: { data: { id: string } }) => {
   return (
     <div className="rounded-lg border bg-ui-bg-base p-4 shadow-elevation-card-rest">
       <p className="txt-compact-small-plus text-ui-fg-subtle mb-3 font-medium uppercase tracking-wider">
-        Brand
+        {t("productBrand.title")}
       </p>
       {loading ? (
-        <p className="text-ui-fg-muted txt-small">Loading…</p>
+        <p className="text-ui-fg-muted txt-small">{t("common.loading")}</p>
       ) : (
         <>
           <Select value={currentBrandId} onValueChange={setCurrentBrandId}>
             <Select.Trigger>
-              <Select.Value placeholder="Select a brand…" />
+              <Select.Value placeholder={t("productBrand.selectPlaceholder")} />
             </Select.Trigger>
             <Select.Content>
-              <Select.Item value="__none__">None</Select.Item>
+              <Select.Item value="__none__">{t("common.none")}</Select.Item>
               {brands
                 .filter((b) => b.is_active)
                 .map((b) => (
@@ -92,7 +94,7 @@ const ProductBrandWidget = ({ data }: { data: { id: string } }) => {
             onClick={handleSave}
             isLoading={saving}
           >
-            Save
+            {t("common.save")}
           </Button>
         </>
       )}

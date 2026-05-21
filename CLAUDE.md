@@ -117,6 +117,7 @@ The active root category is stored in `localStorage` (key: `selectedCategoryId`)
 
 ## Key Notes
 
+- **Data fetching cache**: Use `cache: "no-store"` (not `next: { revalidate: N }`) in `sdk.client.fetch` calls for admin-managed content (business info, CMS pages, etc.) so changes appear immediately without a revalidation delay.
 - **No Prisma** — Medusa uses its own data layer. Define models with `@medusajs/framework/utils` utilities and manage schema via `medusa db:generate / db:migrate`.
 - **Payments**: Stripe and PayPal are pre-configured in the seed script. Manual payment is always available.
 - **Currencies**: VND, KRW, and other no-decimal currencies are handled in `src/lib/util/prices.ts` — the `noDivisionCurrencies` list skips dividing by 100.

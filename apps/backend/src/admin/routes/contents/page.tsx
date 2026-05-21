@@ -20,6 +20,7 @@ import StarterKit from "@tiptap/starter-kit"
 import Underline from "@tiptap/extension-underline"
 import Link from "@tiptap/extension-link"
 import { useEffect, useRef, useState, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 
 type ContentItem = {
   id: string
@@ -55,20 +56,8 @@ type ContentForm = {
   in_footer: boolean
 }
 
-const CONTENT_TYPES = [
-  { value: "news", label: "News" },
-  { value: "terms", label: "Terms & Conditions" },
-  { value: "privacy", label: "Privacy Policy" },
-  { value: "return_policy", label: "Return Policy" },
-  { value: "faq", label: "FAQ" },
-  { value: "announcement", label: "Announcement" },
-]
-
-const CONTENT_STATUSES = [
-  { value: "draft", label: "Draft" },
-  { value: "published", label: "Published" },
-  { value: "archived", label: "Archived" },
-]
+const CONTENT_TYPE_VALUES = ["news", "terms", "privacy", "return_policy", "faq", "announcement"] as const
+const CONTENT_STATUS_VALUES = ["draft", "published", "archived"] as const
 
 const TYPE_COLORS: Record<string, "blue" | "green" | "orange" | "red" | "purple" | "grey"> = {
   news: "blue",
@@ -130,6 +119,7 @@ function ThumbnailUpload({
   value: string
   onChange: (url: string) => void
 }) {
+  const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null!)
   const [uploading, setUploading] = useState(false)
 
@@ -139,7 +129,7 @@ function ThumbnailUpload({
       const url = await uploadFile(file)
       onChange(url)
     } catch (e: any) {
-      toast.error(e?.message ?? "Upload failed")
+      toast.error(e?.message ?? t("contents.toast.uploadError"))
     } finally {
       setUploading(false)
     }
@@ -170,10 +160,10 @@ function ThumbnailUpload({
           onClick={() => inputRef.current?.click()}
         >
           <Text size="small" className="text-ui-fg-muted">
-            Click to upload thumbnail
+            {t("contents.thumbnail.clickToUpload")}
           </Text>
           <Text size="small" className="text-ui-fg-subtle">
-            PNG, JPG, WEBP
+            {t("contents.thumbnail.formats")}
           </Text>
         </div>
       )}
@@ -196,7 +186,7 @@ function ThumbnailUpload({
         isLoading={uploading}
         onClick={() => inputRef.current?.click()}
       >
-        {value ? "Replace image" : "Upload image"}
+        {value ? t("contents.thumbnail.replace") : t("contents.thumbnail.upload")}
       </Button>
     </div>
   )
@@ -282,6 +272,7 @@ function RichTextEditor({
   value: string
   onChange: (html: string) => void
 }) {
+  const { t } = useTranslation()
   const [showLinkInput, setShowLinkInput] = useState(false)
   const [linkUrl, setLinkUrl] = useState("")
   const linkInputRef = useRef<HTMLInputElement>(null)
@@ -390,11 +381,15 @@ function RichTextEditor({
             value={linkUrl}
             onChange={(e) => setLinkUrl(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); applyLink() } if (e.key === "Escape") setShowLinkInput(false) }}
-            placeholder="https://…"
+            placeholder={t("contents.editor.urlPlaceholder")}
             className="flex-1 rounded border border-ui-border-base bg-ui-bg-base px-2 py-1 text-sm text-ui-fg-base focus:outline-none focus:ring-1 focus:ring-ui-border-interactive"
           />
-          <button type="button" onMouseDown={(e) => { e.preventDefault(); applyLink() }} className="rounded bg-ui-button-inverted px-3 py-1 text-sm text-ui-fg-on-color hover:bg-ui-button-inverted-hover">Apply</button>
-          <button type="button" onMouseDown={(e) => { e.preventDefault(); setShowLinkInput(false) }} className="text-sm text-ui-fg-subtle hover:text-ui-fg-base">Cancel</button>
+          <button type="button" onMouseDown={(e) => { e.preventDefault(); applyLink() }} className="rounded bg-ui-button-inverted px-3 py-1 text-sm text-ui-fg-on-color hover:bg-ui-button-inverted-hover">
+            {t("contents.editor.apply")}
+          </button>
+          <button type="button" onMouseDown={(e) => { e.preventDefault(); setShowLinkInput(false) }} className="text-sm text-ui-fg-subtle hover:text-ui-fg-base">
+            {t("contents.editor.cancel")}
+          </button>
         </div>
       )}
 
@@ -413,6 +408,7 @@ function ContentFormModal({
   onClose: () => void
   onSaved: () => void
 }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState<ContentForm>(
     item
       ? {
@@ -447,7 +443,7 @@ function ContentFormModal({
 
   const handleSubmit = async () => {
     if (!form.title.trim() || !form.handle.trim() || !form.type) {
-      toast.error("Title, handle, and type are required")
+      toast.error(t("contents.toast.validationError"))
       return
     }
     setSaving(true)
@@ -473,18 +469,18 @@ function ContentFormModal({
           method: "POST",
           body: JSON.stringify(payload),
         })
-        toast.success("Content updated")
+        toast.success(t("contents.toast.updated"))
       } else {
         await adminFetch("/admin/contents", {
           method: "POST",
           body: JSON.stringify(payload),
         })
-        toast.success("Content created")
+        toast.success(t("contents.toast.created"))
       }
       onSaved()
       onClose()
     } catch (e: any) {
-      toast.error(e?.message ?? "Failed to save content")
+      toast.error(e?.message ?? t("contents.toast.saveError"))
     } finally {
       setSaving(false)
     }
@@ -495,49 +491,49 @@ function ContentFormModal({
       <FocusModal.Content>
         <FocusModal.Header>
           <Button onClick={handleSubmit} isLoading={saving}>
-            Save
+            {t("common.save")}
           </Button>
         </FocusModal.Header>
         <FocusModal.Body className="flex flex-col items-center overflow-y-auto py-10">
           <div className="flex w-full max-w-2xl flex-col gap-y-8">
-            <Heading>{item ? "Edit Content" : "New Content"}</Heading>
+            <Heading>{item ? t("contents.editTitle") : t("contents.newTitle")}</Heading>
 
             {/* Basic Info */}
             <div className="flex flex-col gap-y-4">
-              <Text weight="plus">Basic Info</Text>
+              <Text weight="plus">{t("contents.form.basicInfo")}</Text>
 
               <div className="flex flex-col gap-y-2">
-                <Label>Title *</Label>
+                <Label>{t("contents.form.title")}</Label>
                 <Input
                   value={form.title}
                   onChange={(e) => handleTitleChange(e.target.value)}
-                  placeholder="e.g. Privacy Policy"
+                  placeholder={t("contents.form.titlePlaceholder")}
                 />
               </div>
 
               <div className="flex flex-col gap-y-2">
-                <Label>Handle *</Label>
+                <Label>{t("contents.form.handle")}</Label>
                 <Input
                   value={form.handle}
                   onChange={(e) => set("handle")(e.target.value)}
-                  placeholder="e.g. privacy-policy"
+                  placeholder={t("contents.form.handlePlaceholder")}
                 />
                 <Text size="small" className="text-ui-fg-subtle">
-                  Used in URLs. Auto-generated from title.
+                  {t("contents.form.handleHint")}
                 </Text>
               </div>
 
               <div className="grid grid-cols-2 gap-x-4">
                 <div className="flex flex-col gap-y-2">
-                  <Label>Type *</Label>
+                  <Label>{t("contents.form.type")}</Label>
                   <Select value={form.type} onValueChange={set("type")}>
                     <Select.Trigger>
                       <Select.Value />
                     </Select.Trigger>
                     <Select.Content>
-                      {CONTENT_TYPES.map((t) => (
-                        <Select.Item key={t.value} value={t.value}>
-                          {t.label}
+                      {CONTENT_TYPE_VALUES.map((v) => (
+                        <Select.Item key={v} value={v}>
+                          {t(`contents.types.${v}`)}
                         </Select.Item>
                       ))}
                     </Select.Content>
@@ -545,15 +541,15 @@ function ContentFormModal({
                 </div>
 
                 <div className="flex flex-col gap-y-2">
-                  <Label>Status</Label>
+                  <Label>{t("contents.form.status")}</Label>
                   <Select value={form.status} onValueChange={set("status")}>
                     <Select.Trigger>
                       <Select.Value />
                     </Select.Trigger>
                     <Select.Content>
-                      {CONTENT_STATUSES.map((s) => (
-                        <Select.Item key={s.value} value={s.value}>
-                          {s.label}
+                      {CONTENT_STATUS_VALUES.map((v) => (
+                        <Select.Item key={v} value={v}>
+                          {t(`contents.statuses.${v}`)}
                         </Select.Item>
                       ))}
                     </Select.Content>
@@ -562,7 +558,7 @@ function ContentFormModal({
               </div>
 
               <div className="flex items-center justify-between">
-                <Label>Active</Label>
+                <Label>{t("contents.form.active")}</Label>
                 <Switch
                   checked={form.is_active}
                   onCheckedChange={(v) => set("is_active")(v)}
@@ -571,9 +567,9 @@ function ContentFormModal({
 
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-y-0.5">
-                  <Label>Show in Footer</Label>
+                  <Label>{t("contents.form.showInFooter")}</Label>
                   <Text size="small" className="text-ui-fg-subtle">
-                    Display this content as a link in the storefront footer
+                    {t("contents.form.showInFooterHint")}
                   </Text>
                 </div>
                 <Switch
@@ -585,20 +581,20 @@ function ContentFormModal({
 
             {/* Content Body */}
             <div className="flex flex-col gap-y-4">
-              <Text weight="plus">Content</Text>
+              <Text weight="plus">{t("contents.form.content")}</Text>
 
               <div className="flex flex-col gap-y-2">
-                <Label>Excerpt</Label>
+                <Label>{t("contents.form.excerpt")}</Label>
                 <Textarea
                   value={form.excerpt}
                   onChange={(e) => set("excerpt")(e.target.value)}
-                  placeholder="Short summary shown in lists and previews"
+                  placeholder={t("contents.form.excerptPlaceholder")}
                   rows={2}
                 />
               </div>
 
               <div className="flex flex-col gap-y-2">
-                <Label>Body</Label>
+                <Label>{t("contents.form.body")}</Label>
                 <RichTextEditor
                   value={form.body}
                   onChange={(html) => set("body")(html)}
@@ -608,10 +604,10 @@ function ContentFormModal({
 
             {/* Media & Author */}
             <div className="flex flex-col gap-y-4">
-              <Text weight="plus">Media & Author</Text>
+              <Text weight="plus">{t("contents.form.mediaAuthor")}</Text>
 
               <div className="flex flex-col gap-y-2">
-                <Label>Thumbnail</Label>
+                <Label>{t("contents.form.thumbnail")}</Label>
                 <ThumbnailUpload
                   value={form.thumbnail_url}
                   onChange={(url) => set("thumbnail_url")(url)}
@@ -620,16 +616,16 @@ function ContentFormModal({
 
               <div className="grid grid-cols-2 gap-x-4">
                 <div className="flex flex-col gap-y-2">
-                  <Label>Author</Label>
+                  <Label>{t("contents.form.author")}</Label>
                   <Input
                     value={form.author}
                     onChange={(e) => set("author")(e.target.value)}
-                    placeholder="Author name"
+                    placeholder={t("contents.form.authorPlaceholder")}
                   />
                 </div>
 
                 <div className="flex flex-col gap-y-2">
-                  <Label>Publish Date</Label>
+                  <Label>{t("contents.form.publishDate")}</Label>
                   <Input
                     type="datetime-local"
                     value={form.published_at}
@@ -641,23 +637,23 @@ function ContentFormModal({
 
             {/* SEO */}
             <div className="flex flex-col gap-y-4">
-              <Text weight="plus">SEO</Text>
+              <Text weight="plus">{t("contents.form.seo")}</Text>
 
               <div className="flex flex-col gap-y-2">
-                <Label>SEO Title</Label>
+                <Label>{t("contents.form.seoTitle")}</Label>
                 <Input
                   value={form.seo_title}
                   onChange={(e) => set("seo_title")(e.target.value)}
-                  placeholder="Override for browser tab / search results"
+                  placeholder={t("contents.form.seoTitlePlaceholder")}
                 />
               </div>
 
               <div className="flex flex-col gap-y-2">
-                <Label>SEO Description</Label>
+                <Label>{t("contents.form.seoDescription")}</Label>
                 <Textarea
                   value={form.seo_description}
                   onChange={(e) => set("seo_description")(e.target.value)}
-                  placeholder="Meta description shown in search results"
+                  placeholder={t("contents.form.seoDescriptionPlaceholder")}
                   rows={3}
                 />
               </div>
@@ -670,6 +666,7 @@ function ContentFormModal({
 }
 
 const ContentsPage = () => {
+  const { t } = useTranslation()
   const [contents, setContents] = useState<ContentItem[]>([])
   const [loading, setLoading] = useState(true)
   const [editTarget, setEditTarget] = useState<ContentItem | null | "new">(null)
@@ -680,7 +677,7 @@ const ContentsPage = () => {
     setLoading(true)
     adminFetch("/admin/contents")
       .then((d) => setContents(d.contents ?? []))
-      .catch(() => toast.error("Failed to load content"))
+      .catch(() => toast.error(t("contents.toast.loadError")))
       .finally(() => setLoading(false))
   }
 
@@ -689,13 +686,13 @@ const ContentsPage = () => {
   }, [])
 
   const handleDelete = async (item: ContentItem) => {
-    if (!confirm(`Delete "${item.title}"? This cannot be undone.`)) return
+    if (!confirm(t("contents.deleteConfirm", { title: item.title }))) return
     try {
       await adminFetch(`/admin/contents/${item.id}`, { method: "DELETE" })
-      toast.success("Content deleted")
+      toast.success(t("contents.toast.deleted"))
       loadContents()
     } catch {
-      toast.error("Failed to delete content")
+      toast.error(t("contents.toast.deleteError"))
     }
   }
 
@@ -705,15 +702,12 @@ const ContentsPage = () => {
     return true
   })
 
-  const typeLabel = (type: string) =>
-    CONTENT_TYPES.find((t) => t.value === type)?.label ?? type
-
   return (
     <Container className="p-0">
       <div className="flex items-center justify-between border-b px-6 py-4">
-        <Heading>Content</Heading>
+        <Heading>{t("contents.title")}</Heading>
         <Button size="small" onClick={() => setEditTarget("new")}>
-          Add Content
+          {t("contents.add")}
         </Button>
       </div>
 
@@ -721,17 +715,17 @@ const ContentsPage = () => {
       <div className="flex items-center gap-x-4 border-b px-6 py-3">
         <div className="flex items-center gap-x-2">
           <Text size="small" className="text-ui-fg-subtle">
-            Type
+            {t("contents.filters.type")}
           </Text>
           <Select value={typeFilter} onValueChange={setTypeFilter}>
             <Select.Trigger className="h-7 min-w-[140px]">
               <Select.Value />
             </Select.Trigger>
             <Select.Content>
-              <Select.Item value="all">All types</Select.Item>
-              {CONTENT_TYPES.map((t) => (
-                <Select.Item key={t.value} value={t.value}>
-                  {t.label}
+              <Select.Item value="all">{t("contents.filters.allTypes")}</Select.Item>
+              {CONTENT_TYPE_VALUES.map((v) => (
+                <Select.Item key={v} value={v}>
+                  {t(`contents.types.${v}`)}
                 </Select.Item>
               ))}
             </Select.Content>
@@ -740,17 +734,17 @@ const ContentsPage = () => {
 
         <div className="flex items-center gap-x-2">
           <Text size="small" className="text-ui-fg-subtle">
-            Status
+            {t("contents.filters.status")}
           </Text>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <Select.Trigger className="h-7 min-w-[130px]">
               <Select.Value />
             </Select.Trigger>
             <Select.Content>
-              <Select.Item value="all">All statuses</Select.Item>
-              {CONTENT_STATUSES.map((s) => (
-                <Select.Item key={s.value} value={s.value}>
-                  {s.label}
+              <Select.Item value="all">{t("contents.filters.allStatuses")}</Select.Item>
+              {CONTENT_STATUS_VALUES.map((v) => (
+                <Select.Item key={v} value={v}>
+                  {t(`contents.statuses.${v}`)}
                 </Select.Item>
               ))}
             </Select.Content>
@@ -759,28 +753,26 @@ const ContentsPage = () => {
 
         {filtered.length !== contents.length && (
           <Text size="small" className="text-ui-fg-subtle">
-            {filtered.length} of {contents.length}
+            {t("contents.filters.showing", { filtered: filtered.length, total: contents.length })}
           </Text>
         )}
       </div>
 
       {loading ? (
-        <p className="px-6 py-4 text-ui-fg-muted">Loading…</p>
+        <p className="px-6 py-4 text-ui-fg-muted">{t("common.loading")}</p>
       ) : filtered.length === 0 ? (
         <p className="px-6 py-4 text-ui-fg-muted">
-          {contents.length === 0
-            ? 'No content yet. Click "Add Content" to get started.'
-            : "No content matches the current filters."}
+          {contents.length === 0 ? t("contents.empty") : t("contents.emptyFiltered")}
         </p>
       ) : (
         <Table>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Title</Table.HeaderCell>
-              <Table.HeaderCell>Type</Table.HeaderCell>
-              <Table.HeaderCell>Status</Table.HeaderCell>
-              <Table.HeaderCell>Published</Table.HeaderCell>
-              <Table.HeaderCell>Active</Table.HeaderCell>
+              <Table.HeaderCell>{t("contents.table.title")}</Table.HeaderCell>
+              <Table.HeaderCell>{t("contents.table.type")}</Table.HeaderCell>
+              <Table.HeaderCell>{t("contents.table.status")}</Table.HeaderCell>
+              <Table.HeaderCell>{t("contents.table.published")}</Table.HeaderCell>
+              <Table.HeaderCell>{t("contents.table.active")}</Table.HeaderCell>
               <Table.HeaderCell />
             </Table.Row>
           </Table.Header>
@@ -797,12 +789,12 @@ const ContentsPage = () => {
                 </Table.Cell>
                 <Table.Cell>
                   <Badge color={TYPE_COLORS[item.type] ?? "grey"} size="2xsmall">
-                    {typeLabel(item.type)}
+                    {t(`contents.types.${item.type}`, { defaultValue: item.type })}
                   </Badge>
                 </Table.Cell>
                 <Table.Cell>
                   <Badge color={STATUS_COLORS[item.status] ?? "grey"} size="2xsmall">
-                    {item.status}
+                    {t(`contents.statuses.${item.status}`, { defaultValue: item.status })}
                   </Badge>
                 </Table.Cell>
                 <Table.Cell className="text-ui-fg-subtle">
@@ -818,14 +810,14 @@ const ContentsPage = () => {
                       variant="secondary"
                       onClick={() => setEditTarget(item)}
                     >
-                      Edit
+                      {t("common.edit")}
                     </Button>
                     <Button
                       size="small"
                       variant="danger"
                       onClick={() => handleDelete(item)}
                     >
-                      Delete
+                      {t("common.delete")}
                     </Button>
                   </div>
                 </Table.Cell>

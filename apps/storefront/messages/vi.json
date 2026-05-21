@@ -229,6 +229,12 @@
     "collections": "Bộ Sưu Tập",
     "categories": "Sản Phẩm"
   },
+  "notFound": {
+    "title": "Không tìm thấy trang",
+    "description": "Trang bạn truy cập không tồn tại.",
+    "cartDescription": "Giỏ hàng bạn truy cập không tồn tại. Hãy xóa cookie và thử lại.",
+    "goToFrontpage": "Về trang chủ"
+  },
   "order": {
     "thankYou": "Cảm ơn!",
     "orderPlaced": "Đơn hàng của bạn đã được đặt thành công.",
@@ -236,5 +242,11 @@
     "needHelp": "Cần hỗ trợ?",
     "contact": "Liên hệ",
     "returnsExchanges": "Đổi trả & Hoàn hàng"
+  },
+  "aboutUs": {
+    "breadcrumbHome": "Trang chủ",
+    "breadcrumbCurrent": "Về chúng tôi",
+    "title": "Về chúng tôi",
+    "comingSoon": "Sắp ra mắt."
   }
 }

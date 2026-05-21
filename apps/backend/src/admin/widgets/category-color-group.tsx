@@ -1,6 +1,7 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk"
 import { Button, Select, toast } from "@medusajs/ui"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 type ColorGroup = { id: string; name: string }
 
@@ -23,6 +24,7 @@ async function adminFetch(path: string, options: RequestInit = {}) {
 }
 
 const CategoryColorGroupWidget = ({ data }: { data: CategoryData }) => {
+  const { t } = useTranslation()
   const [colorGroups, setColorGroups] = useState<ColorGroup[]>([])
   const [selected, setSelected] = useState<string>("__none__")
   const [loading, setLoading] = useState(true)
@@ -35,7 +37,7 @@ const CategoryColorGroupWidget = ({ data }: { data: CategoryData }) => {
         const current = data.metadata?.color_group_id
         setSelected(current ?? "__none__")
       })
-      .catch(() => toast.error("Failed to load color groups"))
+      .catch(() => toast.error(t("categoryColorGroup.toast.loadError")))
       .finally(() => setLoading(false))
   }, [data.id])
 
@@ -50,9 +52,9 @@ const CategoryColorGroupWidget = ({ data }: { data: CategoryData }) => {
         method: "POST",
         body: JSON.stringify({ metadata: newMetadata }),
       })
-      toast.success("Color group saved")
+      toast.success(t("categoryColorGroup.toast.saved"))
     } catch {
-      toast.error("Failed to save color group")
+      toast.error(t("categoryColorGroup.toast.saveError"))
     } finally {
       setSaving(false)
     }
@@ -61,18 +63,18 @@ const CategoryColorGroupWidget = ({ data }: { data: CategoryData }) => {
   return (
     <div className="rounded-lg border bg-ui-bg-base p-4 shadow-elevation-card-rest">
       <p className="txt-compact-small-plus text-ui-fg-subtle mb-3 font-medium uppercase tracking-wider">
-        Color Group
+        {t("categoryColorGroup.title")}
       </p>
       {loading ? (
-        <p className="txt-small text-ui-fg-muted">Loading…</p>
+        <p className="txt-small text-ui-fg-muted">{t("common.loading")}</p>
       ) : (
         <>
           <Select value={selected} onValueChange={setSelected}>
             <Select.Trigger>
-              <Select.Value placeholder="Select a color group…" />
+              <Select.Value placeholder={t("categoryColorGroup.selectPlaceholder")} />
             </Select.Trigger>
             <Select.Content>
-              <Select.Item value="__none__">None</Select.Item>
+              <Select.Item value="__none__">{t("common.none")}</Select.Item>
               {colorGroups.map((g) => (
                 <Select.Item key={g.id} value={g.id}>
                   {g.name}
@@ -87,7 +89,7 @@ const CategoryColorGroupWidget = ({ data }: { data: CategoryData }) => {
             onClick={handleSave}
             isLoading={saving}
           >
-            Save
+            {t("common.save")}
           </Button>
         </>
       )}

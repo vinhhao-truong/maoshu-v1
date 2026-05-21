@@ -7,13 +7,14 @@ export type BusinessInfo = {
   store_name: string | null
   tagline: string | null
   logo_url: string | null
+  about_us: string | null
 }
 
 export const getBusinessInfo = async (): Promise<BusinessInfo | null> => {
   return sdk.client
     .fetch<{ business_info: BusinessInfo }>(`/store/business-info`, {
       method: "GET",
-      next: { revalidate: 3600 },
+      cache: "no-store",
     })
     .then(({ business_info }) => business_info)
     .catch(() => null)

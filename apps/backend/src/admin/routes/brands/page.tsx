@@ -13,6 +13,7 @@ import {
   toast,
 } from "@medusajs/ui"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 type Brand = {
   id: string
@@ -72,6 +73,7 @@ function BrandFormModal({
   onClose: () => void
   onSaved: () => void
 }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState<BrandForm>(
     brand
       ? {
@@ -95,7 +97,7 @@ function BrandFormModal({
 
   const handleSubmit = async () => {
     if (!form.name.trim() || !form.handle.trim()) {
-      toast.error("Name and handle are required")
+      toast.error(t("brands.toast.validationError"))
       return
     }
     setSaving(true)
@@ -112,18 +114,18 @@ function BrandFormModal({
           method: "POST",
           body: JSON.stringify(payload),
         })
-        toast.success("Brand updated")
+        toast.success(t("brands.toast.updated"))
       } else {
         await adminFetch("/admin/brands", {
           method: "POST",
           body: JSON.stringify(payload),
         })
-        toast.success("Brand created")
+        toast.success(t("brands.toast.created"))
       }
       onSaved()
       onClose()
     } catch (e: any) {
-      toast.error(e?.message ?? "Failed to save brand")
+      toast.error(e?.message ?? t("brands.toast.saveError"))
     } finally {
       setSaving(false)
     }
@@ -134,49 +136,49 @@ function BrandFormModal({
       <FocusModal.Content>
         <FocusModal.Header>
           <Button onClick={handleSubmit} isLoading={saving}>
-            Save
+            {t("common.save")}
           </Button>
         </FocusModal.Header>
         <FocusModal.Body className="flex flex-col items-center py-10">
           <div className="flex w-full max-w-lg flex-col gap-y-6">
-            <Heading>{brand ? "Edit Brand" : "New Brand"}</Heading>
+            <Heading>{brand ? t("brands.editTitle") : t("brands.newTitle")}</Heading>
 
             <div className="flex flex-col gap-y-2">
-              <Label>Name *</Label>
+              <Label>{t("common.name")} *</Label>
               <Input
                 value={form.name}
                 onChange={(e) => handleNameChange(e.target.value)}
-                placeholder="e.g. Nike"
+                placeholder={t("brands.namePlaceholder")}
               />
             </div>
 
             <div className="flex flex-col gap-y-2">
-              <Label>Handle *</Label>
+              <Label>{t("common.handle")} *</Label>
               <Input
                 value={form.handle}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, handle: e.target.value }))
                 }
-                placeholder="e.g. nike"
+                placeholder={t("brands.handlePlaceholder")}
               />
               <Text size="small" className="text-ui-fg-subtle">
-                Used in URLs. Auto-generated from name.
+                {t("brands.handleHint")}
               </Text>
             </div>
 
             <div className="flex flex-col gap-y-2">
-              <Label>Description</Label>
+              <Label>{t("brands.description")}</Label>
               <Input
                 value={form.description}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, description: e.target.value }))
                 }
-                placeholder="Optional description"
+                placeholder={t("brands.descriptionPlaceholder")}
               />
             </div>
 
             <div className="flex flex-col gap-y-2">
-              <Label>Logo URL</Label>
+              <Label>{t("brands.logoUrl")}</Label>
               <Input
                 value={form.logo_url}
                 onChange={(e) =>
@@ -187,7 +189,7 @@ function BrandFormModal({
             </div>
 
             <div className="flex items-center justify-between">
-              <Label>Active</Label>
+              <Label>{t("common.active")}</Label>
               <Switch
                 checked={form.is_active}
                 onCheckedChange={(checked) =>
@@ -203,6 +205,7 @@ function BrandFormModal({
 }
 
 const BrandsPage = () => {
+  const { t } = useTranslation()
   const [brands, setBrands] = useState<Brand[]>([])
   const [loading, setLoading] = useState(true)
   const [editTarget, setEditTarget] = useState<Brand | null | "new">(null)
@@ -211,7 +214,7 @@ const BrandsPage = () => {
     setLoading(true)
     adminFetch("/admin/brands")
       .then((d) => setBrands(d.brands ?? []))
-      .catch(() => toast.error("Failed to load brands"))
+      .catch(() => toast.error(t("brands.toast.loadError")))
       .finally(() => setLoading(false))
   }
 
@@ -220,38 +223,36 @@ const BrandsPage = () => {
   }, [])
 
   const handleDelete = async (brand: Brand) => {
-    if (!confirm(`Delete brand "${brand.name}"? This cannot be undone.`)) return
+    if (!confirm(t("brands.deleteConfirm", { name: brand.name }))) return
     try {
       await adminFetch(`/admin/brands/${brand.id}`, { method: "DELETE" })
-      toast.success("Brand deleted")
+      toast.success(t("brands.toast.deleted"))
       loadBrands()
     } catch {
-      toast.error("Failed to delete brand")
+      toast.error(t("brands.toast.deleteError"))
     }
   }
 
   return (
     <Container className="p-0">
       <div className="flex items-center justify-between border-b px-6 py-4">
-        <Heading>Brands</Heading>
+        <Heading>{t("brands.title")}</Heading>
         <Button size="small" onClick={() => setEditTarget("new")}>
-          Add Brand
+          {t("brands.add")}
         </Button>
       </div>
 
       {loading ? (
-        <p className="px-6 py-4 text-ui-fg-muted">Loading…</p>
+        <p className="px-6 py-4 text-ui-fg-muted">{t("common.loading")}</p>
       ) : brands.length === 0 ? (
-        <p className="px-6 py-4 text-ui-fg-muted">
-          No brands yet. Click "Add Brand" to get started.
-        </p>
+        <p className="px-6 py-4 text-ui-fg-muted">{t("brands.empty")}</p>
       ) : (
         <Table>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Handle</Table.HeaderCell>
-              <Table.HeaderCell>Active</Table.HeaderCell>
+              <Table.HeaderCell>{t("common.name")}</Table.HeaderCell>
+              <Table.HeaderCell>{t("common.handle")}</Table.HeaderCell>
+              <Table.HeaderCell>{t("common.active")}</Table.HeaderCell>
               <Table.HeaderCell />
             </Table.Row>
           </Table.Header>
@@ -272,14 +273,14 @@ const BrandsPage = () => {
                       variant="secondary"
                       onClick={() => setEditTarget(brand)}
                     >
-                      Edit
+                      {t("common.edit")}
                     </Button>
                     <Button
                       size="small"
                       variant="danger"
                       onClick={() => handleDelete(brand)}
                     >
-                      Delete
+                      {t("common.delete")}
                     </Button>
                   </div>
                 </Table.Cell>

@@ -1,6 +1,7 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk"
 import { Button, Input, toast } from "@medusajs/ui"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 const BACKEND_URL =
   (import.meta as any).env?.VITE_MEDUSA_BACKEND_URL ?? "http://localhost:9000"
@@ -21,6 +22,7 @@ async function adminFetch(path: string, options: RequestInit = {}) {
 type Variant = { id: string; title: string; sku: string | null }
 
 const ProductVariantCostWidget = ({ data }: { data: { id: string } }) => {
+  const { t } = useTranslation()
   const productId = data.id
   const [variants, setVariants] = useState<Variant[]>([])
   const [costs, setCosts] = useState<Record<string, string>>({})
@@ -37,7 +39,7 @@ const ProductVariantCostWidget = ({ data }: { data: { id: string } }) => {
         }
         setCosts(costMap)
       })
-      .catch((err) => toast.error(`Failed to load costs: ${err.message}`))
+      .catch((err) => toast.error(t("variantCosts.toast.loadError", { message: err.message })))
       .finally(() => setLoading(false))
   }, [productId])
 
@@ -55,9 +57,9 @@ const ProductVariantCostWidget = ({ data }: { data: { id: string } }) => {
           })),
         }),
       })
-      toast.success("Costs saved")
+      toast.success(t("variantCosts.toast.saved"))
     } catch (err: any) {
-      toast.error(`Failed to save: ${err.message}`)
+      toast.error(t("variantCosts.toast.saveError", { message: err.message }))
     } finally {
       setSaving(false)
     }
@@ -67,7 +69,7 @@ const ProductVariantCostWidget = ({ data }: { data: { id: string } }) => {
     <div className="rounded-lg border bg-ui-bg-base p-4 shadow-elevation-card-rest">
       <div className="flex items-center justify-between mb-3">
         <p className="txt-compact-small-plus text-ui-fg-subtle font-medium uppercase tracking-wider">
-          Variant Costs
+          {t("variantCosts.title")}
         </p>
         <Button
           size="small"
@@ -76,14 +78,14 @@ const ProductVariantCostWidget = ({ data }: { data: { id: string } }) => {
           isLoading={saving}
           disabled={loading || variants.length === 0}
         >
-          Save
+          {t("common.save")}
         </Button>
       </div>
 
       {loading ? (
-        <p className="text-ui-fg-muted txt-small">Loading…</p>
+        <p className="text-ui-fg-muted txt-small">{t("common.loading")}</p>
       ) : variants.length === 0 ? (
-        <p className="text-ui-fg-muted txt-small">No variants.</p>
+        <p className="text-ui-fg-muted txt-small">{t("variantCosts.noVariants")}</p>
       ) : (
         <div className="flex flex-col gap-2">
           {variants.map((v) => (

@@ -1,0 +1,305 @@
+{
+  "common": {
+    "save": "Save",
+    "saveChanges": "Save changes",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "loading": "Loading…",
+    "none": "None",
+    "active": "Active",
+    "noImage": "No image",
+    "replace": "Replace",
+    "upload": "Upload",
+    "apply": "Apply",
+    "name": "Name",
+    "handle": "Handle",
+    "status": "Status",
+    "type": "Type"
+  },
+  "brands": {
+    "title": "Brands",
+    "add": "Add Brand",
+    "editTitle": "Edit Brand",
+    "newTitle": "New Brand",
+    "namePlaceholder": "e.g. Nike",
+    "handleHint": "Used in URLs. Auto-generated from name.",
+    "handlePlaceholder": "e.g. nike",
+    "description": "Description",
+    "descriptionPlaceholder": "Optional description",
+    "logoUrl": "Logo URL",
+    "empty": "No brands yet. Click \"Add Brand\" to get started.",
+    "deleteConfirm": "Delete brand \"{{name}}\"? This cannot be undone.",
+    "toast": {
+      "loadError": "Failed to load brands",
+      "validationError": "Name and handle are required",
+      "created": "Brand created",
+      "updated": "Brand updated",
+      "saveError": "Failed to save brand",
+      "deleted": "Brand deleted",
+      "deleteError": "Failed to delete brand"
+    }
+  },
+  "productBrand": {
+    "title": "Brand",
+    "selectPlaceholder": "Select a brand…",
+    "toast": {
+      "loadError": "Failed to load brand data",
+      "updated": "Brand updated",
+      "updateError": "Failed to update brand"
+    }
+  },
+  "bulkActions": {
+    "downloadTemplate": "Download Import Template",
+    "import": "Import Products",
+    "export": "Export Products",
+    "deleteSelected": "Delete Selected",
+    "deleteAll": "Delete All Products",
+    "confirmDeleteAll": "Confirm Delete All?",
+    "cancelLink": "Cancel",
+    "modal": {
+      "title": "Delete Selected Products",
+      "loadingProducts": "Loading products…",
+      "noProducts": "No products found.",
+      "selectAll": "Select all ({{count}})",
+      "selectedCount": "{{count}} selected",
+      "delete": "Delete",
+      "deleteWithCount": "Delete ({{count}})"
+    },
+    "toast": {
+      "loadError": "Failed to load products",
+      "importSuccess": "Imported: {{created}} created, {{updated}} updated",
+      "importSuccessWithErrors": "Imported: {{created}} created, {{updated}} updated, {{errors}} errors",
+      "importError": "Import failed",
+      "deletePartialError": "{{count}} product(s) could not be deleted.",
+      "deleteAllSuccess": "All {{count}} product(s) deleted.",
+      "deleteSomeSuccess": "{{count}} product(s) deleted.",
+      "fetchError": "Failed to fetch products."
+    }
+  },
+  "collectionImages": {
+    "title": "Collection Images",
+    "horizontalImage": "Horizontal Image",
+    "verticalImage": "Vertical Image",
+    "toast": {
+      "horizontalSaved": "Horizontal image saved",
+      "verticalSaved": "Vertical image saved",
+      "uploadError": "Upload failed"
+    }
+  },
+  "categoryColorGroup": {
+    "title": "Color Group",
+    "selectPlaceholder": "Select a color group…",
+    "toast": {
+      "loadError": "Failed to load color groups",
+      "saved": "Color group saved",
+      "saveError": "Failed to save color group"
+    }
+  },
+  "variantCosts": {
+    "title": "Variant Costs",
+    "noVariants": "No variants.",
+    "toast": {
+      "loadError": "Failed to load costs: {{message}}",
+      "saved": "Costs saved",
+      "saveError": "Failed to save: {{message}}"
+    }
+  },
+  "categoryImages": {
+    "title": "Category Images",
+    "horizontalImage": "Horizontal Image",
+    "verticalImage": "Vertical Image",
+    "logo": "Logo",
+    "toast": {
+      "horizontalSaved": "Horizontal image saved",
+      "verticalSaved": "Vertical image saved",
+      "logoSaved": "Logo image saved",
+      "uploadError": "Upload failed"
+    }
+  },
+  "systemColors": {
+    "title": "System Colors",
+    "add": "Add Color",
+    "editTitle": "Edit Color",
+    "newTitle": "New Color",
+    "hex": "Hex",
+    "color": "Color",
+    "empty": "No colors yet. Click \"Add Color\" to get started.",
+    "deleteConfirm": "Delete \"{{name}}\"? This cannot be undone.",
+    "toast": {
+      "loadError": "Failed to load colors",
+      "validationError": "Name and hex are required",
+      "created": "Color created",
+      "updated": "Color updated",
+      "saveError": "Failed to save color",
+      "deleted": "Color deleted",
+      "deleteError": "Failed to delete color"
+    }
+  },
+  "colorGroups": {
+    "title": "Color Groups",
+    "add": "Add Group",
+    "editTitle": "Edit Color Group",
+    "newTitle": "New Color Group",
+    "empty": "No color groups yet. Click \"Add Group\" to get started.",
+    "deleteConfirm": "Delete \"{{name}}\"? This cannot be undone.",
+    "roles": {
+      "primary": "Primary",
+      "secondary": "Secondary",
+      "inverse": "Inverse",
+      "neutral": "Neutral",
+      "success": "Success",
+      "warning": "Warning",
+      "danger": "Danger",
+      "info": "Info"
+    },
+    "toast": {
+      "loadError": "Failed to load data",
+      "validationError": "Name is required",
+      "created": "Color group created",
+      "updated": "Color group updated",
+      "saveError": "Failed to save color group",
+      "deleted": "Color group deleted",
+      "deleteError": "Failed to delete color group"
+    }
+  },
+  "businessInfo": {
+    "title": "Business Info",
+    "subtitle": "Used across the storefront — footer, contact page, receipts, and more.",
+    "sections": {
+      "brand": "Brand",
+      "contact": "Contact",
+      "address": "Address",
+      "socialMedia": "Social Media",
+      "aboutUs": "About Us",
+      "other": "Other"
+    },
+    "fields": {
+      "logo": "Logo",
+      "logoHint": "Shown in the header and footer",
+      "storeName": "Store name *",
+      "tagline": "Tagline",
+      "taglineHint": "Short description shown under the logo or in the hero",
+      "email": "Email",
+      "phone": "Phone",
+      "addressLine1": "Address line 1",
+      "addressLine2": "Address line 2",
+      "cityStatePostal": "City / State / Postal",
+      "country": "Country",
+      "businessHours": "Business hours",
+      "businessHoursHint": "Free text — e.g. Mon–Fri 9am–6pm",
+      "taxId": "Tax ID / Business reg. no.",
+      "aboutUsHint": "Rich text content shown on the About Us page of the storefront."
+    },
+    "logo": {
+      "clickToUpload": "Click to upload",
+      "replaceLogo": "Replace logo",
+      "uploadLogo": "Upload logo"
+    },
+    "placeholders": {
+      "storeName": "e.g. Maoshu Store",
+      "tagline": "e.g. Fresh groceries, delivered fast",
+      "email": "hello@yourstore.com",
+      "phone": "+84 xxx xxx xxx",
+      "addressLine1": "Street address",
+      "addressLine2": "Apartment, suite, unit (optional)",
+      "city": "City",
+      "state": "State / Province",
+      "postalCode": "Postal code",
+      "country": "e.g. Vietnam",
+      "taxId": "e.g. MST 0123456789"
+    },
+    "toast": {
+      "loadError": "Failed to load business info",
+      "validationError": "Store name is required",
+      "saved": "Business info saved",
+      "saveError": "Failed to save",
+      "uploadError": "Upload failed"
+    }
+  },
+  "contents": {
+    "title": "Content",
+    "add": "Add Content",
+    "editTitle": "Edit Content",
+    "newTitle": "New Content",
+    "filters": {
+      "type": "Type",
+      "status": "Status",
+      "allTypes": "All types",
+      "allStatuses": "All statuses",
+      "showing": "{{filtered}} of {{total}}"
+    },
+    "types": {
+      "news": "News",
+      "terms": "Terms & Conditions",
+      "privacy": "Privacy Policy",
+      "return_policy": "Return Policy",
+      "faq": "FAQ",
+      "announcement": "Announcement"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "published": "Published",
+      "archived": "Archived"
+    },
+    "empty": "No content yet. Click \"Add Content\" to get started.",
+    "emptyFiltered": "No content matches the current filters.",
+    "deleteConfirm": "Delete \"{{title}}\"? This cannot be undone.",
+    "table": {
+      "title": "Title",
+      "type": "Type",
+      "status": "Status",
+      "published": "Published",
+      "active": "Active"
+    },
+    "form": {
+      "basicInfo": "Basic Info",
+      "content": "Content",
+      "mediaAuthor": "Media & Author",
+      "seo": "SEO",
+      "title": "Title *",
+      "handle": "Handle *",
+      "handleHint": "Used in URLs. Auto-generated from title.",
+      "type": "Type *",
+      "status": "Status",
+      "active": "Active",
+      "showInFooter": "Show in Footer",
+      "showInFooterHint": "Display this content as a link in the storefront footer",
+      "excerpt": "Excerpt",
+      "excerptPlaceholder": "Short summary shown in lists and previews",
+      "body": "Body",
+      "thumbnail": "Thumbnail",
+      "author": "Author",
+      "authorPlaceholder": "Author name",
+      "publishDate": "Publish Date",
+      "seoTitle": "SEO Title",
+      "seoTitlePlaceholder": "Override for browser tab / search results",
+      "seoDescription": "SEO Description",
+      "seoDescriptionPlaceholder": "Meta description shown in search results",
+      "titlePlaceholder": "e.g. Privacy Policy",
+      "handlePlaceholder": "e.g. privacy-policy"
+    },
+    "thumbnail": {
+      "clickToUpload": "Click to upload thumbnail",
+      "formats": "PNG, JPG, WEBP",
+      "replace": "Replace image",
+      "upload": "Upload image"
+    },
+    "editor": {
+      "enterUrl": "Enter URL",
+      "urlPlaceholder": "https://…",
+      "apply": "Apply",
+      "cancel": "Cancel"
+    },
+    "toast": {
+      "loadError": "Failed to load content",
+      "validationError": "Title, handle, and type are required",
+      "created": "Content created",
+      "updated": "Content updated",
+      "saveError": "Failed to save content",
+      "deleted": "Content deleted",
+      "deleteError": "Failed to delete content",
+      "uploadError": "Upload failed"
+    }
+  }
+}
