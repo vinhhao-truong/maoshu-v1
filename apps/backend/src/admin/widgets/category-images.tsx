@@ -1,5 +1,5 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk"
-import { Button, toast } from "@medusajs/ui"
+import { Button, Input, toast } from "@medusajs/ui"
 import { useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -111,10 +111,26 @@ const CategoryImagesWidget = ({ data }: { data: CategoryData }) => {
     data.metadata ?? {}
   )
   const [uploading, setUploading] = useState({ horizontal: false, vertical: false, logo: false })
+  const [slogan, setSlogan] = useState<string>(data.metadata?.slogan ?? "")
+  const [savingSlogan, setSavingSlogan] = useState(false)
 
   const hRef = useRef<HTMLInputElement>(null!)
   const vRef = useRef<HTMLInputElement>(null!)
   const lRef = useRef<HTMLInputElement>(null!)
+
+  const handleSaveSlogan = async () => {
+    setSavingSlogan(true)
+    try {
+      const newMeta = { ...metadata, slogan: slogan.trim() || null }
+      await saveCategoryMetadata(data.id, newMeta)
+      setMetadata(newMeta)
+      toast.success(t("categoryImages.toast.sloganSaved"))
+    } catch (e: any) {
+      toast.error(e?.message ?? t("categoryImages.toast.uploadError"))
+    } finally {
+      setSavingSlogan(false)
+    }
+  }
 
   const handleUpload = async (file: File, type: "horizontal" | "vertical" | "logo") => {
     const field = type === "horizontal" ? "horizontal_image" : type === "vertical" ? "vertical_image" : "logo_image"
@@ -167,6 +183,26 @@ const CategoryImagesWidget = ({ data }: { data: CategoryData }) => {
         inputRef={lRef}
         onFileSelect={(f) => handleUpload(f, "logo")}
       />
+
+      <div className="flex flex-col gap-y-2">
+        <p className="txt-compact-small text-ui-fg-subtle font-medium">
+          {t("categoryImages.slogan")}
+        </p>
+        <Input
+          value={slogan}
+          onChange={(e) => setSlogan(e.target.value)}
+          placeholder={t("categoryImages.sloganPlaceholder")}
+        />
+        <Button
+          size="small"
+          variant="secondary"
+          isLoading={savingSlogan}
+          onClick={handleSaveSlogan}
+          className="w-full"
+        >
+          {t("categoryImages.saveSlogan")}
+        </Button>
+      </div>
     </div>
   )
 }

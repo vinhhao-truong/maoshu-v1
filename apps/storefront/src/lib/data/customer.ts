@@ -62,11 +62,21 @@ export const updateCustomer = async (body: HttpTypes.StoreUpdateCustomer) => {
 
 export async function signup(_currentState: unknown, formData: FormData) {
   const password = formData.get("password") as string
+  const phone = (formData.get("phone") as string)?.trim()
+  const emailInput = (formData.get("email") as string)?.trim()
+
+  if (!phone) {
+    return "Phone number is required"
+  }
+
+  // emailpass provider requires an email — generate one from phone if not provided
+  const email = emailInput || `${phone.replace(/\D/g, "")}@phone.store.local`
+
   const customerForm = {
-    email: formData.get("email") as string,
+    email,
     first_name: formData.get("first_name") as string,
     last_name: formData.get("last_name") as string,
-    phone: formData.get("phone") as string,
+    phone,
   }
 
   try {
@@ -114,8 +124,14 @@ export async function signup(_currentState: unknown, formData: FormData) {
 }
 
 export async function login(_currentState: unknown, formData: FormData) {
-  const email = formData.get("email") as string
+  const identifier = ((formData.get("identifier") ?? formData.get("email")) as string)?.trim()
   const password = formData.get("password") as string
+
+  // If identifier looks like a phone number, reconstruct the synthetic email
+  const isPhone = /^[+\d\s\-().]+$/.test(identifier) && identifier.replace(/\D/g, "").length >= 6
+  const email = isPhone
+    ? `${identifier.replace(/\D/g, "")}@phone.store.local`
+    : identifier
 
   try {
     await sdk.auth

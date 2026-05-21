@@ -1,5 +1,6 @@
 import { HttpTypes } from "@medusajs/types"
 import { Text } from "@modules/common/components/ui"
+import { useLocale, useTranslations } from "next-intl"
 
 type OrderDetailsProps = {
   order: HttpTypes.StoreOrder
@@ -7,48 +8,47 @@ type OrderDetailsProps = {
 }
 
 const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
+  const t = useTranslations("order")
+  const locale = useLocale()
+
   const formatStatus = (str: string) => {
     const formatted = str.split("_").join(" ")
-
     return formatted.slice(0, 1).toUpperCase() + formatted.slice(1)
   }
 
   return (
     <div>
       <Text>
-        We have sent the order confirmation details to{" "}
-        <span
-          className="text-ui-fg-medium-plus font-semibold"
-          data-testid="order-email"
-        >
-          {order.email}
+        {t("processingOrderPrefix")}{" "}
+        <span className="text-ui-fg-medium-plus font-semibold">
+          {order.shipping_address?.phone}
         </span>
-        .
+        {t("processingOrderSuffix")}
       </Text>
       <Text className="mt-2">
-        Order date:{" "}
+        {t("orderDate")}:{" "}
         <span data-testid="order-date">
-          {new Date(order.created_at).toDateString()}
+          {new Date(order.created_at).toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" })}
         </span>
       </Text>
       <Text className="mt-2 text-ui-fg-interactive">
-        Order number: <span data-testid="order-id">{order.display_id}</span>
+        {t("orderNumber")}: <span data-testid="order-id">#{order.id.slice(-8).toUpperCase()}</span>
       </Text>
 
       <div className="flex items-center text-compact-small gap-x-4 mt-4">
         {showStatus && (
           <>
             <Text>
-              Order status:{" "}
-              <span className="text-ui-fg-subtle " data-testid="order-status">
+              {t("orderStatus")}:{" "}
+              <span className="text-ui-fg-subtle" data-testid="order-status">
                 {formatStatus(order.fulfillment_status)}
               </span>
             </Text>
             <Text>
-              Payment status:{" "}
+              {t("paymentStatus")}:{" "}
               <span
-                className="text-ui-fg-subtle "
-                sata-testid="order-payment-status"
+                className="text-ui-fg-subtle"
+                data-testid="order-payment-status"
               >
                 {formatStatus(order.payment_status)}
               </span>

@@ -114,8 +114,12 @@
       "horizontalSaved": "Horizontal image saved",
       "verticalSaved": "Vertical image saved",
       "logoSaved": "Logo image saved",
-      "uploadError": "Upload failed"
-    }
+      "uploadError": "Upload failed",
+      "sloganSaved": "Slogan saved"
+    },
+    "slogan": "Slogan",
+    "sloganPlaceholder": "e.g. Fresh & fast delivery",
+    "saveSlogan": "Save slogan"
   },
   "systemColors": {
     "title": "System Colors",
@@ -216,6 +220,15 @@
       "saveError": "Failed to save",
       "uploadError": "Upload failed"
     }
+  },
+  "orderShortId": {
+    "title": "Order Reference"
+  },
+  "orderListShortId": {
+    "title": "Active Orders",
+    "searchPlaceholder": "Search short ID…",
+    "noMatch": "No orders match.",
+    "empty": "No active orders."
   },
   "contents": {
     "title": "Content",

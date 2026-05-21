@@ -5,6 +5,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
 import { getTranslations } from "next-intl/server"
+import { isPhoneUser } from "@lib/util/customer"
 
 type OverviewProps = {
   customer: HttpTypes.StoreCustomer | null
@@ -28,7 +29,7 @@ const Overview = async ({ customer, orders }: OverviewProps) => {
               data-testid="customer-email"
               data-value={customer?.email}
             >
-              {customer?.email}
+              {isPhoneUser(customer?.email) ? customer?.phone : customer?.email}
             </span>
           </span>
         </div>

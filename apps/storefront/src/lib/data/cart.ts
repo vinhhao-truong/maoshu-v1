@@ -368,45 +368,64 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
       throw new Error("No existing cart found when setting addresses")
     }
 
+    const splitFullName = (fullName: string) => {
+      const parts = (fullName || "").trim().split(/\s+/)
+      return { first_name: parts[0] || "", last_name: parts.slice(1).join(" ") || "" }
+    }
+
+    const shippingName = splitFullName(formData.get("shipping_address.full_name") as string)
+    const shippingPhone = (formData.get("shipping_address.phone") as string)?.trim() || ""
+    const emailInput = (formData.get("email") as string)?.trim()
+    const email = emailInput || `${shippingPhone.replace(/\D/g, "")}@phone.store.local`
+
+    const countryCode = formData.get("shipping_address.country_code") as string
+
     const data = {
       shipping_address: {
-        first_name: formData.get("shipping_address.first_name"),
-        last_name: formData.get("shipping_address.last_name"),
+        first_name: shippingName.first_name,
+        last_name: shippingName.last_name,
         address_1: formData.get("shipping_address.address_1"),
         address_2: "",
         company: formData.get("shipping_address.company"),
-        postal_code: formData.get("shipping_address.postal_code"),
-        city: formData.get("shipping_address.city"),
-        country_code: formData.get("shipping_address.country_code"),
-        province: formData.get("shipping_address.province"),
-        phone: formData.get("shipping_address.phone"),
+        country_code: countryCode,
+        phone: shippingPhone,
       },
-      email: formData.get("email"),
+      email,
     } as any
 
     const sameAsBilling = formData.get("same_as_billing")
     if (sameAsBilling === "on") data.billing_address = data.shipping_address
 
-    if (sameAsBilling !== "on")
+    if (sameAsBilling !== "on") {
+      const billingName = splitFullName(formData.get("billing_address.full_name") as string)
       data.billing_address = {
-        first_name: formData.get("billing_address.first_name"),
-        last_name: formData.get("billing_address.last_name"),
+        first_name: billingName.first_name,
+        last_name: billingName.last_name,
         address_1: formData.get("billing_address.address_1"),
         address_2: "",
         company: formData.get("billing_address.company"),
-        postal_code: formData.get("billing_address.postal_code"),
-        city: formData.get("billing_address.city"),
-        country_code: formData.get("billing_address.country_code"),
-        province: formData.get("billing_address.province"),
+        country_code: countryCode,
         phone: formData.get("billing_address.phone"),
       }
+    }
     await updateCart(data)
+
+    const authHeaders = await getAuthHeaders()
+    if (authHeaders) {
+      await sdk.store.customer
+        .update(
+          { first_name: shippingName.first_name, last_name: shippingName.last_name },
+          {},
+          authHeaders
+        )
+        .catch(() => {})
+    }
   } catch (e: any) {
     return e.message
   }
 
   redirect(
-    `/${formData.get("shipping_address.country_code")}/checkout?step=delivery`
+    `/${formData.get("shipping_address.country_code") || "vn"}/checkout?step=delivery`
   )
 }
 

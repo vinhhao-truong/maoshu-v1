@@ -7,6 +7,7 @@ import Input from "@modules/common/components/input"
 import AccountInfo from "../account-info"
 import { HttpTypes } from "@medusajs/types"
 import { useTranslations } from "next-intl"
+import { isPhoneUser } from "@lib/util/customer"
 
 type MyInformationProps = {
   customer: HttpTypes.StoreCustomer
@@ -46,7 +47,7 @@ const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
     <form action={formAction} className="w-full">
       <AccountInfo
         label={t("email")}
-        currentInfo={`${customer.email}`}
+        currentInfo={isPhoneUser(customer.email) ? "" : `${customer.email}`}
         isSuccess={successState}
         isError={!!state.error}
         errorMessage={state.error || undefined}
@@ -60,7 +61,7 @@ const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
             type="email"
             autoComplete="email"
             required
-            defaultValue={customer.email}
+            defaultValue={isPhoneUser(customer.email) ? "" : customer.email}
             data-testid="email-input"
           />
         </div>

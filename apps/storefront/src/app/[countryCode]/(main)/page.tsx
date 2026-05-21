@@ -66,7 +66,7 @@ export default async function Home(props: {
 
   return (
     <>
-      <Hero />
+      <Hero rootCategory={rootCategory} />
       <FeaturedProducts collections={collections} countryCode={countryCode} categoryIds={rootCategoryIds} />
       <div className="content-container py-12 flex flex-col small:flex-row gap-8">
         <CategorySidebar

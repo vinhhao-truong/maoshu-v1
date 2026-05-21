@@ -45,19 +45,19 @@ const Register = ({ setCurrentView }: Props) => {
             data-testid="last-name-input"
           />
           <Input
-            label={t("email")}
-            name="email"
-            required
-            type="email"
-            autoComplete="email"
-            data-testid="email-input"
-          />
-          <Input
             label={t("phone")}
             name="phone"
+            required
             type="tel"
             autoComplete="tel"
             data-testid="phone-input"
+          />
+          <Input
+            label={t("email")}
+            name="email"
+            type="email"
+            autoComplete="email"
+            data-testid="email-input"
           />
           <Input
             label={t("password")}

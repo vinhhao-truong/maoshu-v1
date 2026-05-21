@@ -114,8 +114,12 @@
       "horizontalSaved": "Đã lưu ảnh ngang",
       "verticalSaved": "Đã lưu ảnh dọc",
       "logoSaved": "Đã lưu ảnh logo",
-      "uploadError": "Tải lên thất bại"
-    }
+      "uploadError": "Tải lên thất bại",
+      "sloganSaved": "Đã lưu khẩu hiệu"
+    },
+    "slogan": "Khẩu hiệu",
+    "sloganPlaceholder": "VD: Tươi ngon, giao nhanh",
+    "saveSlogan": "Lưu khẩu hiệu"
   },
   "systemColors": {
     "title": "Màu hệ thống",
@@ -216,6 +220,15 @@
       "saveError": "Không thể lưu",
       "uploadError": "Tải lên thất bại"
     }
+  },
+  "orderShortId": {
+    "title": "Mã tham chiếu"
+  },
+  "orderListShortId": {
+    "title": "Đơn hàng đang xử lý",
+    "searchPlaceholder": "Tìm mã ngắn…",
+    "noMatch": "Không tìm thấy đơn hàng.",
+    "empty": "Không có đơn hàng đang xử lý."
   },
   "contents": {
     "title": "Nội dung",

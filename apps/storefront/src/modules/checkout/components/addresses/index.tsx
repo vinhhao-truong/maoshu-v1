@@ -1,5 +1,6 @@
 "use client"
 import { setAddresses } from "@lib/data/cart"
+import { isPhoneUser } from "@lib/util/customer"
 import useToggleState from "@lib/hooks/use-toggle-state"
 import compareAddresses from "@lib/util/compare-addresses"
 import { CheckCircleSolid } from "@medusajs/icons"
@@ -131,9 +132,11 @@ const Addresses = ({
                     <Text className="txt-medium text-ui-fg-subtle">
                       {cart.shipping_address.phone}
                     </Text>
-                    <Text className="txt-medium text-ui-fg-subtle">
-                      {cart.email}
-                    </Text>
+                    {!isPhoneUser(cart.email) && (
+                      <Text className="txt-medium text-ui-fg-subtle">
+                        {cart.email}
+                      </Text>
+                    )}
                   </div>
 
                   <div
