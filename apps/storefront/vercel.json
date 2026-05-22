@@ -1,0 +1,3 @@
+{
+  "installCommand": "npm install --include-workspace-root --workspace=apps/storefront"
+}
