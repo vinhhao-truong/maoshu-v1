@@ -4,7 +4,7 @@ import BusinessInfoModuleService from "../../../modules/business-info/service"
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const service: BusinessInfoModuleService = req.scope.resolve(BUSINESS_INFO_MODULE)
-  const [info] = await service.listBusinessInfos({}, { take: 1 })
+  const [info] = await service.listBusinessInfoes({}, { take: 1 })
   res.json({ business_info: info ?? null })
 }
 
@@ -16,13 +16,13 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     return res.status(400).json({ message: "store_name is required" })
   }
 
-  const [existing] = await service.listBusinessInfos({}, { take: 1 })
+  const [existing] = await service.listBusinessInfoes({}, { take: 1 })
 
   let info
   if (existing) {
-    ;[info] = await service.updateBusinessInfos([{ id: existing.id, ...body }])
+    ;[info] = await service.updateBusinessInfoes([{ id: existing.id, ...body }])
   } else {
-    info = await service.createBusinessInfos(body)
+    info = await service.createBusinessInfoes(body)
   }
 
   res.json({ business_info: info })

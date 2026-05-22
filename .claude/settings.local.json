@@ -12,7 +12,8 @@
       "Bash(node -e \"const d=require\\('fs'\\).readFileSync\\('/dev/stdin','utf8'\\); const j=JSON.parse\\(d\\); console.log\\('version:', j.version\\); console.log\\('peerDeps:', JSON.stringify\\(j.peerDependencies\\)\\)\")",
       "Bash(node -e \"const d=require\\('fs'\\).readFileSync\\(0,'utf8'\\); const p=JSON.parse\\(d\\); console.log\\('main:', p.main\\); console.log\\('exports:', JSON.stringify\\(p.exports, null, 2\\)\\)\")",
       "Bash(node -e \"const m = require\\('@medusajs/file-s3'\\); console.log\\('keys:', Object.keys\\(m\\)\\); console.log\\('default:', typeof m.default\\); console.log\\('module:', typeof m.S3FileService || typeof m.default\\)\")",
-      "Bash(node *)"
+      "Bash(node *)",
+      "Bash(npx tsc *)"
     ]
   }
 }
