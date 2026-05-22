@@ -162,7 +162,7 @@ const CollectionImagesWidget = ({ data }: { data: CollectionData }) => {
 }
 
 export const config = defineWidgetConfig({
-  zone: "product_collection.details.side.before",
+  zone: "product_collection.details.before",
 })
 
 export default CollectionImagesWidget

@@ -16,7 +16,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
 
   const [existing] = await variantCostService.listVariantCosts({ variant_id: variantId })
   if (existing) {
-    await variantCostService.updateVariantCosts(existing.id, { cost })
+    await variantCostService.updateVariantCosts([{ id: existing.id, cost }])
   } else if (cost != null) {
     await variantCostService.createVariantCosts({ variant_id: variantId, cost })
   }

@@ -34,7 +34,13 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     }
   }
 
-  const [content] = await contentService.updateContents([{ id: req.params.id, ...body }])
+  const [content] = await contentService.updateContents([{
+    id: req.params.id,
+    ...body,
+    published_at: body.published_at !== undefined
+      ? (body.published_at ? new Date(body.published_at) : null)
+      : undefined,
+  }])
   res.json({ content })
 }
 

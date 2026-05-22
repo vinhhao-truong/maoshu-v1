@@ -8,7 +8,7 @@ import {
 import { Upload } from "@aws-sdk/lib-storage"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { AbstractFileProviderService, MedusaError } from "@medusajs/framework/utils"
-import { PassThrough } from "stream"
+import { PassThrough, Readable } from "stream"
 import { parse } from "path"
 import { ulid } from "ulid"
 import type { Logger } from "@medusajs/framework/types"
@@ -193,14 +193,17 @@ export class SupabaseFileService extends AbstractFileProviderService {
     return { url: signedUrl, key }
   }
 
-  async getDownloadStream(file: any) {
+  async getDownloadStream(file: any): Promise<Readable> {
     if (!file?.fileKey) {
       throw new MedusaError(MedusaError.Types.INVALID_DATA, "No fileKey provided")
     }
     const response = await this.client_.send(
       new GetObjectCommand({ Key: file.fileKey, Bucket: this.config_.bucket })
     )
-    return response.Body
+    if (!response.Body) {
+      throw new MedusaError(MedusaError.Types.NOT_FOUND, "File not found")
+    }
+    return response.Body as unknown as Readable
   }
 
   async getAsBuffer(file: any) {

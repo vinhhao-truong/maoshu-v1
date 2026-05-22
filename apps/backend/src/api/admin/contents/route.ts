@@ -44,6 +44,9 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     return res.status(409).json({ message: "A content item with this handle already exists" })
   }
 
-  const content = await contentService.createContents(body)
+  const content = await contentService.createContents({
+    ...body,
+    published_at: body.published_at ? new Date(body.published_at) : undefined,
+  })
   res.status(201).json({ content })
 }
