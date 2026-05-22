@@ -20,13 +20,13 @@ function readAsBase64(file: File): Promise<string> {
   })
 }
 
-async function uploadFile(file: File): Promise<string> {
+async function uploadFile(file: File, folder: string, oldUrl?: string): Promise<string> {
   const data = await readAsBase64(file)
-  const res = await fetch(`${BACKEND_URL}/admin/uploads`, {
+  const res = await fetch(`${BACKEND_URL}/admin/media`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ filename: file.name, data }),
+    body: JSON.stringify({ filename: file.name, data, folder, ...(oldUrl ? { oldUrl } : {}) }),
   })
   if (!res.ok) throw new Error("Upload failed")
   const json = await res.json()
@@ -119,7 +119,8 @@ const CollectionImagesWidget = ({ data }: { data: CollectionData }) => {
     const field = type === "horizontal" ? "horizontal_image" : "vertical_image"
     setUploading((u) => ({ ...u, [type]: true }))
     try {
-      const url = await uploadFile(file)
+      const folder = `collection/${data.id}/${field}`
+      const url = await uploadFile(file, folder, metadata[field] || undefined)
       const newMeta = { ...metadata, [field]: url }
       await saveCollectionMetadata(data.id, newMeta)
       setMetadata(newMeta)

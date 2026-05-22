@@ -10,6 +10,7 @@ import { useState } from "react"
 
 type Props = {
   categories: HttpTypes.StoreProductCategory[]
+  hasCartItems: boolean
 }
 
 function getCategoryImage(category: HttpTypes.StoreProductCategory): string | undefined {
@@ -18,7 +19,7 @@ function getCategoryImage(category: HttpTypes.StoreProductCategory): string | un
   return undefined
 }
 
-export default function CategoryGrid({ categories }: Props) {
+export default function CategoryGrid({ categories, hasCartItems }: Props) {
   const t = useTranslations("cart")
   const router = useRouter()
   const params = useParams()
@@ -39,7 +40,7 @@ export default function CategoryGrid({ categories }: Props) {
 
   const handleSelect = (id: string) => {
     const existing = localStorage.getItem("selectedCategoryId")
-    if (existing && existing !== id) {
+    if (existing && existing !== id && hasCartItems) {
       setPendingId(id)
       return
     }

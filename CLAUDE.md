@@ -115,6 +115,69 @@ The active root category is stored in `localStorage` (key: `selectedCategoryId`)
 
 **To add a new theme:** add a `[data-theme="name"]` block to `globals.css` overriding `--color-primary*` and `--color-secondary*`, then add the handle mapping to `HANDLE_TO_THEME` in `src/lib/util/theme.ts`.
 
+## File Uploads
+
+**All file uploads — including any custom API routes — must go through Medusa's file module service.** Never write files directly to the filesystem (`fs.writeFileSync`, `fs.createWriteStream`, etc.). The file module is configured to use the custom Supabase Storage provider (`src/modules/supabase-file`) and is the only sanctioned upload path.
+
+### Upload route (`POST /admin/media`)
+
+**Do NOT use `POST /admin/uploads`** — that path is Medusa's built-in multipart upload endpoint for product images. Our custom JSON-based upload lives at `/admin/media` (`src/api/admin/media/route.ts`).
+
+The shared upload endpoint accepts:
+
+```typescript
+{
+  filename: string   // original filename (used for extension/MIME detection)
+  data: string       // base64-encoded file content
+  folder?: string    // storage path prefix, e.g. "category/cat_123/logo_image"
+  oldUrl?: string    // full URL of the file being replaced — backend deletes it first
+}
+```
+
+Returns `{ url: string }` — the Supabase Storage public URL.
+
+### Folder convention
+
+All callers must pass a `folder` that encodes `{entity}/{id}/{field}`:
+
+| Caller | Folder pattern |
+|--------|----------------|
+| Category images widget | `category/{id}/{field}` (e.g. `category/pcat_01/logo_image`) |
+| Collection images widget | `collection/{id}/{field}` |
+| Content thumbnails | `content/{id}/thumbnail` (new items: `content/thumbnail`) |
+| Business info logo | `business-info/logo` |
+
+### Replacing files
+
+Always pass `oldUrl` when a file already exists for that slot. The backend extracts the storage key from the URL and calls `fileService.deleteFiles([key])` before uploading the new file, so old files are cleaned up automatically.
+
+### Direct use of the file service
+
+In a custom API route that doesn't go through `/admin/uploads`:
+
+```typescript
+import { Modules } from "@medusajs/framework/utils"
+
+const fileService = req.scope.resolve(Modules.FILE)
+const [uploaded] = await fileService.createFiles([
+  { filename: "folder/myfile.jpg", mimeType, content: base64String, access: "public" },
+])
+res.json({ url: uploaded.url })
+
+// To delete: fileService.deleteFiles([storageKey])
+// The storage key equals uploaded.id (returned by createFiles) or is derived from
+// the URL by stripping the S3_FILE_URL base prefix.
+```
+
+- `content` must be a base64-encoded string.
+- `access: "public"` for media visible to customers; `"private"` for internal files.
+- The returned `url` is the Supabase Storage public URL — store this in the database, not a local path.
+- The static-serving route `GET /uploads/[filename]` exists only as a fallback for files uploaded before the Supabase migration. Do not rely on it for new uploads.
+
+### Provider notes
+
+The file provider is `src/modules/supabase-file` (NOT `@medusajs/file-s3`). The custom provider is required because Supabase Storage does not support S3 ACL headers, which `@medusajs/file-s3` hardcodes. The custom provider also preserves folder structure in storage keys.
+
 ## Key Notes
 
 - **Data fetching cache**: Use `cache: "no-store"` (not `next: { revalidate: N }`) in `sdk.client.fetch` calls for admin-managed content (business info, CMS pages, etc.) so changes appear immediately without a revalidation delay.

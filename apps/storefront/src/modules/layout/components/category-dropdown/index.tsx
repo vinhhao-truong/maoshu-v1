@@ -3,7 +3,7 @@
 import { HttpTypes } from "@medusajs/types"
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
-import { clearCart } from "@lib/data/cart"
+import { clearCart, retrieveCart } from "@lib/data/cart"
 import ConfirmModal from "@modules/common/components/confirm-modal"
 import { clx } from "@modules/common/components/ui"
 import { useTranslations } from "next-intl"
@@ -28,10 +28,13 @@ export default function CategorySwitch({ categories }: Props) {
     }
   }, [categories])
 
-  const handleSelect = (category: HttpTypes.StoreProductCategory) => {
+  const handleSelect = async (category: HttpTypes.StoreProductCategory) => {
     if (selected && selected.id !== category.id) {
-      setPending(category)
-      return
+      const cart = await retrieveCart(undefined, "id,*items")
+      if ((cart?.items?.length ?? 0) > 0) {
+        setPending(category)
+        return
+      }
     }
     applySwitch(category)
   }

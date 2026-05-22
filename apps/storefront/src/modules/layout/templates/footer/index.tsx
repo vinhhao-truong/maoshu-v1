@@ -9,7 +9,7 @@ import MedusaCTA from "@modules/layout/components/medusa-cta";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
-export default async function Footer({ categoryLogoUrl }: { categoryLogoUrl?: string }) {
+export default async function Footer({ categoryLogoUrl, categoryName }: { categoryLogoUrl?: string; categoryName?: string }) {
   const [{ collections }, productCategories, t, footerContent] = await Promise.all([
     listCollections({ fields: "*products" }),
     listCategories(),
@@ -140,7 +140,7 @@ export default async function Footer({ categoryLogoUrl }: { categoryLogoUrl?: st
         </div>
         <div className="flex w-full mb-16 justify-between text-ui-fg-muted">
           <Text className="txt-compact-small">
-            {t("copyright", { year: new Date().getFullYear() })}
+            {t("copyright", { year: new Date().getFullYear() })}{categoryName ? ` ${categoryName}` : ""}
           </Text>
           <MedusaCTA />
         </div>

@@ -62,13 +62,13 @@ function readAsBase64(file: File): Promise<string> {
   })
 }
 
-async function uploadFile(file: File): Promise<string> {
+async function uploadFile(file: File, folder: string, oldUrl?: string): Promise<string> {
   const data = await readAsBase64(file)
-  const res = await fetch(`${BACKEND_URL}/admin/uploads`, {
+  const res = await fetch(`${BACKEND_URL}/admin/media`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ filename: file.name, data }),
+    body: JSON.stringify({ filename: file.name, data, folder, ...(oldUrl ? { oldUrl } : {}) }),
   })
   if (!res.ok) throw new Error("Upload failed")
   return (await res.json()).url as string
@@ -332,7 +332,7 @@ const BusinessInfoPage = () => {
   const handleLogoUpload = async (file: File) => {
     setUploading(true)
     try {
-      const url = await uploadFile(file)
+      const url = await uploadFile(file, "business-info/logo", form.logo_url || undefined)
       setForm((f) => ({ ...f, logo_url: url }))
     } catch (e: any) {
       toast.error(e?.message ?? t("businessInfo.toast.uploadError"))

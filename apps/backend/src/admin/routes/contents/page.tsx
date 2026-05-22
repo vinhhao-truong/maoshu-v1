@@ -99,13 +99,13 @@ function readAsBase64(file: File): Promise<string> {
   })
 }
 
-async function uploadFile(file: File): Promise<string> {
+async function uploadFile(file: File, folder: string, oldUrl?: string): Promise<string> {
   const data = await readAsBase64(file)
-  const res = await fetch(`${BACKEND_URL}/admin/uploads`, {
+  const res = await fetch(`${BACKEND_URL}/admin/media`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ filename: file.name, data }),
+    body: JSON.stringify({ filename: file.name, data, folder, ...(oldUrl ? { oldUrl } : {}) }),
   })
   if (!res.ok) throw new Error("Upload failed")
   const json = await res.json()
@@ -115,9 +115,11 @@ async function uploadFile(file: File): Promise<string> {
 function ThumbnailUpload({
   value,
   onChange,
+  folder,
 }: {
   value: string
   onChange: (url: string) => void
+  folder: string
 }) {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null!)
@@ -126,7 +128,7 @@ function ThumbnailUpload({
   const handleFile = async (file: File) => {
     setUploading(true)
     try {
-      const url = await uploadFile(file)
+      const url = await uploadFile(file, folder, value || undefined)
       onChange(url)
     } catch (e: any) {
       toast.error(e?.message ?? t("contents.toast.uploadError"))
@@ -611,6 +613,7 @@ function ContentFormModal({
                 <ThumbnailUpload
                   value={form.thumbnail_url}
                   onChange={(url) => set("thumbnail_url")(url)}
+                  folder={item ? `content/${item.id}/thumbnail` : "content/thumbnail"}
                 />
               </div>
 
