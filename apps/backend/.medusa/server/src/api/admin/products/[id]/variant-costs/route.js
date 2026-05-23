@@ -1,0 +1,40 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.GET = GET;
+exports.POST = POST;
+const utils_1 = require("@medusajs/framework/utils");
+const variant_cost_1 = require("../../../../../modules/variant-cost");
+async function GET(req, res) {
+    const query = req.scope.resolve(utils_1.ContainerRegistrationKeys.QUERY);
+    const variantCostService = req.scope.resolve(variant_cost_1.VARIANT_COST_MODULE);
+    const { data } = await query.graph({
+        entity: "product",
+        filters: { id: req.params.id },
+        fields: ["id", "variants.id", "variants.title", "variants.sku"],
+    });
+    const product = data[0];
+    if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+    }
+    const variants = product.variants ?? [];
+    const variantIds = variants.map((v) => v.id);
+    const costs = variantIds.length > 0
+        ? await variantCostService.listVariantCosts({ variant_id: variantIds })
+        : [];
+    res.json({ variants, costs });
+}
+async function POST(req, res) {
+    const { costs } = req.body;
+    const variantCostService = req.scope.resolve(variant_cost_1.VARIANT_COST_MODULE);
+    for (const { variant_id, cost } of costs ?? []) {
+        const [existing] = await variantCostService.listVariantCosts({ variant_id });
+        if (existing) {
+            await variantCostService.updateVariantCosts([{ id: existing.id, cost }]);
+        }
+        else if (cost != null) {
+            await variantCostService.createVariantCosts({ variant_id, cost });
+        }
+    }
+    res.json({ success: true });
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicm91dGUuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi9zcmMvYXBpL2FkbWluL3Byb2R1Y3RzL1tpZF0vdmFyaWFudC1jb3N0cy9yb3V0ZS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUlBLGtCQXdCQztBQUVELG9CQWlCQztBQTlDRCxxREFBcUU7QUFDckUsc0VBQXlFO0FBRWxFLEtBQUssVUFBVSxHQUFHLENBQUMsR0FBa0IsRUFBRSxHQUFtQjtJQUMvRCxNQUFNLEtBQUssR0FBRyxHQUFHLENBQUMsS0FBSyxDQUFDLE9BQU8sQ0FBQyxpQ0FBeUIsQ0FBQyxLQUFLLENBQUMsQ0FBQTtJQUNoRSxNQUFNLGtCQUFrQixHQUFHLEdBQUcsQ0FBQyxLQUFLLENBQUMsT0FBTyxDQUFDLGtDQUFtQixDQUFDLENBQUE7SUFFakUsTUFBTSxFQUFFLElBQUksRUFBRSxHQUFHLE1BQU0sS0FBSyxDQUFDLEtBQUssQ0FBQztRQUNqQyxNQUFNLEVBQUUsU0FBUztRQUNqQixPQUFPLEVBQUUsRUFBRSxFQUFFLEVBQUUsR0FBRyxDQUFDLE1BQU0sQ0FBQyxFQUFFLEVBQUU7UUFDOUIsTUFBTSxFQUFFLENBQUMsSUFBSSxFQUFFLGFBQWEsRUFBRSxnQkFBZ0IsRUFBRSxjQUFjLENBQUM7S0FDaEUsQ0FBQyxDQUFBO0lBRUYsTUFBTSxPQUFPLEdBQUcsSUFBSSxDQUFDLENBQUMsQ0FBQyxDQUFBO0lBQ3ZCLElBQUksQ0FBQyxPQUFPLEVBQUUsQ0FBQztRQUNiLE9BQU8sR0FBRyxDQUFDLE1BQU0sQ0FBQyxHQUFHLENBQUMsQ0FBQyxJQUFJLENBQUMsRUFBRSxPQUFPLEVBQUUsbUJBQW1CLEVBQUUsQ0FBQyxDQUFBO0lBQy9ELENBQUM7SUFFRCxNQUFNLFFBQVEsR0FBSSxPQUFlLENBQUMsUUFBUSxJQUFJLEVBQUUsQ0FBQTtJQUNoRCxNQUFNLFVBQVUsR0FBYSxRQUFRLENBQUMsR0FBRyxDQUFDLENBQUMsQ0FBTSxFQUFFLEVBQUUsQ0FBQyxDQUFDLENBQUMsRUFBRSxDQUFDLENBQUE7SUFFM0QsTUFBTSxLQUFLLEdBQ1QsVUFBVSxDQUFDLE1BQU0sR0FBRyxDQUFDO1FBQ25CLENBQUMsQ0FBQyxNQUFNLGtCQUFrQixDQUFDLGdCQUFnQixDQUFDLEVBQUUsVUFBVSxFQUFFLFVBQVUsRUFBRSxDQUFDO1FBQ3ZFLENBQUMsQ0FBQyxFQUFFLENBQUE7SUFFUixHQUFHLENBQUMsSUFBSSxDQUFDLEVBQUUsUUFBUSxFQUFFLEtBQUssRUFBRSxDQUFDLENBQUE7QUFDL0IsQ0FBQztBQUVNLEtBQUssVUFBVSxJQUFJLENBQUMsR0FBa0IsRUFBRSxHQUFtQjtJQUNoRSxNQUFNLEVBQUUsS0FBSyxFQUFFLEdBQUcsR0FBRyxDQUFDLElBRXJCLENBQUE7SUFFRCxNQUFNLGtCQUFrQixHQUFHLEdBQUcsQ0FBQyxLQUFLLENBQUMsT0FBTyxDQUFDLGtDQUFtQixDQUFDLENBQUE7SUFFakUsS0FBSyxNQUFNLEVBQUUsVUFBVSxFQUFFLElBQUksRUFBRSxJQUFJLEtBQUssSUFBSSxFQUFFLEVBQUUsQ0FBQztRQUMvQyxNQUFNLENBQUMsUUFBUSxDQUFDLEdBQUcsTUFBTSxrQkFBa0IsQ0FBQyxnQkFBZ0IsQ0FBQyxFQUFFLFVBQVUsRUFBRSxDQUFDLENBQUE7UUFDNUUsSUFBSSxRQUFRLEVBQUUsQ0FBQztZQUNiLE1BQU0sa0JBQWtCLENBQUMsa0JBQWtCLENBQUMsQ0FBQyxFQUFFLEVBQUUsRUFBRSxRQUFRLENBQUMsRUFBRSxFQUFFLElBQUksRUFBRSxDQUFDLENBQUMsQ0FBQTtRQUMxRSxDQUFDO2FBQU0sSUFBSSxJQUFJLElBQUksSUFBSSxFQUFFLENBQUM7WUFDeEIsTUFBTSxrQkFBa0IsQ0FBQyxrQkFBa0IsQ0FBQyxFQUFFLFVBQVUsRUFBRSxJQUFJLEVBQUUsQ0FBQyxDQUFBO1FBQ25FLENBQUM7SUFDSCxDQUFDO0lBRUQsR0FBRyxDQUFDLElBQUksQ0FBQyxFQUFFLE9BQU8sRUFBRSxJQUFJLEVBQUUsQ0FBQyxDQUFBO0FBQzdCLENBQUMifQ==
