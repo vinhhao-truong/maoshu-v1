@@ -3,6 +3,9 @@ import { loadEnv, defineConfig } from '@medusajs/framework/utils'
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
 module.exports = defineConfig({
+  admin: {
+    disable: process.env.DISABLE_ADMIN === 'true',
+  },
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
     databaseDriverOptions: process.env.NODE_ENV === "production"
@@ -14,6 +17,7 @@ module.exports = defineConfig({
       authCors: process.env.AUTH_CORS!,
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
+      port: parseInt(process.env.PORT || "9000"),
     }
   },
   modules: [
