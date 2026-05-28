@@ -4,11 +4,9 @@ import { cookies } from "next/headers"
 import { listLocales } from "@lib/data/locales"
 import { getLocale } from "@lib/data/locale-actions"
 import { listRegions } from "@lib/data/regions"
-import { retrieveCustomer } from "@lib/data/customer"
-import { listCategories } from "@lib/data/categories"
 import { listCollections } from "@lib/data/collections"
 import { getBusinessInfo } from "@lib/data/business-info"
-import { StoreRegion } from "@medusajs/types"
+import { HttpTypes, StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
 import CategoryDropdown from "@modules/layout/components/category-dropdown"
@@ -17,20 +15,26 @@ import SearchBar from "@modules/layout/components/search-bar"
 import SubNav from "@modules/layout/components/sub-nav"
 import { getTranslations } from "next-intl/server"
 
-export default async function Nav() {
-  const [regions, locales, currentLocale, customer, t, allCategories, { collections }, cookieStore, businessInfo] = await Promise.all([
+export default async function Nav({
+  categories,
+  customer,
+}: {
+  categories: HttpTypes.StoreProductCategory[]
+  customer: HttpTypes.StoreCustomer | null
+}) {
+  // categories and customer are passed from the parent layout — no duplicate fetches
+  const [regions, locales, currentLocale, t, { collections }, cookieStore, businessInfo] = await Promise.all([
     listRegions().then((regions: StoreRegion[]) => regions),
     listLocales(),
     getLocale(),
-    retrieveCustomer(),
     getTranslations("nav"),
-    listCategories({ limit: 100 }),
     listCollections(),
     cookies(),
     getBusinessInfo(),
   ])
 
-  const topLevelCategories = (allCategories ?? []).filter((c) => !c.parent_category)
+  const allCategories = categories
+  const topLevelCategories = allCategories.filter((c) => !c.parent_category)
 
   const selectedCategoryId = cookieStore.get("selectedCategoryId")?.value
   const activeRoot = topLevelCategories.find((c) => c.id === selectedCategoryId) ?? null

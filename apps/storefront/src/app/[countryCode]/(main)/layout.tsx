@@ -23,17 +23,20 @@ export default async function PageLayout(props: {
   params: Promise<{ countryCode: string }>
 }) {
   const { countryCode } = await props.params
-  const customer = await retrieveCustomer()
-  const cart = await retrieveCart()
-  let shippingOptions: StoreCartShippingOption[] = []
 
+  // Fetch customer, cart, and categories in parallel — none depend on each other
+  const [customer, cart, categories] = await Promise.all([
+    retrieveCustomer(),
+    retrieveCart(),
+    listCategories({ limit: 100 }),
+  ])
+
+  let shippingOptions: StoreCartShippingOption[] = []
   if (cart) {
     const { shipping_options } = await listCartOptions()
-
     shippingOptions = shipping_options
   }
 
-  const categories = await listCategories({ limit: 100 })
   const rootCategories = (categories ?? []).filter((c) => !c.parent_category)
   const validIds = rootCategories.map((c) => c.id)
 
@@ -46,7 +49,7 @@ export default async function PageLayout(props: {
     <div data-theme={theme}>
       <ThemeSync theme={theme} />
       <CategoryGuard validIds={validIds} countryCode={countryCode} />
-      <Nav />
+      <Nav categories={categories ?? []} customer={customer} />
       {customer && cart && (
         <CartMismatchBanner customer={customer} cart={cart} />
       )}
@@ -59,7 +62,11 @@ export default async function PageLayout(props: {
         />
       )}
       {props.children}
-      <Footer categoryLogoUrl={activeRoot?.metadata?.logo_image as string | undefined} categoryName={activeRoot?.name} />
+      <Footer
+        categories={categories ?? []}
+        categoryLogoUrl={activeRoot?.metadata?.logo_image as string | undefined}
+        categoryName={activeRoot?.name}
+      />
     </div>
   )
 }

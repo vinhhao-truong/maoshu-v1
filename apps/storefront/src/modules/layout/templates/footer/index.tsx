@@ -1,7 +1,7 @@
-import { listCategories } from "@lib/data/categories";
 import { listCollections } from "@lib/data/collections";
 import { listFooterContent } from "@lib/data/content";
 import { Text, clx } from "@modules/common/components/ui";
+import { HttpTypes } from "@medusajs/types";
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link";
 import FooterCategories from "@modules/layout/components/footer-categories";
@@ -9,13 +9,23 @@ import MedusaCTA from "@modules/layout/components/medusa-cta";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
-export default async function Footer({ categoryLogoUrl, categoryName }: { categoryLogoUrl?: string; categoryName?: string }) {
-  const [{ collections }, productCategories, t, footerContent] = await Promise.all([
-    listCollections({ fields: "*products" }),
-    listCategories(),
+export default async function Footer({
+  categoryLogoUrl,
+  categoryName,
+  categories,
+}: {
+  categoryLogoUrl?: string
+  categoryName?: string
+  categories: HttpTypes.StoreProductCategory[]
+}) {
+  // categories passed from parent layout — no duplicate fetch
+  // listCollections no longer requests *products (only names/handles needed for links)
+  const [{ collections }, t, footerContent] = await Promise.all([
+    listCollections(),
     getTranslations("footer"),
     listFooterContent(),
   ]);
+  const productCategories = categories;
 
   return (
     <footer className="border-t border-ui-border-base w-full">

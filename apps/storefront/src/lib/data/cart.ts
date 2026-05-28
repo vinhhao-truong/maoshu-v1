@@ -363,7 +363,7 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
     if (!formData) {
       throw new Error("No form data found when setting addresses")
     }
-    const cartId = getCartId()
+    const cartId = await getCartId()
     if (!cartId) {
       throw new Error("No existing cart found when setting addresses")
     }
@@ -408,18 +408,21 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
         phone: formData.get("billing_address.phone"),
       }
     }
-    await updateCart(data)
-
     const authHeaders = await getAuthHeaders()
-    if (authHeaders) {
-      await sdk.store.customer
-        .update(
-          { first_name: shippingName.first_name, last_name: shippingName.last_name },
-          {},
-          authHeaders
-        )
-        .catch(() => {})
-    }
+
+    // Run cart update and customer profile update in parallel — they're independent
+    await Promise.all([
+      updateCart(data),
+      authHeaders
+        ? sdk.store.customer
+            .update(
+              { first_name: shippingName.first_name, last_name: shippingName.last_name },
+              {},
+              authHeaders
+            )
+            .catch(() => {})
+        : Promise.resolve(),
+    ])
   } catch (e: any) {
     return e.message
   }

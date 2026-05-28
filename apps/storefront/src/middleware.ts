@@ -115,9 +115,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Generate a fresh cache ID on every request so server components always
-  // get a cache miss and fetch live data from the backend.
-  const cacheId = crypto.randomUUID()
+  // Reuse the existing cache ID from the cookie so Next.js tag-based caching
+  // works across requests. Only generate a new one on the very first visit.
+  // Use revalidateTag() after mutations to bust specific data instead of
+  // invalidating everything on every request.
+  const existingCacheId = request.cookies.get("_medusa_cache_id")?.value
+  const cacheId = existingCacheId ?? crypto.randomUUID()
 
   // Inject the new ID into the request's cookie header so that getCacheTag()
   // inside server components reads it during this render (not the old cookie).

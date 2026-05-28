@@ -13,7 +13,14 @@
       "Bash(node -e \"const d=require\\('fs'\\).readFileSync\\(0,'utf8'\\); const p=JSON.parse\\(d\\); console.log\\('main:', p.main\\); console.log\\('exports:', JSON.stringify\\(p.exports, null, 2\\)\\)\")",
       "Bash(node -e \"const m = require\\('@medusajs/file-s3'\\); console.log\\('keys:', Object.keys\\(m\\)\\); console.log\\('default:', typeof m.default\\); console.log\\('module:', typeof m.S3FileService || typeof m.default\\)\")",
       "Bash(node *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(curl -o /dev/null -s -w 'DNS lookup: %{time_namelookup}s\\\\nTCP connect: %{time_connect}s\\\\nTLS handshake: %{time_appconnect}s\\\\nFirst byte: %{time_starttransfer}s\\\\nTotal: %{time_total}s\\\\nHTTP status: %{http_code}\\\\n' https://xozqnlivqhmhgwjltkdz.storage.supabase.co/storage/v1/bucket)",
+      "Bash(curl -o /dev/null -s -w 'DNS: %{time_namelookup}s | TCP: %{time_connect}s | TLS: %{time_appconnect}s | TTFB: %{time_starttransfer}s | Total: %{time_total}s\\\\n' https://xozqnlivqhmhgwjltkdz.supabase.co)",
+      "Bash(curl -o /dev/null -s -w 'Storage S3 — DNS: %{time_namelookup}s  TCP connect: %{time_connect}s  TLS: %{time_appconnect}s  TTFB: %{time_starttransfer}s  Total: %{time_total}s  Status: %{http_code}\\\\n' https://xozqnlivqhmhgwjltkdz.storage.supabase.co/storage/v1/bucket)",
+      "Bash(Get-ChildItem -Path \".medusa\" -Recurse)",
+      "Bash(Measure-Object -Property Length -Sum)",
+      "Bash(Select-Object Count, Sum)",
+      "Bash(git rm *)"
     ]
   }
 }
