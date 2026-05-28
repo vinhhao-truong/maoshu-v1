@@ -1,6 +1,6 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "cd apps/backend && npm install --include=dev && npm run build && ls .medusa/server/public/admin/assets | head -3 && npm prune --omit=dev"
+buildCommand = "cd apps/backend && npm install --include=dev && npm run build && cp -r .medusa/server/public . && npm prune --omit=dev"
 
 [deploy]
 startCommand = "cd apps/backend && npm run start"

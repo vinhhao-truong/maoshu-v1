@@ -1,11 +1,6 @@
 import { loadEnv, defineConfig } from '@medusajs/framework/utils'
-import { existsSync } from 'fs'
-import { join } from 'path'
 
-// When medusa start runs from .medusa/server/, .env lives two dirs up
-const cwd = process.cwd()
-const envDir = existsSync(join(cwd, '.env')) ? cwd : join(cwd, '../..')
-loadEnv(process.env.NODE_ENV || 'development', envDir)
+loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
 module.exports = defineConfig({
   admin: {
