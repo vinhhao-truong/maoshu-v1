@@ -34,7 +34,8 @@ const OrderListShortIdWidget = () => {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
 
-  useEffect(() => {
+  const fetchOrders = () => {
+    setLoading(true)
     adminFetch("/admin/orders?limit=100&fields=id,display_id,created_at,fulfillment_status,shipping_address")
       .then((data) => {
         const active = (data.orders ?? [])
@@ -46,7 +47,9 @@ const OrderListShortIdWidget = () => {
       })
       .catch(console.error)
       .finally(() => setLoading(false))
-  }, [])
+  }
+
+  useEffect(() => { fetchOrders() }, [])
 
   const shortId = (id: string) => `#${id.slice(-8).toUpperCase()}`
 
@@ -65,9 +68,18 @@ const OrderListShortIdWidget = () => {
   return (
     <div className="rounded-lg border bg-ui-bg-base shadow-elevation-card-rest mb-4 overflow-hidden">
       <div className="px-4 py-3 border-b bg-ui-bg-subtle flex items-center justify-between gap-4">
-        <p className="txt-compact-small-plus font-medium text-ui-fg-subtle uppercase tracking-wider shrink-0">
-          {t("orderListShortId.title")}
-        </p>
+        <div className="flex items-center gap-2 shrink-0">
+          <p className="txt-compact-small-plus font-medium text-ui-fg-subtle uppercase tracking-wider">
+            {t("orderListShortId.title")}
+          </p>
+          <button
+            onClick={fetchOrders}
+            title="Refresh"
+            className="text-ui-fg-muted hover:text-ui-fg-base transition-colors"
+          >
+            ↻
+          </button>
+        </div>
         <input
           type="text"
           value={search}

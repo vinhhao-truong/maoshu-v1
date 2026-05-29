@@ -229,7 +229,9 @@
     "totalAfter": "Tổng sau khi thêm",
     "items": "{count} sản phẩm",
     "cancel": "Hủy",
-    "addToCart": "Thêm vào giỏ"
+    "addToCart": "Thêm vào giỏ",
+    "remainingStock": "Còn {count} sản phẩm có thể thêm",
+    "noMoreAvailable": "Không còn hàng để thêm"
   },
   "relatedProducts": {
     "heading": "Sản phẩm liên quan",

@@ -229,7 +229,9 @@
     "totalAfter": "Total after adding",
     "items": "{count, plural, one {# item} other {# items}}",
     "cancel": "Cancel",
-    "addToCart": "Add to Cart"
+    "addToCart": "Add to Cart",
+    "remainingStock": "{count, plural, one {# remaining in stock} other {# remaining in stock}}",
+    "noMoreAvailable": "No more available to add"
   },
   "relatedProducts": {
     "heading": "Related products",

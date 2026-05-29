@@ -31,6 +31,13 @@ export default function AddToCartModal({
   const [inputValue, setInputValue] = useState("1")
   const [inCart, setInCart] = useState<number | null>(null)
 
+  const maxInventory =
+    variant.manage_inventory && !variant.allow_backorder
+      ? (variant.inventory_quantity ?? 0)
+      : Infinity
+
+  const maxAddable = inCart !== null ? Math.max(0, maxInventory - inCart) : Infinity
+
   useEffect(() => {
     if (!open) return
     setQty(1)
@@ -43,8 +50,18 @@ export default function AddToCartModal({
     })
   }, [open, variant.id])
 
+  // Re-clamp qty once inCart loads and maxAddable is known
+  useEffect(() => {
+    if (inCart === null) return
+    if (qty > maxAddable) {
+      const clamped = Math.max(1, maxAddable)
+      setQty(clamped)
+      setInputValue(String(clamped))
+    }
+  }, [inCart])
+
   const applyQty = (next: number) => {
-    const clamped = Math.max(1, next)
+    const clamped = Math.min(Math.max(1, next), maxAddable)
     setQty(clamped)
     setInputValue(String(clamped))
   }
@@ -53,7 +70,7 @@ export default function AddToCartModal({
     const raw = e.target.value
     setInputValue(raw)
     const parsed = parseInt(raw, 10)
-    if (!isNaN(parsed) && parsed >= 1) setQty(parsed)
+    if (!isNaN(parsed) && parsed >= 1) setQty(Math.min(parsed, maxAddable))
   }
 
   const handleInputBlur = () => {
@@ -131,32 +148,43 @@ export default function AddToCartModal({
                 </div>
 
                 {/* Quantity stepper */}
-                <div className="flex items-center justify-center gap-x-3">
-                  <button
-                    onClick={() => applyQty(qty - 1)}
-                    disabled={qty <= 1}
-                    className="w-9 h-9 flex items-center justify-center border border-gray-300 text-xl hover:border-black disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                    aria-label="Decrease quantity"
-                  >
-                    −
-                  </button>
-                  <input
-                    type="number"
-                    min={1}
-                    value={inputValue}
-                    onChange={handleInputChange}
-                    onBlur={handleInputBlur}
-                    disabled={isAdding}
-                    className="w-16 h-9 border border-gray-300 text-center text-lg font-bold text-ui-fg-base focus:border-black focus:outline-none tabular-nums disabled:opacity-50 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                    aria-label="Quantity"
-                  />
-                  <button
-                    onClick={() => applyQty(qty + 1)}
-                    className="w-9 h-9 flex items-center justify-center border border-gray-300 text-xl hover:border-black transition-colors"
-                    aria-label="Increase quantity"
-                  >
-                    +
-                  </button>
+                <div className="flex flex-col items-center gap-y-2">
+                  <div className="flex items-center justify-center gap-x-3">
+                    <button
+                      onClick={() => applyQty(qty - 1)}
+                      disabled={qty <= 1}
+                      className="w-9 h-9 flex items-center justify-center border border-gray-300 text-xl hover:border-black disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                      aria-label="Decrease quantity"
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      min={1}
+                      max={maxAddable === Infinity ? undefined : maxAddable}
+                      value={inputValue}
+                      onChange={handleInputChange}
+                      onBlur={handleInputBlur}
+                      disabled={isAdding || maxAddable === 0}
+                      className="w-16 h-9 border border-gray-300 text-center text-lg font-bold text-ui-fg-base focus:border-black focus:outline-none tabular-nums disabled:opacity-50 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                      aria-label="Quantity"
+                    />
+                    <button
+                      onClick={() => applyQty(qty + 1)}
+                      disabled={qty >= maxAddable}
+                      className="w-9 h-9 flex items-center justify-center border border-gray-300 text-xl hover:border-black disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                      aria-label="Increase quantity"
+                    >
+                      +
+                    </button>
+                  </div>
+                  {maxInventory !== Infinity && inCart !== null && (
+                    <span className="text-xs text-ui-fg-subtle">
+                      {maxAddable <= 0
+                        ? t("noMoreAvailable")
+                        : t("remainingStock", { count: maxAddable })}
+                    </span>
+                  )}
                 </div>
 
                 {/* Cart breakdown */}
@@ -202,6 +230,7 @@ export default function AddToCartModal({
                   className="flex-1"
                   onClick={handleConfirm}
                   isLoading={isAdding}
+                  disabled={isAdding || maxAddable === 0}
                 >
                   {t("addToCart")}
                 </Button>

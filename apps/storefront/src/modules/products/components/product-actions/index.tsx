@@ -42,7 +42,12 @@ export default function ProductActions({
   const [options, setOptions] = useState<Record<string, string | undefined>>({})
   const [isAdding, setIsAdding] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
   const countryCode = useParams().countryCode as string
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   // If there is only 1 variant, preselect the options
   useEffect(() => {
@@ -173,6 +178,7 @@ export default function ProductActions({
         <Button
           onClick={openModal}
           disabled={
+            !isMounted ||
             !inStock ||
             !selectedVariant ||
             !!disabled ||
@@ -181,7 +187,7 @@ export default function ProductActions({
           }
           variant="primary"
           className="w-full h-10"
-          isLoading={isAdding}
+          isLoading={!isMounted || isAdding}
           data-testid="add-product-button"
         >
           {!selectedVariant && !options
@@ -198,6 +204,7 @@ export default function ProductActions({
           inStock={inStock}
           handleAddToCart={openModal}
           isAdding={isAdding}
+          isMounted={isMounted}
           show={!inView}
           optionsDisabled={!!disabled || isAdding}
         />
