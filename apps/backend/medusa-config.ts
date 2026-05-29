@@ -71,5 +71,11 @@ module.exports = defineConfig({
     {
       resolve: "./src/modules/business-info",
     },
+    {
+      resolve: "./src/modules/product-stats",
+    },
+    {
+      resolve: "./src/modules/scheduled-job",
+    },
   ],
 })

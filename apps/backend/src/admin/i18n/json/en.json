@@ -221,6 +221,90 @@
       "uploadError": "Upload failed"
     }
   },
+  "productStats": {
+    "title": "Product Stats",
+    "weeklySelling": "Weekly Sold",
+    "weeklyView": "Weekly Views",
+    "totalSell": "Total Sold",
+    "totalView": "Total Views"
+  },
+  "scheduledJobs": {
+    "title": "Scheduled Jobs",
+    "add": "Add Job",
+    "editTitle": "Edit Scheduled Job",
+    "newTitle": "New Scheduled Job",
+    "empty": "No scheduled jobs yet. Click \"Add Job\" to get started.",
+    "deleteConfirm": "Delete job \"{{label}}\"? This cannot be undone.",
+    "runNow": "Run Now",
+    "table": {
+      "function": "Function",
+      "schedule": "Schedule",
+      "type": "Type",
+      "enabled": "Enabled",
+      "lastRun": "Last Run",
+      "status": "Status"
+    },
+    "types": {
+      "once": "Once",
+      "recurring": "Recurring"
+    },
+    "runStatuses": {
+      "success": "Success",
+      "failed": "Failed",
+      "never": "Never run"
+    },
+    "form": {
+      "function": "Function *",
+      "functionPlaceholder": "Select a function…",
+      "label": "Label",
+      "labelPlaceholder": "Optional display name",
+      "scheduleType": "Schedule Type",
+      "once": "Once",
+      "recurring": "Recurring",
+      "runAt": "Run At *",
+      "frequency": "Frequency",
+      "presets": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly",
+        "custom": "Custom"
+      },
+      "time": "Time",
+      "daysOfWeek": "Days of Week",
+      "dayOfMonth": "Day of Month",
+      "dayOrdinal": "Day {{day}}",
+      "cronExpression": "Cron Expression",
+      "cronHint": "Standard cron format: minute hour day month weekday (e.g. 0 9 * * 1-5)",
+      "preview": "Expression:",
+      "enabled": "Enabled"
+    },
+    "logs": {
+      "title": "Run History",
+      "empty": "No runs yet."
+    },
+    "toast": {
+      "loadError": "Failed to load scheduled jobs",
+      "validationError": "Function and schedule are required",
+      "created": "Scheduled job created",
+      "updated": "Scheduled job updated",
+      "saveError": "Failed to save scheduled job",
+      "deleted": "Scheduled job deleted",
+      "deleteError": "Failed to delete scheduled job",
+      "runSuccess": "Job triggered successfully",
+      "runError": "Failed to trigger job",
+      "noWeekdays": "Please select at least one day of the week"
+    }
+  },
+  "collectionType": {
+    "title": "Collection Type",
+    "placeholder": "Select type",
+    "types": {
+      "new_release": "New Release",
+      "trending": "Trending",
+      "best_selling": "Best Selling",
+      "other": "Other"
+    }
+  },
   "orderShortId": {
     "title": "Order Reference"
   },

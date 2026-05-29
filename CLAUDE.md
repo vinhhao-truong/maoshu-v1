@@ -178,6 +178,25 @@ res.json({ url: uploaded.url })
 
 The file provider is `src/modules/supabase-file` (NOT `@medusajs/file-s3`). The custom provider is required because Supabase Storage does not support S3 ACL headers, which `@medusajs/file-s3` hardcodes. The custom provider also preserves folder structure in storage keys.
 
+## Scheduled Job Functions
+
+The backend has a database-driven cron job system. Admins manage jobs from the UI at `/scheduled-jobs`. Jobs reference **pre-defined functions** by key — adding a new function is a 3-step code change with no DB migration.
+
+To add a new function, use the `/add-cron-function` skill (`.claude/skills/add-cron-function.md`).
+
+### Product Stats module
+
+`PRODUCT_STATS_MODULE` (`src/modules/product-stats/`) tracks per-product stats in the `product_stat` table. All fields are integers with `DEFAULT 0` — always present, never null.
+
+| Field | Updated by | Reset by |
+|---|---|---|
+| `weekly_selling_amount` | `order.completed` subscriber | product-trending-reset cron |
+| `weekly_view_amount` | storefront view API (future) | product-trending-reset cron |
+| `total_sell_amount` | `order.completed` subscriber | never |
+| `total_view_amount` | storefront view API (future) | never |
+
+Service has a `getOrCreate(productId)` method — call this instead of `retrieveProductStat` to ensure the record always exists.
+
 ## Key Notes
 
 - **Data fetching cache**: Use `cache: "no-store"` (not `next: { revalidate: N }`) in `sdk.client.fetch` calls for admin-managed content (business info, CMS pages, etc.) so changes appear immediately without a revalidation delay.

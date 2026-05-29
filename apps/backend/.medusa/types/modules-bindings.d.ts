@@ -29,6 +29,8 @@ import type ColorGroupModule from '../../src/modules/color-group'
 import type VariantCostModule from '../../src/modules/variant-cost'
 import type ContentModule from '../../src/modules/content'
 import type BusinessInfoModule from '../../src/modules/business-info'
+import type ProductStatsModule from '../../src/modules/product-stats'
+import type ScheduledJobModule from '../../src/modules/scheduled-job'
 
 declare module '@medusajs/framework/types' {
   interface ModuleImplementations {
@@ -62,6 +64,8 @@ declare module '@medusajs/framework/types' {
     'colorGroupModule': InstanceType<(typeof ColorGroupModule)['service']>,
     'variantCostModule': InstanceType<(typeof VariantCostModule)['service']>,
     'contentModule': InstanceType<(typeof ContentModule)['service']>,
-    'businessInfoModule': InstanceType<(typeof BusinessInfoModule)['service']>
+    'businessInfoModule': InstanceType<(typeof BusinessInfoModule)['service']>,
+    'productStatsModule': InstanceType<(typeof ProductStatsModule)['service']>,
+    'scheduledJobModule': InstanceType<(typeof ScheduledJobModule)['service']>
   }
 }

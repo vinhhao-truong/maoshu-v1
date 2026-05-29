@@ -221,6 +221,90 @@
       "uploadError": "Tải lên thất bại"
     }
   },
+  "productStats": {
+    "title": "Thống kê sản phẩm",
+    "weeklySelling": "Đã bán tuần này",
+    "weeklyView": "Lượt xem tuần này",
+    "totalSell": "Tổng đã bán",
+    "totalView": "Tổng lượt xem"
+  },
+  "scheduledJobs": {
+    "title": "Lịch công việc",
+    "add": "Thêm công việc",
+    "editTitle": "Sửa công việc",
+    "newTitle": "Công việc mới",
+    "empty": "Chưa có công việc nào. Nhấn \"Thêm công việc\" để bắt đầu.",
+    "deleteConfirm": "Xóa công việc \"{{label}}\"? Không thể hoàn tác.",
+    "runNow": "Chạy ngay",
+    "table": {
+      "function": "Hàm",
+      "schedule": "Lịch chạy",
+      "type": "Loại",
+      "enabled": "Bật",
+      "lastRun": "Lần chạy cuối",
+      "status": "Trạng thái"
+    },
+    "types": {
+      "once": "Một lần",
+      "recurring": "Định kỳ"
+    },
+    "runStatuses": {
+      "success": "Thành công",
+      "failed": "Thất bại",
+      "never": "Chưa chạy"
+    },
+    "form": {
+      "function": "Hàm *",
+      "functionPlaceholder": "Chọn hàm…",
+      "label": "Tên hiển thị",
+      "labelPlaceholder": "Tên hiển thị (không bắt buộc)",
+      "scheduleType": "Loại lịch",
+      "once": "Một lần",
+      "recurring": "Định kỳ",
+      "runAt": "Thời điểm chạy *",
+      "frequency": "Tần suất",
+      "presets": {
+        "daily": "Hàng ngày",
+        "weekly": "Hàng tuần",
+        "monthly": "Hàng tháng",
+        "custom": "Tùy chỉnh"
+      },
+      "time": "Thời gian",
+      "daysOfWeek": "Ngày trong tuần",
+      "dayOfMonth": "Ngày trong tháng",
+      "dayOrdinal": "Ngày {{day}}",
+      "cronExpression": "Cron Expression",
+      "cronHint": "Định dạng cron: phút giờ ngày tháng thứ (VD: 0 9 * * 1-5)",
+      "preview": "Biểu thức:",
+      "enabled": "Bật"
+    },
+    "logs": {
+      "title": "Lịch sử chạy",
+      "empty": "Chưa có lần chạy nào."
+    },
+    "toast": {
+      "loadError": "Không thể tải danh sách công việc",
+      "validationError": "Hàm và lịch chạy là bắt buộc",
+      "created": "Đã tạo công việc",
+      "updated": "Đã cập nhật công việc",
+      "saveError": "Không thể lưu công việc",
+      "deleted": "Đã xóa công việc",
+      "deleteError": "Không thể xóa công việc",
+      "runSuccess": "Đã kích hoạt công việc",
+      "runError": "Không thể kích hoạt công việc",
+      "noWeekdays": "Vui lòng chọn ít nhất một ngày trong tuần"
+    }
+  },
+  "collectionType": {
+    "title": "Loại bộ sưu tập",
+    "placeholder": "Chọn loại",
+    "types": {
+      "new_release": "Hàng mới về",
+      "trending": "Đang thịnh hành",
+      "best_selling": "Bán chạy nhất",
+      "other": "Khác"
+    }
+  },
   "orderShortId": {
     "title": "Mã tham chiếu"
   },
