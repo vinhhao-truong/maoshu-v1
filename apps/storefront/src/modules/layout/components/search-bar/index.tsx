@@ -127,7 +127,27 @@ export default function SearchBar({ categories }: Props) {
 
   return (
     <div ref={containerRef} className="relative flex items-center h-full">
-      <div className="flex items-center gap-1 border border-gray-200 rounded-sm px-2 py-2 bg-white focus-within:border-gray-400 transition-colors">
+      <LocalizedClientLink
+        href="/search"
+        className="small:hidden flex items-center justify-center text-primary-fg hover:opacity-70 transition-opacity"
+        aria-label="Tìm kiếm"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+      </LocalizedClientLink>
+      <div className="hidden small:flex items-center gap-1 border border-gray-200 rounded-sm px-2 py-2 bg-white focus-within:border-gray-400 transition-colors">
         {/* Search icon */}
         <svg
           xmlns="http://www.w3.org/2000/svg"

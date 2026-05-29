@@ -103,7 +103,7 @@ const CartDropdown = ({
         leaveTo="opacity-0 translate-x-4"
       >
         <div
-          className="fixed right-0 top-0 h-[calc(100vh-1rem)] z-[200] m-2 w-full sm:w-[420px] flex flex-col bg-white rounded-rounded text-ui-fg-base text-sm shadow-lg"
+          className="fixed right-0 top-0 h-screen sm:h-[calc(100vh-1rem)] z-[200] sm:m-2 w-full sm:w-[420px] flex flex-col bg-white sm:rounded-rounded text-ui-fg-base text-sm shadow-lg"
           data-testid="nav-cart-dropdown"
         >
           {/* Header */}

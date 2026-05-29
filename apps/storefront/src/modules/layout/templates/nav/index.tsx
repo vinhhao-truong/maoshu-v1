@@ -41,8 +41,8 @@ export default async function Nav({
 
   return (
     <div className="sticky top-0 inset-x-0 z-50">
-      <header className="relative h-16 mx-auto border-b duration-200 bg-primary border-primary-hover">
-        <nav className="content-container txt-xsmall-plus text-primary-fg flex items-center justify-between w-full h-full text-small-regular">
+      <header className="relative mx-auto border-b duration-200 bg-primary border-primary-hover">
+        <nav className="content-container txt-xsmall-plus text-primary-fg flex items-center justify-between w-full h-12 small:h-16 text-small-regular relative">
           <div className="flex-1 basis-0 h-full flex items-center gap-x-3">
             <div className="h-full small:hidden">
               <SideMenu
@@ -55,7 +55,7 @@ export default async function Nav({
             </div>
             <LocalizedClientLink
               href="/"
-              className="hover:opacity-80 transition-opacity leading-none"
+              className="hover:opacity-80 transition-opacity leading-none hidden small:block"
               data-testid="nav-store-link"
             >
               {businessInfo?.logo_url ? (

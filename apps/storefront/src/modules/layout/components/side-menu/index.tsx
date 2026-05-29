@@ -96,11 +96,11 @@ const SideMenu = ({ allCategories, collections }: SideMenuProps) => {
           >
             <PopoverPanel
               static
-              className="flex flex-col fixed left-0 top-0 w-full sm:w-[420px] h-[calc(100vh-1rem)] z-[200] text-sm text-ui-fg-base m-2"
+              className="flex flex-col fixed left-0 top-0 w-full sm:w-[420px] h-screen sm:h-[calc(100vh-1rem)] z-[200] text-sm text-ui-fg-base sm:m-2"
             >
               <div
                 data-testid="nav-menu-popup"
-                className="flex flex-col h-full bg-white rounded-rounded shadow-lg"
+                className="flex flex-col h-full bg-white sm:rounded-rounded shadow-lg"
               >
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">

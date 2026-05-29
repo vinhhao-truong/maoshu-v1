@@ -68,7 +68,7 @@ export default function CategorySwitch({ categories }: Props) {
               key={category.id}
               onClick={() => !isSelected && handleSelect(category)}
               className={clx(
-                "px-3 py-1 rounded-full text-xs font-medium transition-all duration-200",
+                "rounded-full font-medium transition-all duration-200 px-2 py-0.5 text-[10px] small:px-3 small:py-1 small:text-xs",
                 isSelected
                   ? "bg-white text-primary shadow-sm cursor-default"
                   : "text-primary-fg/70 hover:text-primary-fg"
