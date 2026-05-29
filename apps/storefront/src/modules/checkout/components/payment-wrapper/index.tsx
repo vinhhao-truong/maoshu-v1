@@ -1,7 +1,7 @@
 "use client"
 
-import { loadStripe } from "@stripe/stripe-js"
-import React from "react"
+import { loadStripe, Stripe } from "@stripe/stripe-js"
+import React, { useRef } from "react"
 import StripeWrapper from "./stripe-wrapper"
 import { HttpTypes } from "@medusajs/types"
 import { isStripeLike } from "@lib/constants"
@@ -16,28 +16,26 @@ const stripeKey =
   process.env.NEXT_PUBLIC_MEDUSA_PAYMENTS_PUBLISHABLE_KEY
 
 const medusaAccountId = process.env.NEXT_PUBLIC_MEDUSA_PAYMENTS_ACCOUNT_ID
-const stripePromise = stripeKey
-  ? loadStripe(
-      stripeKey,
-      medusaAccountId ? { stripeAccount: medusaAccountId } : undefined
-    )
-  : null
 
 const PaymentWrapper: React.FC<PaymentWrapperProps> = ({ cart, children }) => {
+  const stripePromiseRef = useRef<Promise<Stripe | null> | null>(null)
+
   const paymentSession = cart.payment_collection?.payment_sessions?.find(
     (s) => s.status === "pending"
   )
 
-  if (
-    isStripeLike(paymentSession?.provider_id) &&
-    paymentSession &&
-    stripePromise
-  ) {
+  if (isStripeLike(paymentSession?.provider_id) && paymentSession && stripeKey) {
+    if (!stripePromiseRef.current) {
+      stripePromiseRef.current = loadStripe(
+        stripeKey,
+        medusaAccountId ? { stripeAccount: medusaAccountId } : undefined
+      )
+    }
     return (
       <StripeWrapper
         paymentSession={paymentSession}
         stripeKey={stripeKey}
-        stripePromise={stripePromise}
+        stripePromise={stripePromiseRef.current}
       >
         {children}
       </StripeWrapper>

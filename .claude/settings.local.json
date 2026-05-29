@@ -20,7 +20,8 @@
       "Bash(Get-ChildItem -Path \".medusa\" -Recurse)",
       "Bash(Measure-Object -Property Length -Sum)",
       "Bash(Select-Object Count, Sum)",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(Get-Content *)"
     ]
   }
 }

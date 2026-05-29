@@ -16,6 +16,19 @@ const S3_PATHNAME = process.env.MEDUSA_CLOUD_S3_PATHNAME
  */
 const nextConfig = {
   reactStrictMode: true,
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Permissions-Policy",
+            value: "browsing-topics=(), interest-cohort=(), web-share=()",
+          },
+        ],
+      },
+    ]
+  },
   logging: {
     fetches: {
       fullUrl: true,
