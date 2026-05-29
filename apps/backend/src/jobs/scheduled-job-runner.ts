@@ -3,10 +3,35 @@ import { parseExpression } from "cron-parser"
 import { SCHEDULED_JOB_MODULE } from "../modules/scheduled-job"
 import ScheduledJobModuleService from "../modules/scheduled-job/service"
 import { FUNCTION_REGISTRY } from "../modules/scheduled-job/functions"
+import { SYSTEM_JOBS } from "../modules/scheduled-job/system-jobs"
+
+async function seedSystemJobs(service: ScheduledJobModuleService) {
+  const validKeys = new Set(SYSTEM_JOBS.map((j) => j.function_key))
+
+  // Remove system jobs whose function_key is no longer registered (handles renames)
+  const allSystemJobs = await service.listScheduledJobs({ is_system: true })
+  const orphaned = allSystemJobs.filter((j) => !validKeys.has(j.function_key))
+  if (orphaned.length > 0) {
+    await service.deleteScheduledJobs(orphaned.map((j) => j.id))
+  }
+
+  // Create any missing system jobs
+  for (const spec of SYSTEM_JOBS) {
+    const existing = await service.listScheduledJobs({
+      function_key: spec.function_key,
+      is_system: true,
+    })
+    if (existing.length === 0) {
+      await service.createScheduledJobs(spec)
+    }
+  }
+}
 
 export default async function scheduledJobRunner(container: MedusaContainer) {
   const service: ScheduledJobModuleService = container.resolve(SCHEDULED_JOB_MODULE)
   const logger = container.resolve("logger") as any
+
+  await seedSystemJobs(service)
 
   const [jobs] = await service.listAndCountScheduledJobs(
     { enabled: true },
@@ -21,7 +46,7 @@ export default async function scheduledJobRunner(container: MedusaContainer) {
 
     if (job.schedule_type === "recurring" && job.cron_expression) {
       try {
-        const interval = parseExpression(job.cron_expression, { currentDate: now })
+        const interval = parseExpression(job.cron_expression, { currentDate: now, tz: "Asia/Ho_Chi_Minh" })
         const prev = interval.prev().toDate()
         shouldRun = prev >= oneMinuteAgo && prev <= now
       } catch {

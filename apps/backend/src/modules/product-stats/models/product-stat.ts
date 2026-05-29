@@ -5,6 +5,10 @@ const ProductStat = model.define("product_stat", {
   product_id: model.text(),
   weekly_selling_amount: model.number().default(0),
   weekly_view_amount: model.number().default(0),
+  monthly_selling_amount: model.number().default(0),
+  monthly_view_amount: model.number().default(0),
+  annual_selling_amount: model.number().default(0),
+  annual_view_amount: model.number().default(0),
   total_sell_amount: model.number().default(0),
   total_view_amount: model.number().default(0),
 })

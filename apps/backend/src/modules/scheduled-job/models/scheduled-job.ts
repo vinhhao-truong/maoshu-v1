@@ -10,6 +10,7 @@ const ScheduledJob = model.define("scheduled_job", {
   enabled: model.boolean().default(true),
   last_run_at: model.dateTime().nullable(),
   last_run_status: model.text().nullable(),
+  is_system: model.boolean().default(false),
 })
 
 export default ScheduledJob

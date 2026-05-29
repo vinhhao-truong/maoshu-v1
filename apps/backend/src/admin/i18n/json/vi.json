@@ -223,10 +223,12 @@
   },
   "productStats": {
     "title": "Thống kê sản phẩm",
-    "weeklySelling": "Đã bán tuần này",
-    "weeklyView": "Lượt xem tuần này",
-    "totalSell": "Tổng đã bán",
-    "totalView": "Tổng lượt xem"
+    "weekly": "Tuần này",
+    "monthly": "Tháng này",
+    "annual": "Năm nay",
+    "allTime": "Tất cả",
+    "sold": "Đã bán",
+    "views": "Lượt xem"
   },
   "scheduledJobs": {
     "title": "Lịch công việc",
@@ -247,6 +249,10 @@
     "types": {
       "once": "Một lần",
       "recurring": "Định kỳ"
+    },
+    "jobTypes": {
+      "system": "Hệ thống",
+      "manual": "Thủ công"
     },
     "runStatuses": {
       "success": "Thành công",

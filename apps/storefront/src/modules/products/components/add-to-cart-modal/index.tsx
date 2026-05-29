@@ -2,8 +2,10 @@
 
 import { Dialog, Transition } from "@headlessui/react"
 import { Fragment, useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { retrieveCart } from "@lib/data/cart"
+import { trackProductView } from "@lib/data/product-stats"
 import { Button } from "@modules/common/components/ui"
 import { HttpTypes } from "@medusajs/types"
 import X from "@modules/common/icons/x"
@@ -27,6 +29,7 @@ export default function AddToCartModal({
   isAdding,
 }: AddToCartModalProps) {
   const t = useTranslations("addToCartModal")
+  const pathname = usePathname()
   const [qty, setQty] = useState(1)
   const [inputValue, setInputValue] = useState("1")
   const [inCart, setInCart] = useState<number | null>(null)
@@ -80,6 +83,9 @@ export default function AddToCartModal({
 
   const handleConfirm = async () => {
     await onConfirm(qty)
+    if (!pathname.includes("/products/")) {
+      trackProductView(product.id)
+    }
     onClose()
   }
 

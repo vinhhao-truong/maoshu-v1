@@ -10,7 +10,12 @@ Key paths:
 - Functions live in `apps/backend/src/modules/scheduled-job/functions/`
 - Registry: `apps/backend/src/modules/scheduled-job/functions/index.ts`
 - Admin UI dropdown: `apps/backend/src/admin/routes/scheduled-jobs/page.tsx`
-- Job runner (do NOT modify): `apps/backend/src/jobs/scheduled-job-runner.ts`
+- System job definitions: `apps/backend/src/modules/scheduled-job/system-jobs.ts`
+- Job runner (do NOT modify directly): `apps/backend/src/jobs/scheduled-job-runner.ts`
+
+**Two kinds of jobs:**
+- **System jobs** — defined in code, auto-seeded into the DB by the runner, protected from deletion in the UI (purple "System" badge). Use these for jobs that should always exist.
+- **Manual jobs** — created by admins through the UI (grey "Manual" badge). Use the 3-step process below to make a function available for admins to schedule.
 
 ## Step 1 — Write the function file
 
@@ -68,12 +73,36 @@ const FUNCTION_OPTIONS = [
 
 The label here must match `FUNCTION_LABELS` exactly.
 
-## Done
+## Done (manual job)
 
 The job runner dispatches by key automatically — no other changes needed. The admin can now create a scheduled job that selects the new function from the dropdown.
+
+---
+
+## To make a function a system job (auto-seeded, protected)
+
+After completing Steps 1–3 above, add one entry to `apps/backend/src/modules/scheduled-job/system-jobs.ts`:
+
+```ts
+export const SYSTEM_JOBS = [
+  // existing entries...
+  {
+    function_key: "kebab-name",
+    label: "Human Readable Label",
+    schedule_type: "recurring" as const,
+    cron_expression: "0 0 * * 0",  // Vietnam time (Asia/Ho_Chi_Minh, UTC+7) — write schedules in VN local time
+    enabled: true,
+    is_system: true,
+  },
+]
+```
+
+The runner seeds missing system jobs on every tick — no migration or manual DB insert needed. The job will appear in the admin with a purple "System" badge and no Delete button. It can still be edited (schedule, enabled toggle) by admins.
 
 ## Existing functions for reference
 
 | Key | File | What it does |
 |---|---|---|
-| `product-trending-reset` | `product-trending-reset.ts` | Resets `weekly_selling_amount` and `weekly_view_amount` to 0 for all products |
+| `product-weekly-reset` | `product-weekly-reset.ts` | Snapshots then resets `weekly_selling_amount` + `weekly_view_amount` to 0 |
+| `product-monthly-reset` | `product-monthly-reset.ts` | Snapshots then resets `monthly_selling_amount` + `monthly_view_amount` to 0 |
+| `product-annual-reset` | `product-annual-reset.ts` | Snapshots then resets `annual_selling_amount` + `annual_view_amount` to 0 |

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import { listProducts } from "@lib/data/products"
 import { getRegion, listRegions } from "@lib/data/regions"
 import ProductTemplate from "@modules/products/templates"
+import ProductViewTracker from "@modules/products/components/product-view-tracker"
 import { HttpTypes } from "@medusajs/types"
 
 type Props = {
@@ -126,11 +127,14 @@ export default async function ProductPage(props: Props) {
   }
 
   return (
-    <ProductTemplate
-      product={pricedProduct}
-      region={region}
-      countryCode={params.countryCode}
-      images={images}
-    />
+    <>
+      <ProductViewTracker productId={pricedProduct.id} />
+      <ProductTemplate
+        product={pricedProduct}
+        region={region}
+        countryCode={params.countryCode}
+        images={images}
+      />
+    </>
   )
 }

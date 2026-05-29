@@ -27,6 +27,7 @@ type ScheduledJob = {
   enabled: boolean
   last_run_at: string | null
   last_run_status: "success" | "failed" | null
+  is_system: boolean
   created_at: string
 }
 
@@ -57,7 +58,9 @@ type JobForm = {
 }
 
 const FUNCTION_OPTIONS = [
-  { key: "product-trending-reset", label: "Product Trending Reset" },
+  { key: "product-weekly-reset",  label: "Product Weekly Reset" },
+  { key: "product-monthly-reset", label: "Product Monthly Reset" },
+  { key: "product-annual-reset",  label: "Product Annual Reset" },
 ]
 
 const WEEKDAYS = [
@@ -499,7 +502,11 @@ const ScheduledJobsPage = () => {
   const loadJobs = () => {
     setLoading(true)
     adminFetch("/admin/scheduled-jobs")
-      .then((d) => setJobs(d.jobs ?? []))
+      .then((d) => {
+        const all: ScheduledJob[] = d.jobs ?? []
+        all.sort((a, b) => (b.is_system ? 1 : 0) - (a.is_system ? 1 : 0))
+        setJobs(all)
+      })
       .catch(() => toast.error(t("scheduledJobs.toast.loadError")))
       .finally(() => setLoading(false))
   }
@@ -587,9 +594,14 @@ const ScheduledJobsPage = () => {
                     </span>
                   </Table.Cell>
                   <Table.Cell>
-                    <Badge color={job.schedule_type === "recurring" ? "blue" : "orange"} size="2xsmall">
-                      {t(`scheduledJobs.types.${job.schedule_type}`)}
-                    </Badge>
+                    <div className="flex items-center gap-x-1">
+                      <Badge color={job.is_system ? "purple" : "grey"} size="2xsmall">
+                        {t(job.is_system ? "scheduledJobs.jobTypes.system" : "scheduledJobs.jobTypes.manual")}
+                      </Badge>
+                      <Badge color={job.schedule_type === "recurring" ? "blue" : "orange"} size="2xsmall">
+                        {t(`scheduledJobs.types.${job.schedule_type}`)}
+                      </Badge>
+                    </div>
                   </Table.Cell>
                   <Table.Cell>
                     <Checkbox checked={job.enabled} disabled />
@@ -628,13 +640,15 @@ const ScheduledJobsPage = () => {
                       >
                         {t("common.edit")}
                       </Button>
-                      <Button
-                        size="small"
-                        variant="danger"
-                        onClick={() => handleDelete(job)}
-                      >
-                        {t("common.delete")}
-                      </Button>
+                      {!job.is_system && (
+                        <Button
+                          size="small"
+                          variant="danger"
+                          onClick={() => handleDelete(job)}
+                        >
+                          {t("common.delete")}
+                        </Button>
+                      )}
                     </div>
                   </Table.Cell>
                 </Table.Row>

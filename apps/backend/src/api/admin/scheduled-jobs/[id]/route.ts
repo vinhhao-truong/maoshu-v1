@@ -25,6 +25,10 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
 
 export async function DELETE(req: MedusaRequest, res: MedusaResponse) {
   const service: ScheduledJobModuleService = req.scope.resolve(SCHEDULED_JOB_MODULE)
+  const job = await service.retrieveScheduledJob(req.params.id)
+  if (job.is_system) {
+    return res.status(403).json({ message: "System jobs cannot be deleted" })
+  }
   await service.deleteScheduledJobs([req.params.id])
   res.json({ id: req.params.id, deleted: true })
 }

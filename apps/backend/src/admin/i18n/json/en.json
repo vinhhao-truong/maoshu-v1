@@ -223,10 +223,12 @@
   },
   "productStats": {
     "title": "Product Stats",
-    "weeklySelling": "Weekly Sold",
-    "weeklyView": "Weekly Views",
-    "totalSell": "Total Sold",
-    "totalView": "Total Views"
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "allTime": "All Time",
+    "sold": "Sold",
+    "views": "Views"
   },
   "scheduledJobs": {
     "title": "Scheduled Jobs",
@@ -247,6 +249,10 @@
     "types": {
       "once": "Once",
       "recurring": "Recurring"
+    },
+    "jobTypes": {
+      "system": "System",
+      "manual": "Manual"
     },
     "runStatuses": {
       "success": "Success",

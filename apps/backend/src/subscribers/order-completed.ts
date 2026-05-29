@@ -36,6 +36,8 @@ export default async function orderCompletedHandler({
       await statsService.updateProductStats([{
         id: stat.id,
         weekly_selling_amount: (stat.weekly_selling_amount ?? 0) + qty,
+        monthly_selling_amount: (stat.monthly_selling_amount ?? 0) + qty,
+        annual_selling_amount: (stat.annual_selling_amount ?? 0) + qty,
         total_sell_amount: (stat.total_sell_amount ?? 0) + qty,
       }])
     } catch (e: any) {
