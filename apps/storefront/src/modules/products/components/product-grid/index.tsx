@@ -6,10 +6,12 @@ export default async function ProductGrid({
   countryCode,
   limit = 12,
   categoryIds,
+  order,
 }: {
   countryCode: string
   limit?: number
   categoryIds?: string[]
+  order?: string
 }) {
   const region = await getRegion(countryCode)
 
@@ -20,6 +22,9 @@ export default async function ProductGrid({
   const queryParams: Record<string, unknown> = { limit }
   if (categoryIds?.length) {
     queryParams.category_id = categoryIds
+  }
+  if (order) {
+    queryParams.order = order
   }
 
   const {

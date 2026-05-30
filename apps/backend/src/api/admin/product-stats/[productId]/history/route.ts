@@ -10,7 +10,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const filters: Record<string, any> = { product_id: req.params.productId }
   if (resetType) filters.reset_type = resetType
 
-  const history = await service.listProductStatHistorys(
+  const history = await service.listProductStatHistories(
     filters,
     { skip: 0, take: limit, order: { period_end: "DESC" } }
   )

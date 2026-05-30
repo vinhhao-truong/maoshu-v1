@@ -2,13 +2,12 @@ import { Metadata } from "next"
 import { Suspense } from "react"
 import { cookies } from "next/headers"
 
-import FeaturedProducts from "@modules/home/components/featured-products"
+import NewArrivals from "@modules/home/components/new-arrivals"
 import Hero from "@modules/home/components/hero"
 import ProductGrid from "@modules/products/components/product-grid"
 import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
 import CategorySidebar from "@modules/home/components/category-sidebar"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import { listCollections } from "@lib/data/collections"
 import { listCategories } from "@lib/data/categories"
 import { getRegion } from "@lib/data/regions"
 import { getTranslations } from "next-intl/server"
@@ -30,25 +29,13 @@ export default async function Home(props: {
 
   const region = await getRegion(countryCode)
 
-  const { collections } = await listCollections({
-    fields: "id, handle, title",
-  })
-
   const categories = await listCategories({ limit: 50 })
 
-  if (!collections || !region) {
+  if (!region) {
     return null
   }
 
-  const selectedCategory = categories?.find((c) => c.handle === categoryHandle)
-  const categoryIds = selectedCategory
-    ? [
-        selectedCategory.id,
-        ...(selectedCategory.category_children?.map((c) => c.id) ?? []),
-      ]
-    : undefined
-
-  // Root category from cookie — used to filter collections server-side
+  // Root category from cookie — used to scope all product sections
   const cookieStore = await cookies()
   const rootCategoryId = cookieStore.get("selectedCategoryId")?.value
   const rootCategory = categories?.find((c) => c.id === rootCategoryId)
@@ -62,12 +49,20 @@ export default async function Home(props: {
       ]
     : undefined
 
+  const selectedCategory = categories?.find((c) => c.handle === categoryHandle)
+  const categoryIds = selectedCategory
+    ? [
+        selectedCategory.id,
+        ...(selectedCategory.category_children?.map((c) => c.id) ?? []),
+      ]
+    : rootCategoryIds
+
   const t = await getTranslations("store")
 
   return (
     <>
       <Hero rootCategory={rootCategory} />
-      <FeaturedProducts collections={collections} countryCode={countryCode} categoryIds={rootCategoryIds} />
+      <NewArrivals countryCode={countryCode} categoryIds={rootCategoryIds} />
       <div className="content-container py-12 flex flex-col small:flex-row gap-8">
         <CategorySidebar
           categories={categories ?? []}

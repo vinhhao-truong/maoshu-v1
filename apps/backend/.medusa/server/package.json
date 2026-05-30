@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "build": "medusa build",
-    "start": "cd .medusa/server && medusa start",
+    "start": "medusa start",
     "dev": "medusa develop",
     "test:integration:http": "TEST_TYPE=integration:http NODE_OPTIONS=--experimental-vm-modules jest --silent=false --runInBand --forceExit",
     "test:integration:modules": "TEST_TYPE=integration:modules NODE_OPTIONS=--experimental-vm-modules jest --silent=false --runInBand --forceExit",
@@ -36,6 +36,7 @@
     "@tiptap/pm": "^3.23.4",
     "@tiptap/react": "^3.23.4",
     "@tiptap/starter-kit": "^3.23.4",
+    "cron-parser": "^4.9.0",
     "react-i18next": "13.5.0",
     "react-router-dom": "6.30.3"
   },

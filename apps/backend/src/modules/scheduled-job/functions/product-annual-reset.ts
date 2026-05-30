@@ -18,7 +18,7 @@ export async function productAnnualReset(container: MedusaContainer): Promise<vo
 
   const periodEnd = new Date()
 
-  await statsService.createProductStatHistorys(
+  await statsService.createProductStatHistories(
     toReset.map((s) => ({
       product_id: s.product_id,
       reset_type: "annual",

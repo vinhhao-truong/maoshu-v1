@@ -152,7 +152,6 @@ export default async function Nav({
       <SubNav
         rootCategory={activeRoot}
         allCategories={allCategories ?? []}
-        collections={collections ?? []}
         locales={locales ?? []}
         currentLocale={currentLocale ?? "vi"}
       />

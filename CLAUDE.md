@@ -197,6 +197,8 @@ To add a new function, use the `/add-cron-function` skill (`.claude/skills/add-c
 
 Service has a `getOrCreate(productId)` method — call this instead of `retrieveProductStat` to ensure the record always exists.
 
+**Auto-generated service method pluralization:** Medusa pluralizes the model name when generating CRUD methods, and it uses real English pluralization (not a naive `+ "s"`). A model ending in `y` becomes `ies`. So `ProductStatHistory` generates `listProductStatHistories` / `createProductStatHistories` / `updateProductStatHistories` — **not** `...Historys`. Likewise `ProductStat` → `...ProductStats`. Use the correct plural to avoid TS2551 build errors.
+
 ## Key Notes
 
 - **Data fetching cache**: Use `cache: "no-store"` (not `next: { revalidate: N }`) in `sdk.client.fetch` calls for admin-managed content (business info, CMS pages, etc.) so changes appear immediately without a revalidation delay.
