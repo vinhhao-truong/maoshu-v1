@@ -4,9 +4,11 @@ import { cookies } from "next/headers"
 import { listCartOptions, retrieveCart } from "@lib/data/cart"
 import { retrieveCustomer } from "@lib/data/customer"
 import { listCategories } from "@lib/data/categories"
+import { getCategoryColors } from "@lib/data/color-groups"
 import { getBaseURL } from "@lib/util/env"
-import { themeForCategory } from "@lib/util/theme"
+import { buildCssVars } from "@lib/util/color-scale"
 import { StoreCartShippingOption } from "@medusajs/types"
+
 import CartMismatchBanner from "@modules/layout/components/cart-mismatch-banner"
 import CategoryGuard from "@modules/layout/components/category-guard"
 import ThemeSync from "@modules/layout/components/theme-sync"
@@ -24,11 +26,16 @@ export default async function PageLayout(props: {
 }) {
   const { countryCode } = await props.params
 
-  // Fetch customer, cart, and categories in parallel — none depend on each other
-  const [customer, cart, categories] = await Promise.all([
+  // Read selected category from cookie before parallel fetches so we can
+  // include the color fetch in the same Promise.all — no sequential waterfall
+  const cookieStore = await cookies()
+  const selectedCategoryId = cookieStore.get("selectedCategoryId")?.value
+
+  const [customer, cart, categories, colorGroup] = await Promise.all([
     retrieveCustomer(),
     retrieveCart(),
     listCategories({ limit: 100 }),
+    selectedCategoryId ? getCategoryColors(selectedCategoryId) : null,
   ])
 
   let shippingOptions: StoreCartShippingOption[] = []
@@ -39,15 +46,14 @@ export default async function PageLayout(props: {
 
   const rootCategories = (categories ?? []).filter((c) => !c.parent_category)
   const validIds = rootCategories.map((c) => c.id)
-
-  const cookieStore = await cookies()
-  const selectedCategoryId = cookieStore.get("selectedCategoryId")?.value
   const activeRoot = rootCategories.find((c) => c.id === selectedCategoryId)
-  const theme = activeRoot ? themeForCategory(activeRoot) : undefined
+
+  const cssVars = colorGroup ? buildCssVars(colorGroup) : undefined
 
   return (
-    <div data-theme={theme}>
-      <ThemeSync theme={theme} />
+    <div>
+      {cssVars && <style dangerouslySetInnerHTML={{ __html: `:root{${cssVars}}` }} />}
+      <ThemeSync cssVars={cssVars} />
       <CategoryGuard validIds={validIds} countryCode={countryCode} />
       <Nav categories={categories ?? []} customer={customer} />
       {customer && cart && (

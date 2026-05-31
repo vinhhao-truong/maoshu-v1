@@ -133,6 +133,34 @@ MEDUSA_CLOUD_S3_HOSTNAME=<supabase-project-ref>.supabase.co
 NEXT_PUBLIC_STRIPE_KEY=<production-stripe-key>
 ```
 
+## Root Category Routes
+
+The backend has a dedicated custom route layer for anything that depends on the active root category. All such routes live under `apps/backend/src/api/store/root-categories/` and share a common utility layer.
+
+### Utilities (`src/api/store/root-categories/utils.ts`)
+
+Two reusable functions that every sub-route builds on:
+
+- `getRootCategory(id, scope)` — fetches a product category by ID via `query.graph`, returning `{ id, name, handle, metadata }`.
+- `resolveColorGroup(colorGroupId, scope)` — fetches the color group and replaces any stored system color IDs (`syscol_...`) with their hex values before returning.
+
+### Sub-routes
+
+| Route | File | Purpose |
+|---|---|---|
+| `GET /store/root-categories/:id/colors` | `[id]/colors/route.ts` | Returns the resolved color group for a root category |
+
+### Adding a new sub-route
+
+1. Create `apps/backend/src/api/store/root-categories/[id]/<resource>/route.ts`
+2. Call `getRootCategory(req.params.id, req.scope)` to get the category and its metadata
+3. Use metadata fields to fetch related data (or add a new resolver to `utils.ts` if the resolution logic is non-trivial and likely to be reused)
+4. Return the assembled data in one response — the storefront should never need a second fetch to get related data
+
+### Storefront side
+
+The storefront calls `GET /store/root-categories/:selectedCategoryId/colors` in `src/lib/data/color-groups.ts` inside the layout's `Promise.all`, so it fires in parallel with the category list and other layout data. No sequential waterfall.
+
 ## Design System
 
 ### Color Theming

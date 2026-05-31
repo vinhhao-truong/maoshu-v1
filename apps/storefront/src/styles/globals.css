@@ -50,31 +50,6 @@
   --color-danger-fg:      255 255 255;
 }
 
-/* Pet store — warm orange + amber */
-[data-theme="pet"] {
-  --color-primary:        194  65 12;   /* orange-700  #C2410C */
-  --color-primary-hover:  154  52 18;   /* orange-800  #9A3412 */
-  --color-primary-light:  254 215 170;  /* orange-200  #FED7AA */
-  --color-primary-fg:     255 255 255;
-
-  --color-secondary:       180  83  9;  /* amber-700   #B45309 */
-  --color-secondary-hover: 146  64 14;  /* amber-800   #92400E */
-  --color-secondary-light: 253 230 138; /* amber-200   #FDE68A */
-  --color-secondary-fg:    255 255 255;
-}
-
-/* Convenience store — trustworthy blue + fresh green */
-[data-theme="convenience"] {
-  --color-primary:         30  64 175;  /* blue-800    #1E40AF */
-  --color-primary-hover:   30  58 138;  /* blue-900    #1E3A8A */
-  --color-primary-light:  191 219 254;  /* blue-200    #BFDBFE */
-  --color-primary-fg:     255 255 255;
-
-  --color-secondary:       22 101  52;  /* green-800   #166534 */
-  --color-secondary-hover: 20  83  45;  /* green-900   #14532D */
-  --color-secondary-light: 187 247 208; /* green-200   #BBF7D0 */
-  --color-secondary-fg:    255 255 255;
-}
 
 @layer utilities {
   /* Chrome, Safari and Opera */
