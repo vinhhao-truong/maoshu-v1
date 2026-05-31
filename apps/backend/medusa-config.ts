@@ -1,6 +1,17 @@
 import { loadEnv, defineConfig } from '@medusajs/framework/utils'
+import { config } from 'dotenv'
+import { expand } from 'dotenv-expand'
+import { join } from 'path'
 
-loadEnv(process.env.NODE_ENV || 'development', process.cwd())
+const env = process.env.NODE_ENV || 'development'
+
+// loadEnv only handles staging/production/test — load development (or any custom env) manually first
+const MEDUSA_KNOWN_ENVS = ["staging", "production", "test"]
+if (!MEDUSA_KNOWN_ENVS.includes(env)) {
+  expand(config({ path: join(process.cwd(), `.env.${env}`) }))
+}
+
+loadEnv(env, process.cwd())
 
 module.exports = defineConfig({
   admin: {
@@ -34,7 +45,7 @@ module.exports = defineConfig({
         options: { redis: { url: process.env.REDIS_URL } },
       },
     ] : []),
-    {
+    ...(process.env.S3_ENDPOINT ? [{
       resolve: "@medusajs/medusa/file",
       options: {
         providers: [
@@ -52,7 +63,7 @@ module.exports = defineConfig({
           },
         ],
       },
-    },
+    }] : []),
     {
       resolve: "./src/modules/brand",
     },

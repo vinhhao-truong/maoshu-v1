@@ -76,21 +76,61 @@ The storefront talks to Medusa's REST API. The middleware caches region data (1-
 
 ## Environment
 
-**Backend** (`apps/backend/.env`):
+Both apps use a three-file env split. Files are loaded by precedence (highest wins): `.env.{NODE_ENV}` overrides `.env`.
+
+### Backend (`apps/backend/`)
+
+| File | Committed | Loaded when |
+|---|---|---|
+| `.env` | no | always — shared vars (CORS, JWT, onboarding) |
+| `.env.development` | no | `medusa develop` (`NODE_ENV=development`) |
+| `.env.production` | no | `medusa start` (`NODE_ENV=production`) |
+| `.env.template` | yes | reference only |
+
+**Important:** Medusa's `loadEnv` only natively handles `staging`, `production`, and `test`. `development` is handled by a manual dotenv load at the top of `medusa-config.ts` — do not remove it.
+
 ```
-DATABASE_URL=postgres://...
-REDIS_URL=redis://localhost:6379
-JWT_SECRET / COOKIE_SECRET
+# .env (shared)
 STORE_CORS / ADMIN_CORS / AUTH_CORS
+JWT_SECRET / COOKIE_SECRET
+MEDUSA_ADMIN_ONBOARDING_*
+
+# .env.development
+DATABASE_URL=postgresql://postgres:<password>@localhost:5432/medusa-maoshu-v1
+REDIS_URL=redis://localhost:6379
+
+# .env.production
+DATABASE_URL=postgresql://...supabase.co.../postgres
+S3_ENDPOINT / S3_REGION / S3_BUCKET / S3_ACCESS_KEY_ID / S3_SECRET_ACCESS_KEY / S3_FILE_URL
 ```
 
-**Storefront** (`apps/storefront/.env.local`):
+**Storage:** The Supabase file module is only loaded when `S3_ENDPOINT` is set. In development it is absent, so Medusa falls back to local file storage automatically.
+
+**Migrations on deploy:** `apps/backend/package.json` `start` script runs `medusa db:migrate && medusa start` — migrations are applied automatically on every production deployment.
+
+### Storefront (`apps/storefront/`)
+
+Next.js natively supports the env split — no code changes needed.
+
+| File | Committed | Loaded when |
+|---|---|---|
+| `.env` | yes | always — `NEXT_PUBLIC_DEFAULT_REGION=vn` |
+| `.env.development` | no | `next dev` |
+| `.env.production` | no | `next build` / `next start` |
+| `.env.local` | no | kept empty — do not add vars here, it overrides everything |
+
 ```
+# .env.development
 NEXT_PUBLIC_MEDUSA_BACKEND_URL=http://localhost:9000
-NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_...
-NEXT_PUBLIC_DEFAULT_REGION=vn
-NEXT_PUBLIC_STRIPE_KEY=       # optional, Stripe payments
-MEDUSA_CLOUD_S3_HOSTNAME=     # optional, S3 image hosting
+NEXT_PUBLIC_BASE_URL=https://localhost:8000
+NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_...   # local dev key
+
+# .env.production
+NEXT_PUBLIC_MEDUSA_BACKEND_URL=<production-backend-url>
+NEXT_PUBLIC_BASE_URL=<production-storefront-url>
+NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=<production-publishable-key>
+MEDUSA_CLOUD_S3_HOSTNAME=<supabase-project-ref>.supabase.co
+NEXT_PUBLIC_STRIPE_KEY=<production-stripe-key>
 ```
 
 ## Design System
