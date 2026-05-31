@@ -25,21 +25,15 @@ function hexToRgb(hex: string): [number, number, number] {
   const clean = hex.replace("#", "")
   const full =
     clean.length === 3
-      ? clean
-          .split("")
-          .map((c) => c + c)
-          .join("")
+      ? clean.split("").map((c) => c + c).join("")
       : clean
   const n = parseInt(full, 16)
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
 }
 
 function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
-  const rn = r / 255,
-    gn = g / 255,
-    bn = b / 255
-  const max = Math.max(rn, gn, bn),
-    min = Math.min(rn, gn, bn)
+  const rn = r / 255, gn = g / 255, bn = b / 255
+  const max = Math.max(rn, gn, bn), min = Math.min(rn, gn, bn)
   const l = (max + min) / 2
   if (max === min) return [0, 0, l * 100]
   const d = max - min
@@ -52,9 +46,7 @@ function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
 }
 
 function hslToRgbTriplet(h: number, s: number, l: number): string {
-  const hn = h / 360,
-    sn = s / 100,
-    ln = l / 100
+  const hn = h / 360, sn = s / 100, ln = l / 100
   if (sn === 0) {
     const v = Math.round(ln * 255)
     return `${v} ${v} ${v}`
@@ -89,16 +81,11 @@ export function generateColorScale(hex: string) {
   return {
     DEFAULT: `${r} ${g} ${b}`,
     hover: hslToRgbTriplet(h, s, Math.max(0, l - 8)),
-    light: hslToRgbTriplet(
-      h,
-      Math.max(s, 80),
-      Math.min(94, Math.max(l + 47, 82))
-    ),
+    light: hslToRgbTriplet(h, Math.max(s, 80), Math.min(94, Math.max(l + 47, 82))),
     fg: wcagLuminance(r, g, b) >= 0.179 ? "17 24 39" : "255 255 255",
   }
 }
 
-// Returns CSS variable declarations (no :root wrapper) for all defined fields
 export function buildCssVars(colorGroup: ColorGroup): string {
   const lines: string[] = []
   for (const [field, cssPrefix] of Object.entries(CSS_VAR_MAP)) {

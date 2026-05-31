@@ -105,6 +105,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Setup page — bypass everything when ROOT_CATEGORY_ID is missing
+  if (!process.env.ROOT_CATEGORY_ID) {
+    if (!request.nextUrl.pathname.startsWith("/setup")) {
+      return NextResponse.redirect(new URL("/setup", request.url))
+    }
+    return NextResponse.next()
+  }
+
   // Admin routes are admin-only and don't need a region prefix
   if (request.nextUrl.pathname.startsWith("/admin")) {
     const hasToken = !!request.cookies.get("_medusa_admin_jwt")?.value

@@ -15,6 +15,7 @@ type ProductResult = {
 
 type Props = {
   categories: HttpTypes.StoreProductCategory[]
+  rootCategoryId?: string
 }
 
 const BACKEND_URL =
@@ -63,7 +64,7 @@ async function searchProducts(
     .map(({ p }: { p: ProductResult }) => p)
 }
 
-export default function SearchBar({ categories }: Props) {
+export default function SearchBar({ categories, rootCategoryId }: Props) {
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<ProductResult[]>([])
   const [open, setOpen] = useState(false)
@@ -88,8 +89,7 @@ export default function SearchBar({ categories }: Props) {
     }
     timerRef.current = setTimeout(async () => {
       setLoading(true)
-      const rootId = localStorage.getItem("selectedCategoryId")
-      const root = rootId ? categories.find((c) => c.id === rootId) : null
+      const root = rootCategoryId ? categories.find((c) => c.id === rootCategoryId) : null
       const categoryIds = root ? collectDescendantIds(root) : []
       const found = await searchProducts(query, categoryIds)
       setResults(found)
@@ -99,7 +99,7 @@ export default function SearchBar({ categories }: Props) {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current)
     }
-  }, [query, categories])
+  }, [query, categories, rootCategoryId])
 
   // Close on outside click
   useEffect(() => {

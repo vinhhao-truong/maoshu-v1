@@ -1,5 +1,4 @@
 import { Suspense } from "react"
-import { cookies } from "next/headers"
 
 import { listLocales } from "@lib/data/locales"
 import { getLocale } from "@lib/data/locale-actions"
@@ -9,7 +8,6 @@ import { getBusinessInfo } from "@lib/data/business-info"
 import { HttpTypes, StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
-import CategoryDropdown from "@modules/layout/components/category-dropdown"
 import SideMenu from "@modules/layout/components/side-menu"
 import SearchBar from "@modules/layout/components/search-bar"
 import SubNav from "@modules/layout/components/sub-nav"
@@ -23,21 +21,20 @@ export default async function Nav({
   customer: HttpTypes.StoreCustomer | null
 }) {
   // categories and customer are passed from the parent layout — no duplicate fetches
-  const [regions, locales, currentLocale, t, { collections }, cookieStore, businessInfo] = await Promise.all([
+  const [regions, locales, currentLocale, t, { collections }, businessInfo] = await Promise.all([
     listRegions().then((regions: StoreRegion[]) => regions),
     listLocales(),
     getLocale(),
     getTranslations("nav"),
     listCollections(),
-    cookies(),
     getBusinessInfo(),
   ])
 
   const allCategories = categories
   const topLevelCategories = allCategories.filter((c) => !c.parent_category)
 
-  const selectedCategoryId = cookieStore.get("selectedCategoryId")?.value
-  const activeRoot = topLevelCategories.find((c) => c.id === selectedCategoryId) ?? null
+  const rootCategoryId = process.env.ROOT_CATEGORY_ID
+  const activeRoot = topLevelCategories.find((c) => c.id === rootCategoryId) ?? null
 
   return (
     <div className="sticky top-0 inset-x-0 z-50">
@@ -51,6 +48,7 @@ export default async function Nav({
                 currentLocale={currentLocale}
                 allCategories={allCategories ?? []}
                 collections={collections ?? []}
+                rootCategoryId={rootCategoryId}
               />
             </div>
             <LocalizedClientLink
@@ -72,13 +70,9 @@ export default async function Nav({
             </LocalizedClientLink>
           </div>
 
-          <div className="flex items-center justify-center h-full">
-            <CategoryDropdown categories={topLevelCategories} />
-          </div>
-
           <div className="flex items-center h-full flex-1 basis-0">
             <div className="flex items-center gap-x-4 ml-auto">
-              <SearchBar categories={allCategories ?? []} />
+              <SearchBar categories={allCategories ?? []} rootCategoryId={rootCategoryId} />
               <div className="relative group/cart-tip">
                 <Suspense
                   fallback={

@@ -1,6 +1,5 @@
 import { Metadata } from "next"
 import { notFound, redirect } from "next/navigation"
-import { cookies } from "next/headers"
 
 import { getCategoryByHandle, listCategories } from "@lib/data/categories"
 import { listRegions } from "@lib/data/regions"
@@ -82,8 +81,7 @@ export default async function CategoryPage(props: Props) {
     notFound()
   }
 
-  const cookieStore = await cookies()
-  const rootCategoryId = cookieStore.get("selectedCategoryId")?.value
+  const rootCategoryId = process.env.ROOT_CATEGORY_ID
 
   const parent = productCategory.parent_category
   if (parent && parent.id !== rootCategoryId && parent.handle) {

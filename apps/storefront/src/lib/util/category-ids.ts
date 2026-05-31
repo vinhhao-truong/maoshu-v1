@@ -6,12 +6,11 @@ export function collectDescendantIds(
   return [cat.id, ...(cat.category_children ?? []).flatMap(collectDescendantIds)]
 }
 
-export async function getRootCategoryIds(
-  cookieStore: { get: (key: string) => { value: string } | undefined },
+export function getRootCategoryIds(
+  rootCategoryId: string | undefined,
   categories: HttpTypes.StoreProductCategory[]
-): Promise<string[] | undefined> {
-  const rootId = cookieStore.get("selectedCategoryId")?.value
-  if (!rootId) return undefined
-  const root = categories.find((c) => c.id === rootId)
+): string[] | undefined {
+  if (!rootCategoryId) return undefined
+  const root = categories.find((c) => c.id === rootCategoryId)
   return root ? collectDescendantIds(root) : undefined
 }

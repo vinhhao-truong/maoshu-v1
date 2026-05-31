@@ -5,14 +5,8 @@ import ColorGroupModuleService from "../../../modules/color-group/service"
 import SystemColorModuleService from "../../../modules/system-color/service"
 
 const COLOR_FIELDS = [
-  "primary",
-  "secondary",
-  "inverse",
-  "neutral",
-  "success",
-  "warning",
-  "danger",
-  "info",
+  "primary", "secondary", "inverse", "neutral",
+  "success", "warning", "danger", "info",
 ] as const
 
 export type RootCategoryData = {
@@ -35,27 +29,24 @@ export async function getRootCategory(
   return (data[0] as RootCategoryData) ?? null
 }
 
+// Resolves a color group ID → hex-resolved color group object.
+// System color IDs (syscol_...) are replaced with their hex values.
 export async function resolveColorGroup(
   colorGroupId: string,
   scope: Record<string, unknown>
 ): Promise<Record<string, unknown> | null> {
-  const colorGroupService: ColorGroupModuleService = (scope as any).resolve(
-    COLOR_GROUP_MODULE
-  )
+  const colorGroupService: ColorGroupModuleService = (scope as any).resolve(COLOR_GROUP_MODULE)
   const group = await colorGroupService.retrieveColorGroup(colorGroupId)
   if (!group) return null
 
   const resolved = { ...(group as unknown as Record<string, unknown>) }
 
-  // Collect system color IDs that need to be resolved to hex
-  const ids = COLOR_FIELDS.map((f) => resolved[f]).filter(
-    (v): v is string => typeof v === "string" && v.startsWith("syscol")
-  )
+  const ids = COLOR_FIELDS
+    .map((f) => resolved[f])
+    .filter((v): v is string => typeof v === "string" && v.startsWith("syscol"))
 
   if (ids.length > 0) {
-    const systemColorService: SystemColorModuleService = (scope as any).resolve(
-      SYSTEM_COLOR_MODULE
-    )
+    const systemColorService: SystemColorModuleService = (scope as any).resolve(SYSTEM_COLOR_MODULE)
     const systemColors = await systemColorService.listSystemColors({ id: ids })
     const hexById: Record<string, string> = Object.fromEntries(
       systemColors.map((c) => [c.id, c.hex])

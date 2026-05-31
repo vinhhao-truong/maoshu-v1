@@ -5,7 +5,7 @@ import useToggleState from "@lib/hooks/use-toggle-state"
 import { XMark } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import { Fragment, useEffect, useRef, useState } from "react"
+import { Fragment, useState } from "react"
 import { Locale } from "@lib/data/locales"
 import { useTranslations } from "next-intl"
 
@@ -15,6 +15,7 @@ type SideMenuProps = {
   currentLocale: string | null
   allCategories: HttpTypes.StoreProductCategory[]
   collections: HttpTypes.StoreCollection[]
+  rootCategoryId?: string
 }
 
 const ChevronDown = ({ open }: { open: boolean }) => (
@@ -29,19 +30,11 @@ const ChevronDown = ({ open }: { open: boolean }) => (
   </svg>
 )
 
-const SideMenu = ({ allCategories, collections }: SideMenuProps) => {
+const SideMenu = ({ allCategories, collections, rootCategoryId }: SideMenuProps) => {
   const t = useTranslations("sideMenu")
   const menuToggleState = useToggleState()
 
   const [openSection, setOpenSection] = useState<"collections" | "categories" | null>(null)
-  const [rootCategoryId, setRootCategoryId] = useState<string | null>(null)
-
-  useEffect(() => {
-    const sync = () => setRootCategoryId(localStorage.getItem("selectedCategoryId"))
-    sync()
-    window.addEventListener("selectedCategoryChanged", sync)
-    return () => window.removeEventListener("selectedCategoryChanged", sync)
-  }, [])
 
   const rootCategory = allCategories.find((c) => c.id === rootCategoryId)
   const subcategories = rootCategory?.category_children ?? []

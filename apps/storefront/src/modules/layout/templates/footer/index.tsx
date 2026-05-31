@@ -13,10 +13,12 @@ export default async function Footer({
   categoryLogoUrl,
   categoryName,
   categories,
+  rootCategoryId,
 }: {
   categoryLogoUrl?: string
   categoryName?: string
   categories: HttpTypes.StoreProductCategory[]
+  rootCategoryId?: string
 }) {
   // categories passed from parent layout — no duplicate fetch
   // listCollections no longer requests *products (only names/handles needed for links)
@@ -54,7 +56,7 @@ export default async function Footer({
               <span className="txt-small-plus txt-ui-fg-base">
                 {t("categories")}
               </span>
-              <FooterCategories categories={productCategories ?? []} />
+              <FooterCategories categories={productCategories ?? []} rootCategoryId={rootCategoryId} />
             </div>
             {collections && collections.length > 0 && (
               <div className="flex flex-col gap-y-2">

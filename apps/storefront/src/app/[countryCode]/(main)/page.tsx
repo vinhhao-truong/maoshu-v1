@@ -1,6 +1,5 @@
 import { Metadata } from "next"
 import { Suspense } from "react"
-import { cookies } from "next/headers"
 
 import NewArrivals from "@modules/home/components/new-arrivals"
 import Hero from "@modules/home/components/hero"
@@ -35,9 +34,7 @@ export default async function Home(props: {
     return null
   }
 
-  // Root category from cookie — used to scope all product sections
-  const cookieStore = await cookies()
-  const rootCategoryId = cookieStore.get("selectedCategoryId")?.value
+  const rootCategoryId = process.env.ROOT_CATEGORY_ID
   const rootCategory = categories?.find((c) => c.id === rootCategoryId)
   const rootCategoryIds = rootCategory
     ? [
@@ -67,6 +64,7 @@ export default async function Home(props: {
         <CategorySidebar
           categories={categories ?? []}
           selectedHandle={categoryHandle}
+          rootCategoryId={rootCategoryId}
         />
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-x-4 mb-6">

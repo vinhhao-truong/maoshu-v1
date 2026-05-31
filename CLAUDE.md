@@ -148,18 +148,64 @@ Two reusable functions that every sub-route builds on:
 
 | Route | File | Purpose |
 |---|---|---|
-| `GET /store/root-categories/:id/colors` | `[id]/colors/route.ts` | Returns the resolved color group for a root category |
+| `GET /store/root-categories/:id` | `[id]/route.ts` | Returns `{ color_group }` — hex-resolved color group; storefront generates CSS vars locally |
 
 ### Adding a new sub-route
 
-1. Create `apps/backend/src/api/store/root-categories/[id]/<resource>/route.ts`
-2. Call `getRootCategory(req.params.id, req.scope)` to get the category and its metadata
-3. Use metadata fields to fetch related data (or add a new resolver to `utils.ts` if the resolution logic is non-trivial and likely to be reused)
-4. Return the assembled data in one response — the storefront should never need a second fetch to get related data
+Use the `/add-root-category-route` skill (`.claude/skills/add-root-category-route.md`) for the full pattern.
+
+In short:
+1. Create `apps/backend/src/api/store/root-categories/[id]/<resource>/route.ts` — call `getRootCategory()`, read a metadata key, fetch and return the resolved data
+2. Add a resolver to `utils.ts` if the fetch involves multiple chained DB calls or will be reused
+3. Add a data fetcher in `apps/storefront/src/lib/data/<resource>.ts`
+4. Add the fetch to the layout `Promise.all` alongside `getCategoryColors` — the storefront should never need a second round-trip
 
 ### Storefront side
 
-The storefront calls `GET /store/root-categories/:selectedCategoryId/colors` in `src/lib/data/color-groups.ts` inside the layout's `Promise.all`, so it fires in parallel with the category list and other layout data. No sequential waterfall.
+The storefront makes **one fetch**: `getRootCategoryData(categoryId)` in `src/lib/data/root-category.ts`, called inside the layout's `Promise.all` alongside categories/customer/cart. The backend resolves all DB references (e.g. system color IDs → hex); lightweight derivation like CSS var generation runs on the storefront during SSR.
+
+- Type: `RootCategoryData` — add new fields here as the backend route grows
+- Fetches `GET /store/root-categories/:id` → `{ color_group }` with hex values resolved
+- `buildCssVars(color_group)` in `src/lib/util/color-scale.ts` generates the CSS variable string during SSR
+
+## Root Category — Storefront Config
+
+The storefront is locked to a single root category set at deployment time via an env var. There is no user-facing category switcher.
+
+### Env var
+
+```
+ROOT_CATEGORY_ID=pcat_01...   # server-side only, no NEXT_PUBLIC_ prefix
+```
+
+Add to `apps/storefront/.env.development` and `apps/storefront/.env.production`. Each deployment/domain gets its own value pointing to the correct root category.
+
+### How it flows
+
+1. `middleware.ts` checks `process.env.ROOT_CATEGORY_ID` on every request — if unset, redirects all routes to `/setup` (no loop: `/setup` itself is bypassed)
+2. Server components read `process.env.ROOT_CATEGORY_ID` directly — no cookies, no localStorage
+3. Client components that need the ID receive it as a `rootCategoryId` prop from their server parent — never read `process.env` client-side
+
+### Files that read ROOT_CATEGORY_ID
+
+| File | Usage |
+|---|---|
+| `src/middleware.ts` | Guard — redirects to `/setup` if missing |
+| `src/app/[countryCode]/(main)/layout.tsx` | Color group fetch + footer data |
+| `src/app/[countryCode]/(main)/page.tsx` | Scopes product grid and new arrivals |
+| `src/app/[countryCode]/(main)/new-arrivals/page.tsx` | Scopes paginated products |
+| `src/app/[countryCode]/(main)/categories/[...category]/page.tsx` | Validates category belongs to root |
+| `src/modules/layout/templates/nav/index.tsx` | Active root for SubNav; passes to SideMenu and SearchBar |
+
+### Setup page
+
+`src/app/setup/page.tsx` — shown when `ROOT_CATEGORY_ID` is not set. Displays a 5-step guide and links to the admin panel (`NEXT_PUBLIC_MEDUSA_BACKEND_URL/app`). No layout, no region prefix — it's a standalone page outside the normal route tree.
+
+### Deleted (no longer exist)
+
+- `select-category` page — user cannot switch categories from the storefront
+- `category-guard` component — redirect-to-select guard is gone
+- `category-dropdown` component — no switcher in the nav
 
 ## Design System
 

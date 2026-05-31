@@ -2,32 +2,17 @@
 
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import { useEffect, useState } from "react"
 
 type Props = {
   categories: HttpTypes.StoreProductCategory[]
+  rootCategoryId?: string
 }
 
-export default function FooterCategories({ categories }: Props) {
-  const [items, setItems] = useState<HttpTypes.StoreProductCategory[]>([])
-
-  useEffect(() => {
-    const sync = (id: string | null) => {
-      if (id) {
-        const root = categories.find((c) => c.id === id)
-        setItems(root?.category_children ?? [])
-      } else {
-        setItems(categories.filter((c) => !c.parent_category))
-      }
-    }
-
-    sync(localStorage.getItem("selectedCategoryId"))
-
-    const handler = (e: Event) =>
-      sync((e as CustomEvent<{ id: string }>).detail.id)
-    window.addEventListener("selectedCategoryChanged", handler)
-    return () => window.removeEventListener("selectedCategoryChanged", handler)
-  }, [categories])
+export default function FooterCategories({ categories, rootCategoryId }: Props) {
+  const root = rootCategoryId ? categories.find((c) => c.id === rootCategoryId) : null
+  const items = root
+    ? (root.category_children ?? [])
+    : categories.filter((c) => !c.parent_category)
 
   if (!items.length) return null
 

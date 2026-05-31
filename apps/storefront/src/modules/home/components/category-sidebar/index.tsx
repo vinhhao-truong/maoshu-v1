@@ -3,32 +3,20 @@
 import { HttpTypes } from "@medusajs/types"
 import { Text } from "@modules/common/components/ui"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef } from "react"
 
 type Props = {
   categories: HttpTypes.StoreProductCategory[]
   selectedHandle?: string
+  rootCategoryId?: string
 }
 
-export default function CategorySidebar({ categories, selectedHandle }: Props) {
+export default function CategorySidebar({ categories, selectedHandle, rootCategoryId }: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const [rootCategory, setRootCategory] = useState<HttpTypes.StoreProductCategory | null>(null)
 
-  useEffect(() => {
-    const sync = (id: string) => {
-      const match = categories.find((c) => c.id === id)
-      setRootCategory(match ?? null)
-    }
-
-    const stored = localStorage.getItem("selectedCategoryId")
-    if (stored) sync(stored)
-
-    const handler = (e: Event) => sync((e as CustomEvent<{ id: string }>).detail.id)
-    window.addEventListener("selectedCategoryChanged", handler)
-    return () => window.removeEventListener("selectedCategoryChanged", handler)
-  }, [categories])
+  const rootCategory = categories.find((c) => c.id === rootCategoryId) ?? null
 
   const setCategory = useCallback(
     (handle: string | undefined) => {

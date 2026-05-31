@@ -1,6 +1,5 @@
 import { Metadata } from "next"
 import { Suspense } from "react"
-import { cookies } from "next/headers"
 import { getTranslations } from "next-intl/server"
 
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
@@ -40,9 +39,7 @@ export default async function NewArrivalsPage(props: Params) {
   const priceMin = priceMinStr ? parseFloat(priceMinStr) : undefined
   const priceMax = priceMaxStr ? parseFloat(priceMaxStr) : undefined
 
-  // Only cookies() is blocking — instant, no network call
-  const cookieStore = await cookies()
-  const rootCategoryId = cookieStore.get("selectedCategoryId")?.value
+  const rootCategoryId = process.env.ROOT_CATEGORY_ID
 
   const t = await getTranslations("store")
 
