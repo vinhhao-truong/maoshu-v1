@@ -1,10 +1,11 @@
 "use server"
 
+import { cache } from "react"
 import { sdk } from "@lib/config"
 import { HttpTypes } from "@medusajs/types"
 import { getCacheOptions } from "./cookies"
 
-export const listRegions = async () => {
+export const listRegions = cache(async () => {
   const next = {
     ...(await getCacheOptions("regions")),
   }
@@ -16,7 +17,7 @@ export const listRegions = async () => {
       cache: "no-store",
     })
     .then(({ regions }) => regions)
-}
+})
 
 export const retrieveRegion = async (id: string) => {
   const next = {

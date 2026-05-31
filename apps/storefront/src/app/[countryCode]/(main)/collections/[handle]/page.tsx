@@ -1,6 +1,5 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { cookies } from "next/headers"
 
 import { getCollectionByHandle, listCollections } from "@lib/data/collections"
 import { listCategories } from "@lib/data/categories"
@@ -88,8 +87,8 @@ export default async function CollectionPage(props: Props) {
     notFound()
   }
 
-  const [cookieStore, allCategories] = await Promise.all([cookies(), listCategories({ limit: 100 })])
-  const categoryIds = await getRootCategoryIds(cookieStore, allCategories ?? [])
+  const allCategories = await listCategories({ limit: 100 })
+  const categoryIds = getRootCategoryIds(process.env.ROOT_CATEGORY_ID, allCategories ?? [])
 
   return (
     <CollectionTemplate
