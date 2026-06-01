@@ -21,7 +21,9 @@
       "Bash(Measure-Object -Property Length -Sum)",
       "Bash(Select-Object Count, Sum)",
       "Bash(git rm *)",
-      "Bash(Get-Content *)"
+      "Bash(Get-Content *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
