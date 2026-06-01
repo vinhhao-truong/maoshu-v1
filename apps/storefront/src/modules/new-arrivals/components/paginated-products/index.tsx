@@ -1,7 +1,5 @@
 import { listProducts, listProductsWithSort } from "@lib/data/products"
-import { listCategories } from "@lib/data/categories"
 import { getRegion } from "@lib/data/regions"
-import { collectDescendantIds } from "@lib/util/category-ids"
 import ProductPreview from "@modules/products/components/product-preview"
 import { Pagination } from "@modules/store/components/pagination"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
@@ -15,7 +13,7 @@ const SORT_ORDER: Partial<Record<SortOptions, string>> = {
 export default async function NewArrivalsPaginatedProducts({
   page,
   countryCode,
-  rootCategoryId,
+  categoryIds,
   sortBy = "created_at",
   priceMin,
   priceMax,
@@ -23,24 +21,15 @@ export default async function NewArrivalsPaginatedProducts({
 }: {
   page: number
   countryCode: string
-  rootCategoryId?: string
+  categoryIds?: string[]
   sortBy?: SortOptions
   priceMin?: number
   priceMax?: number
   limit?: number
 }) {
-  const [region, allCategories] = await Promise.all([
-    getRegion(countryCode),
-    listCategories({ limit: 100 }),
-  ])
+  const region = await getRegion(countryCode)
 
   if (!region) return null
-
-  let categoryIds: string[] | undefined
-  if (rootCategoryId) {
-    const root = allCategories?.find((c) => c.id === rootCategoryId)
-    categoryIds = root ? collectDescendantIds(root) : undefined
-  }
 
   const needsClientSort =
     sortBy === "price_asc" ||

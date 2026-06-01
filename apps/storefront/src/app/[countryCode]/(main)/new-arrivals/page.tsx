@@ -6,6 +6,8 @@ import { SortOptions } from "@modules/store/components/refinement-list/sort-prod
 import RefinementList from "@modules/store/components/refinement-list"
 import NewArrivalsPaginatedProducts from "@modules/new-arrivals/components/paginated-products"
 import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
+import { listCategories } from "@lib/data/categories"
+import { getRootCategoryIds } from "@lib/util/category-ids"
 
 export const metadata: Metadata = {
   title: "New Arrivals",
@@ -39,7 +41,8 @@ export default async function NewArrivalsPage(props: Params) {
   const priceMin = priceMinStr ? parseFloat(priceMinStr) : undefined
   const priceMax = priceMaxStr ? parseFloat(priceMaxStr) : undefined
 
-  const rootCategoryId = process.env.ROOT_CATEGORY_ID
+  const allCategories = await listCategories({ limit: 100 })
+  const categoryIds = getRootCategoryIds(process.env.ROOT_CATEGORY_ID, allCategories ?? [])
 
   const t = await getTranslations("store")
 
@@ -57,7 +60,7 @@ export default async function NewArrivalsPage(props: Params) {
           <NewArrivalsPaginatedProducts
             page={pageNumber}
             countryCode={params.countryCode}
-            rootCategoryId={rootCategoryId}
+            categoryIds={categoryIds}
             sortBy={sortBy as SortOptions}
             priceMin={priceMin}
             priceMax={priceMax}
