@@ -93,7 +93,7 @@ const socialLinks = [
 export default async function ContactPage() {
   const [t, info] = await Promise.all([
     getTranslations("contact"),
-    getBusinessInfo(),
+    getBusinessInfo(process.env.ROOT_CATEGORY_ID),
   ])
 
   const addressParts = [

@@ -1,5 +1,5 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk"
-import { Button, Input, toast } from "@medusajs/ui"
+import { Button, toast } from "@medusajs/ui"
 import { useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -110,30 +110,13 @@ const CategoryImagesWidget = ({ data }: { data: CategoryData }) => {
   const [metadata, setMetadata] = useState<Record<string, any>>(
     data.metadata ?? {}
   )
-  const [uploading, setUploading] = useState({ horizontal: false, vertical: false, logo: false })
-  const [slogan, setSlogan] = useState<string>(data.metadata?.slogan ?? "")
-  const [savingSlogan, setSavingSlogan] = useState(false)
+  const [uploading, setUploading] = useState({ horizontal: false, vertical: false })
 
   const hRef = useRef<HTMLInputElement>(null!)
   const vRef = useRef<HTMLInputElement>(null!)
-  const lRef = useRef<HTMLInputElement>(null!)
 
-  const handleSaveSlogan = async () => {
-    setSavingSlogan(true)
-    try {
-      const newMeta = { ...metadata, slogan: slogan.trim() || null }
-      await saveCategoryMetadata(data.id, newMeta)
-      setMetadata(newMeta)
-      toast.success(t("categoryImages.toast.sloganSaved"))
-    } catch (e: any) {
-      toast.error(e?.message ?? t("categoryImages.toast.uploadError"))
-    } finally {
-      setSavingSlogan(false)
-    }
-  }
-
-  const handleUpload = async (file: File, type: "horizontal" | "vertical" | "logo") => {
-    const field = type === "horizontal" ? "horizontal_image" : type === "vertical" ? "vertical_image" : "logo_image"
+  const handleUpload = async (file: File, type: "horizontal" | "vertical") => {
+    const field = type === "horizontal" ? "horizontal_image" : "vertical_image"
     setUploading((u) => ({ ...u, [type]: true }))
     try {
       const folder = `category/${data.id}/${field}`
@@ -141,13 +124,7 @@ const CategoryImagesWidget = ({ data }: { data: CategoryData }) => {
       const newMeta = { ...metadata, [field]: url }
       await saveCategoryMetadata(data.id, newMeta)
       setMetadata(newMeta)
-      const toastKey =
-        type === "horizontal"
-          ? "categoryImages.toast.horizontalSaved"
-          : type === "vertical"
-          ? "categoryImages.toast.verticalSaved"
-          : "categoryImages.toast.logoSaved"
-      toast.success(t(toastKey))
+      toast.success(t(type === "horizontal" ? "categoryImages.toast.horizontalSaved" : "categoryImages.toast.verticalSaved"))
     } catch (e: any) {
       toast.error(e?.message ?? t("categoryImages.toast.uploadError"))
     } finally {
@@ -176,34 +153,6 @@ const CategoryImagesWidget = ({ data }: { data: CategoryData }) => {
         inputRef={vRef}
         onFileSelect={(f) => handleUpload(f, "vertical")}
       />
-
-      <ImageUploadField
-        label={t("categoryImages.logo")}
-        imageUrl={metadata.logo_image}
-        uploading={uploading.logo}
-        inputRef={lRef}
-        onFileSelect={(f) => handleUpload(f, "logo")}
-      />
-
-      <div className="flex flex-col gap-y-2">
-        <p className="txt-compact-small text-ui-fg-subtle font-medium">
-          {t("categoryImages.slogan")}
-        </p>
-        <Input
-          value={slogan}
-          onChange={(e) => setSlogan(e.target.value)}
-          placeholder={t("categoryImages.sloganPlaceholder")}
-        />
-        <Button
-          size="small"
-          variant="secondary"
-          isLoading={savingSlogan}
-          onClick={handleSaveSlogan}
-          className="w-full"
-        >
-          {t("categoryImages.saveSlogan")}
-        </Button>
-      </div>
     </div>
   )
 }

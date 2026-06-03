@@ -27,7 +27,7 @@ export default async function Nav({
     getLocale(),
     getTranslations("nav"),
     listCollections(),
-    getBusinessInfo(),
+    getBusinessInfo(process.env.ROOT_CATEGORY_ID),
   ])
 
   const allCategories = categories
@@ -40,8 +40,8 @@ export default async function Nav({
     <div className="sticky top-0 inset-x-0 z-50">
       <header className="relative mx-auto border-b duration-200 bg-primary border-primary-hover">
         <nav className="content-container txt-xsmall-plus text-primary-fg flex items-center justify-between w-full h-12 small:h-16 text-small-regular relative">
-          <div className="flex-1 basis-0 h-full flex items-center gap-x-3">
-            <div className="h-full small:hidden">
+          <div className="flex-1 basis-0 h-full flex items-center">
+            <div className="h-full">
               <SideMenu
                 regions={regions}
                 locales={locales}
@@ -51,16 +51,19 @@ export default async function Nav({
                 rootCategoryId={rootCategoryId}
               />
             </div>
+          </div>
+
+          <div className="flex items-center justify-center">
             <LocalizedClientLink
               href="/"
-              className="hover:opacity-80 transition-opacity leading-none hidden small:block"
+              className="hover:opacity-80 transition-opacity leading-none"
               data-testid="nav-store-link"
             >
-              {businessInfo?.logo_url ? (
+              {businessInfo?.logo_white_url ? (
                 <img
-                  src={businessInfo.logo_url}
+                  src={businessInfo.logo_white_url}
                   alt={businessInfo.store_name ?? "Store logo"}
-                  className="h-8 w-auto object-contain"
+                  className="h-6 w-auto object-contain"
                 />
               ) : (
                 <span className="txt-compact-xlarge-plus uppercase">

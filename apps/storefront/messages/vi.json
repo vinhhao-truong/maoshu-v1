@@ -20,7 +20,7 @@
     "support": "Hỗ Trợ",
     "adminShop": "Maoshu Admin",
     "adminSeller": "Maoshu Admin Bán Hàng",
-    "copyright": "© {year} Maoshu"
+    "copyright": "© {year} {storeName}"
   },
   "cart": {
     "title": "Giỏ Hàng",

@@ -193,7 +193,13 @@
       "businessHours": "Giờ làm việc",
       "businessHoursHint": "Văn bản tự do — VD: Thứ 2–6 9:00–18:00",
       "taxId": "Mã số thuế / Mã đăng ký kinh doanh",
-      "aboutUsHint": "Nội dung văn bản phong phú hiển thị trên trang Về chúng tôi."
+      "aboutUsHint": "Nội dung văn bản phong phú hiển thị trên trang Về chúng tôi.",
+      "logoWhite": "Logo (trắng)",
+      "logoWhiteHint": "Dùng trên nền tối",
+      "logoBlack": "Logo (đen)",
+      "logoBlackHint": "Dùng trên nền sáng",
+      "category": "Danh mục",
+      "categoryHint": "Chọn danh mục gốc áp dụng thông tin này"
     },
     "logo": {
       "clickToUpload": "Nhấn để tải lên",
@@ -211,14 +217,18 @@
       "state": "Tỉnh / Thành",
       "postalCode": "Mã bưu điện",
       "country": "VD: Việt Nam",
-      "taxId": "VD: MST 0123456789"
+      "taxId": "VD: MST 0123456789",
+      "selectCategory": "Chọn danh mục"
     },
+    "selectCategoryPrompt": "Chọn một danh mục ở trên để xem hoặc chỉnh sửa thông tin doanh nghiệp.",
     "toast": {
       "loadError": "Không thể tải thông tin doanh nghiệp",
       "validationError": "Tên cửa hàng là bắt buộc",
+      "selectCategory": "Vui lòng chọn danh mục trước",
       "saved": "Đã lưu thông tin doanh nghiệp",
       "saveError": "Không thể lưu",
-      "uploadError": "Tải lên thất bại"
+      "uploadError": "Tải lên thất bại",
+      "fileTooLarge": "Tệp quá lớn. Kích thước tối đa là 2 MB."
     }
   },
   "productStats": {

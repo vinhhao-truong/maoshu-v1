@@ -39,8 +39,6 @@ export default async function PageLayout(props: {
     shippingOptions = shipping_options
   }
 
-  const activeRoot = (categories ?? []).find((c) => c.id === selectedCategoryId)
-
   const cssVars = rootCategoryData?.color_group
     ? buildCssVars(rootCategoryData.color_group)
     : undefined
@@ -64,8 +62,6 @@ export default async function PageLayout(props: {
       {props.children}
       <Footer
         categories={categories ?? []}
-        categoryLogoUrl={activeRoot?.metadata?.logo_image as string | undefined}
-        categoryName={activeRoot?.name}
         rootCategoryId={selectedCategoryId}
       />
     </div>

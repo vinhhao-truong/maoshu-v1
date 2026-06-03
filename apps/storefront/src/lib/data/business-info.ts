@@ -7,6 +7,8 @@ export type BusinessInfo = {
   store_name: string | null
   tagline: string | null
   logo_url: string | null
+  logo_white_url: string | null
+  logo_black_url: string | null
   about_us: string | null
   email: string | null
   phone: string | null
@@ -25,9 +27,10 @@ export type BusinessInfo = {
   business_hours: string | null
 }
 
-export const getBusinessInfo = async (): Promise<BusinessInfo | null> => {
+export const getBusinessInfo = async (rootCategoryId?: string): Promise<BusinessInfo | null> => {
+  const qs = rootCategoryId ? `?root_category_id=${rootCategoryId}` : ""
   return sdk.client
-    .fetch<{ business_info: BusinessInfo }>(`/store/business-info`, {
+    .fetch<{ business_info: BusinessInfo }>(`/store/business-info${qs}`, {
       method: "GET",
       cache: "no-store",
     })

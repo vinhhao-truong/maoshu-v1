@@ -27,7 +27,10 @@ const BusinessInfo = model.define("business_info", {
   // Other
   business_hours: model.text().nullable(),
   tax_id: model.text().nullable(),
+  logo_white_url: model.text().nullable(),
+  logo_black_url: model.text().nullable(),
   metadata: model.json().nullable(),
+  root_category_id: model.text().nullable(),
 })
 
 export default BusinessInfo

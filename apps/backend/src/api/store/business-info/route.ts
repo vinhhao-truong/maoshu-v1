@@ -4,6 +4,8 @@ import BusinessInfoModuleService from "../../../modules/business-info/service"
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const service: BusinessInfoModuleService = req.scope.resolve(BUSINESS_INFO_MODULE)
-  const [info] = await service.listBusinessInfoes({}, { take: 1 })
+  const { root_category_id } = req.query as { root_category_id?: string }
+  const filter = root_category_id ? { root_category_id } : {}
+  const [info] = await service.listBusinessInfos(filter, { take: 1 })
   res.json({ business_info: info ?? null })
 }

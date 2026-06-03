@@ -193,7 +193,13 @@
       "businessHours": "Business hours",
       "businessHoursHint": "Free text — e.g. Mon–Fri 9am–6pm",
       "taxId": "Tax ID / Business reg. no.",
-      "aboutUsHint": "Rich text content shown on the About Us page of the storefront."
+      "aboutUsHint": "Rich text content shown on the About Us page of the storefront.",
+      "logoWhite": "Logo (white)",
+      "logoWhiteHint": "For use on dark backgrounds",
+      "logoBlack": "Logo (black)",
+      "logoBlackHint": "For use on light backgrounds",
+      "category": "Category",
+      "categoryHint": "Select the root category this info applies to"
     },
     "logo": {
       "clickToUpload": "Click to upload",
@@ -211,14 +217,18 @@
       "state": "State / Province",
       "postalCode": "Postal code",
       "country": "e.g. Vietnam",
-      "taxId": "e.g. MST 0123456789"
+      "taxId": "e.g. MST 0123456789",
+      "selectCategory": "Select a category"
     },
+    "selectCategoryPrompt": "Select a category above to view or edit its business info.",
     "toast": {
       "loadError": "Failed to load business info",
       "validationError": "Store name is required",
+      "selectCategory": "Please select a category first",
       "saved": "Business info saved",
       "saveError": "Failed to save",
-      "uploadError": "Upload failed"
+      "uploadError": "Upload failed",
+      "fileTooLarge": "File is too large. Maximum size is 2 MB."
     }
   },
   "productStats": {

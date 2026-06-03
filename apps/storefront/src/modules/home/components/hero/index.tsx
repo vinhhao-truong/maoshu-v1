@@ -3,16 +3,17 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 
 type Props = {
   rootCategory?: HttpTypes.StoreProductCategory | null
+  tagline?: string | null
 }
 
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1920&q=80"
 
-const Hero = ({ rootCategory }: Props) => {
+const Hero = ({ rootCategory, tagline }: Props) => {
   const meta = rootCategory?.metadata as Record<string, unknown> | null
   const bgImage = (meta?.horizontal_image as string | undefined) ?? FALLBACK_IMAGE
   const slogan =
-    (meta?.slogan as string | undefined) ?? rootCategory?.description ?? "Phong cách tối giản, chất lượng vượt trội"
+    tagline ?? rootCategory?.description ?? "Phong cách tối giản, chất lượng vượt trội"
 
   return (
     <div

@@ -1,5 +1,6 @@
 import { listCollections } from "@lib/data/collections";
 import { listFooterContent } from "@lib/data/content";
+import { getBusinessInfo } from "@lib/data/business-info";
 import { Text, clx } from "@modules/common/components/ui";
 import { HttpTypes } from "@medusajs/types";
 
@@ -10,22 +11,17 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 export default async function Footer({
-  categoryLogoUrl,
-  categoryName,
   categories,
   rootCategoryId,
 }: {
-  categoryLogoUrl?: string
-  categoryName?: string
   categories: HttpTypes.StoreProductCategory[]
   rootCategoryId?: string
 }) {
-  // categories passed from parent layout — no duplicate fetch
-  // listCollections no longer requests *products (only names/handles needed for links)
-  const [{ collections }, t, footerContent] = await Promise.all([
+  const [{ collections }, t, footerContent, businessInfo] = await Promise.all([
     listCollections(),
     getTranslations("footer"),
     listFooterContent(),
+    getBusinessInfo(process.env.ROOT_CATEGORY_ID),
   ]);
   const productCategories = categories;
 
@@ -38,15 +34,15 @@ export default async function Footer({
               href="/"
               className="hover:opacity-80 transition-opacity"
             >
-              {categoryLogoUrl ? (
+              {businessInfo?.logo_url ? (
                 <img
-                  src={categoryLogoUrl}
-                  alt={t("storeName")}
-                  className="h-40 w-auto object-contain"
+                  src={businessInfo.logo_url}
+                  alt={businessInfo.store_name ?? t("storeName")}
+                  className="h-20 w-auto object-contain"
                 />
               ) : (
                 <span className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase">
-                  {t("storeName")}
+                  {businessInfo?.store_name ?? t("storeName")}
                 </span>
               )}
             </LocalizedClientLink>
@@ -152,7 +148,7 @@ export default async function Footer({
         </div>
         <div className="flex w-full mb-16 justify-between text-ui-fg-muted">
           <Text className="txt-compact-small">
-            {t("copyright", { year: new Date().getFullYear() })}{categoryName ? ` ${categoryName}` : ""}
+            {t("copyright", { year: new Date().getFullYear(), storeName: businessInfo?.store_name ?? "Maoshu" })}
           </Text>
           <MedusaCTA />
         </div>

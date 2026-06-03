@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AboutUsPage() {
   const [t, info] = await Promise.all([
     getTranslations("aboutUs"),
-    getBusinessInfo(),
+    getBusinessInfo(process.env.ROOT_CATEGORY_ID),
   ])
 
   return (

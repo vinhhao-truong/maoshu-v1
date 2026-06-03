@@ -9,6 +9,7 @@ import CategorySidebar from "@modules/home/components/category-sidebar"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { listCategories } from "@lib/data/categories"
 import { getRegion } from "@lib/data/regions"
+import { getBusinessInfo } from "@lib/data/business-info"
 import { getTranslations } from "next-intl/server"
 
 export const metadata: Metadata = {
@@ -26,9 +27,11 @@ export default async function Home(props: {
   const { countryCode } = params
   const { category: categoryHandle } = searchParams
 
-  const region = await getRegion(countryCode)
-
-  const categories = await listCategories({ limit: 50 })
+  const [region, categories, businessInfo] = await Promise.all([
+    getRegion(countryCode),
+    listCategories({ limit: 50 }),
+    getBusinessInfo(process.env.ROOT_CATEGORY_ID),
+  ])
 
   if (!region) {
     return null
@@ -58,7 +61,7 @@ export default async function Home(props: {
 
   return (
     <>
-      <Hero rootCategory={rootCategory} />
+      <Hero rootCategory={rootCategory} tagline={businessInfo?.tagline} />
       <NewArrivals countryCode={countryCode} categoryIds={rootCategoryIds} />
       <div className="content-container py-12 flex flex-col small:flex-row gap-8">
         <CategorySidebar

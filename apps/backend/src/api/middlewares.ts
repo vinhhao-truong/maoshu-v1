@@ -43,6 +43,11 @@ export default defineMiddlewares({
       bodyParser: { sizeLimit: "10mb" },
     },
     {
+      matcher: "/admin/media",
+      method: ["POST"],
+      bodyParser: { sizeLimit: "10mb" },
+    },
+    {
       matcher: "/store/products",
       method: ["GET"],
       middlewares: [injectBrandFields],
