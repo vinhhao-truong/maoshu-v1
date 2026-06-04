@@ -23,7 +23,8 @@
       "Bash(git rm *)",
       "Bash(Get-Content *)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }
