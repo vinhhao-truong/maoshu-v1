@@ -128,7 +128,7 @@ const SideMenu = ({ allCategories, collections, rootCategoryId }: SideMenuProps)
                       <ChevronDown open={openSection === "collections"} />
                     </button>
                     <div className={`grid transition-all duration-200 ease-in-out ${openSection === "collections" ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
-                      <ul className="overflow-hidden flex flex-col gap-y-5 pl-2 pt-5">
+                      <ul className={`overflow-hidden flex flex-col gap-y-5 pl-2 transition-[padding] duration-200 ease-in-out ${openSection === "collections" ? "pt-5" : "pt-0"}`}>
                         {collections.map((col) => (
                           <li key={col.id}>
                             <LocalizedClientLink
@@ -154,7 +154,7 @@ const SideMenu = ({ allCategories, collections, rootCategoryId }: SideMenuProps)
                       <ChevronDown open={openSection === "categories"} />
                     </button>
                     <div className={`grid transition-all duration-200 ease-in-out ${openSection === "categories" ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
-                      <ul className="overflow-hidden flex flex-col gap-y-5 pl-2 pt-5">
+                      <ul className={`overflow-hidden flex flex-col gap-y-5 pl-2 transition-[padding] duration-200 ease-in-out ${openSection === "categories" ? "pt-5" : "pt-0"}`}>
                         {subcategories.length > 0 ? subcategories.map((cat) => (
                           <li key={cat.id}>
                             <LocalizedClientLink
