@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import { Suspense } from "react"
 
-import NewArrivals from "@modules/home/components/new-arrivals"
+import FeaturedGrid from "@modules/home/components/featured-products"
 import Hero from "@modules/home/components/hero"
 import ProductGrid from "@modules/products/components/product-grid"
 import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
@@ -10,6 +10,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import { listCategories } from "@lib/data/categories"
 import { getRegion } from "@lib/data/regions"
 import { getBusinessInfo } from "@lib/data/business-info"
+import { getRootCategoryHomeGrid } from "@lib/data/root-category"
 import { getTranslations } from "next-intl/server"
 
 export const metadata: Metadata = {
@@ -27,17 +28,19 @@ export default async function Home(props: {
   const { countryCode } = params
   const { category: categoryHandle } = searchParams
 
-  const [region, categories, businessInfo] = await Promise.all([
+  const rootCategoryId = process.env.ROOT_CATEGORY_ID
+
+  const [region, categories, businessInfo, homeGrid] = await Promise.all([
     getRegion(countryCode),
     listCategories({ limit: 50 }),
-    getBusinessInfo(process.env.ROOT_CATEGORY_ID),
+    getBusinessInfo(rootCategoryId),
+    rootCategoryId ? getRootCategoryHomeGrid(rootCategoryId) : null,
   ])
 
   if (!region) {
     return null
   }
 
-  const rootCategoryId = process.env.ROOT_CATEGORY_ID
   const rootCategory = categories?.find((c) => c.id === rootCategoryId)
   const rootCategoryIds = rootCategory
     ? [
@@ -62,7 +65,7 @@ export default async function Home(props: {
   return (
     <>
       <Hero rootCategory={rootCategory} tagline={businessInfo?.tagline} />
-      <NewArrivals countryCode={countryCode} categoryIds={rootCategoryIds} />
+      {homeGrid && <FeaturedGrid data={homeGrid} />}
       <div className="content-container py-12 flex flex-col small:flex-row gap-8">
         <CategorySidebar
           categories={categories ?? []}

@@ -77,6 +77,27 @@
       "fetchError": "Không thể tải sản phẩm."
     }
   },
+  "collectionFeatured": {
+    "title": "Trang chủ",
+    "showOnHomepage": "Hiển thị trên trang chủ",
+    "description": "Bộ sưu tập nổi bật sẽ xuất hiện trong lưới trang chủ.",
+    "toast": {
+      "saved": "Đã lưu",
+      "error": "Lưu thất bại"
+    }
+  },
+  "collectionLayout": {
+    "generalTitle": "Thông tin chung",
+    "title": "Tiêu đề",
+    "handle": "Đường dẫn",
+    "description": "Mô tả",
+    "save": "Lưu",
+    "customTitle": "Tùy chỉnh",
+    "toast": {
+      "saved": "Đã lưu bộ sưu tập",
+      "error": "Lưu thất bại"
+    }
+  },
   "collectionImages": {
     "title": "Ảnh bộ sưu tập",
     "horizontalImage": "Ảnh ngang",
@@ -309,16 +330,6 @@
       "runSuccess": "Đã kích hoạt công việc",
       "runError": "Không thể kích hoạt công việc",
       "noWeekdays": "Vui lòng chọn ít nhất một ngày trong tuần"
-    }
-  },
-  "collectionType": {
-    "title": "Loại bộ sưu tập",
-    "placeholder": "Chọn loại",
-    "types": {
-      "new_release": "Hàng mới về",
-      "trending": "Đang thịnh hành",
-      "best_selling": "Bán chạy nhất",
-      "other": "Khác"
     }
   },
   "orderShortId": {

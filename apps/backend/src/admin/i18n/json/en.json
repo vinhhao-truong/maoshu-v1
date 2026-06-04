@@ -87,6 +87,27 @@
       "uploadError": "Upload failed"
     }
   },
+  "collectionFeatured": {
+    "title": "Homepage",
+    "showOnHomepage": "Show on homepage",
+    "description": "Featured collections appear in the homepage grid.",
+    "toast": {
+      "saved": "Saved",
+      "error": "Failed to save"
+    }
+  },
+  "collectionLayout": {
+    "generalTitle": "General",
+    "title": "Title",
+    "handle": "Handle",
+    "description": "Description",
+    "save": "Save",
+    "customTitle": "Customisation",
+    "toast": {
+      "saved": "Collection saved",
+      "error": "Failed to save"
+    }
+  },
   "categoryColorGroup": {
     "title": "Color Group",
     "selectPlaceholder": "Select a color group…",
@@ -309,16 +330,6 @@
       "runSuccess": "Job triggered successfully",
       "runError": "Failed to trigger job",
       "noWeekdays": "Please select at least one day of the week"
-    }
-  },
-  "collectionType": {
-    "title": "Collection Type",
-    "placeholder": "Select type",
-    "types": {
-      "new_release": "New Release",
-      "trending": "Trending",
-      "best_selling": "Best Selling",
-      "other": "Other"
     }
   },
   "orderShortId": {

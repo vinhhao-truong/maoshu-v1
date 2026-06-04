@@ -241,10 +241,10 @@
   "sideMenu": {
     "menu": "Menu",
     "home": "Trang Chủ",
-    "store": "Cửa Hàng",
+    "store": "Tất Cả Sản Phẩm",
     "account": "Tài Khoản",
     "collections": "Bộ Sưu Tập",
-    "categories": "Sản Phẩm"
+    "categories": "Danh Mục"
   },
   "notFound": {
     "title": "Không tìm thấy trang",

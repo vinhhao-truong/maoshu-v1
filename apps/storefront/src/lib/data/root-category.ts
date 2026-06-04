@@ -15,3 +15,36 @@ export async function getRootCategoryData(
     })
     .catch(() => null)
 }
+
+// Homepage grid — resolved entirely by the backend in one round-trip:
+// newest products in the root tree + featured collections (each with products).
+// Cards render thumbnail + title only, so no region/pricing is needed.
+export type HomeGridProduct = {
+  id: string
+  handle: string
+  title: string
+  thumbnail: string | null
+  images: { url: string }[]
+}
+
+export type FeaturedCollection = {
+  id: string
+  title: string
+  handle: string
+  products: HomeGridProduct[]
+}
+
+export type HomeGridData = {
+  new_arrivals: HomeGridProduct[]
+  featured_collections: FeaturedCollection[]
+}
+
+export async function getRootCategoryHomeGrid(
+  categoryId: string
+): Promise<HomeGridData | null> {
+  return sdk.client
+    .fetch<HomeGridData>(`/store/root-categories/${categoryId}/home-grid`, {
+      cache: "no-store",
+    })
+    .catch(() => null)
+}
