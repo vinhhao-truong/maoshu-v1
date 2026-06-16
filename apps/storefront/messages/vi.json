@@ -6,7 +6,8 @@
     "cart": "Giỏ Hàng ({count})",
     "cartTooltip": "Giỏ Hàng",
     "accountTooltip": "Tài Khoản",
-    "signInTooltip": "Đăng Nhập"
+    "signInTooltip": "Đăng Nhập",
+    "contactTooltip": "Liên Hệ"
   },
   "footer": {
     "categories": "Sản phẩm",
@@ -203,7 +204,8 @@
     "simpleExchangesDesc": "Không vừa ý? Chúng tôi sẽ đổi sản phẩm mới cho bạn.",
     "easyReturns": "Hoàn trả dễ dàng",
     "easyReturnsDesc": "Chỉ cần hoàn trả sản phẩm và chúng tôi sẽ hoàn tiền. Không thắc mắc.",
-    "from": "Từ "
+    "from": "Từ ",
+    "contactUs": "Mua số lượng lớn? Liên hệ ngay!"
   },
   "store": {
     "viewAll": "Xem tất cả",

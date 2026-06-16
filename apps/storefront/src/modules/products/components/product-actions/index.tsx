@@ -7,6 +7,7 @@ import { Button } from "@modules/common/components/ui"
 import Divider from "@modules/common/components/divider"
 import OptionSelect from "@modules/products/components/product-actions/option-select"
 import AddToCartModal from "@modules/products/components/add-to-cart-modal"
+import BusinessInfoPopup, { type BusinessInfoPopupHandle } from "@modules/layout/components/business-info-popup"
 import { isEqual } from "lodash"
 import { useParams, usePathname, useSearchParams } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
@@ -19,6 +20,7 @@ type ProductActionsProps = {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
   disabled?: boolean
+  rootCategoryId?: string
 }
 
 const optionsAsKeymap = (
@@ -33,6 +35,7 @@ const optionsAsKeymap = (
 export default function ProductActions({
   product,
   disabled,
+  rootCategoryId,
 }: ProductActionsProps) {
   const router = useRouter()
   const pathname = usePathname()
@@ -44,6 +47,7 @@ export default function ProductActions({
   const [modalOpen, setModalOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const countryCode = useParams().countryCode as string
+  const businessInfoRef = useRef<BusinessInfoPopupHandle>(null)
 
   useEffect(() => {
     setIsMounted(true)
@@ -175,27 +179,39 @@ export default function ProductActions({
 
         <ProductPrice product={product} variant={selectedVariant} />
 
-        <Button
-          onClick={openModal}
-          disabled={
-            !isMounted ||
-            !inStock ||
-            !selectedVariant ||
-            !!disabled ||
-            isAdding ||
-            !isValidVariant
-          }
-          variant="primary"
-          className="w-full h-10"
-          isLoading={!isMounted || isAdding}
-          data-testid="add-product-button"
-        >
-          {!selectedVariant && !options
-            ? t("selectVariant")
-            : !inStock || !isValidVariant
-            ? t("outOfStock")
-            : t("addToCart")}
-        </Button>
+        <div className="grid grid-cols-2 gap-x-2">
+          <Button
+            onClick={openModal}
+            disabled={
+              !isMounted ||
+              !inStock ||
+              !selectedVariant ||
+              !!disabled ||
+              isAdding ||
+              !isValidVariant
+            }
+            variant="primary"
+            className="h-10"
+            isLoading={!isMounted || isAdding}
+            data-testid="add-product-button"
+          >
+            {!selectedVariant && !options
+              ? t("selectVariant")
+              : !inStock || !isValidVariant
+              ? t("outOfStock")
+              : t("addToCart")}
+          </Button>
+          <Button
+            variant="secondary"
+            className="h-10"
+            onClick={() => businessInfoRef.current?.open()}
+          >
+            {t("contactUs")}
+          </Button>
+        </div>
+
+        <BusinessInfoPopup ref={businessInfoRef} rootCategoryId={rootCategoryId} />
+
         <MobileActions
           product={product}
           variant={selectedVariant}

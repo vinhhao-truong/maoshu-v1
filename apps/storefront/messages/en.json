@@ -6,7 +6,8 @@
     "cart": "Cart ({count})",
     "cartTooltip": "Cart",
     "accountTooltip": "My Account",
-    "signInTooltip": "Sign In"
+    "signInTooltip": "Sign In",
+    "contactTooltip": "Contact Us"
   },
   "footer": {
     "categories": "Categories",
@@ -203,7 +204,8 @@
     "simpleExchangesDesc": "Is the fit not quite right? No worries - we'll exchange your product for a new one.",
     "easyReturns": "Easy returns",
     "easyReturnsDesc": "Just return your product and we'll refund your money. No questions asked.",
-    "from": "From "
+    "from": "From ",
+    "contactUs": "Contact Us"
   },
   "store": {
     "viewAll": "View all",

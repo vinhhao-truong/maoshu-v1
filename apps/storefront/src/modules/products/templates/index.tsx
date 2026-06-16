@@ -1,7 +1,7 @@
 import React, { Suspense } from "react"
 
 import ImageGallery from "@modules/products/components/image-gallery"
-import ProductActions from "@modules/products/components/product-actions"
+import ProductActionsWrapper from "@modules/products/templates/product-actions-wrapper"
 import ProductOnboardingCta from "@modules/products/components/product-onboarding-cta"
 import ProductTabs from "@modules/products/components/product-tabs"
 import RelatedProducts from "@modules/products/components/related-products"
@@ -42,7 +42,9 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
         <div className="flex flex-col flex-1 gap-y-6 small:py-2">
           <ProductOnboardingCta />
           <ProductInfo product={product} />
-          <ProductActions product={product} region={region} />
+          <Suspense fallback={<div className="h-10 w-full animate-pulse bg-gray-100 rounded-md" />}>
+            <ProductActionsWrapper id={product.id!} region={region} />
+          </Suspense>
           <ProductTabs product={product} />
         </div>
       </div>
