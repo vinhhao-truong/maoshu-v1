@@ -4,6 +4,7 @@ import { HttpTypes } from "@medusajs/types"
 import { Text } from "@modules/common/components/ui"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCallback, useEffect, useRef } from "react"
+import { useTranslations } from "next-intl"
 
 type Props = {
   categories: HttpTypes.StoreProductCategory[]
@@ -12,6 +13,7 @@ type Props = {
 }
 
 export default function CategorySidebar({ categories, selectedHandle, rootCategoryId }: Props) {
+  const t = useTranslations("products")
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -50,6 +52,23 @@ export default function CategorySidebar({ categories, selectedHandle, rootCatego
         Danh Mục
       </Text>
       <div className="flex flex-col gap-y-3">
+        {/* All Products entry */}
+        <div
+          className={`flex items-center gap-x-2 ${!selectedHandle ? "ml-[-23px]" : ""}`}
+        >
+          {!selectedHandle && (
+            <span className="text-ui-fg-base text-sm leading-none flex-shrink-0">•</span>
+          )}
+          <button
+            onClick={() => setCategory(undefined)}
+            className={`txt-compact-small text-left truncate transition-colors ${
+              !selectedHandle ? "text-ui-fg-base" : "text-ui-fg-subtle hover:text-ui-fg-base"
+            }`}
+          >
+            {t("breadcrumbAll")}
+          </button>
+        </div>
+
         {topLevel.map((cat) => {
           const isSelected = cat.handle === selectedHandle
           const subCategories = cat.category_children ?? []
