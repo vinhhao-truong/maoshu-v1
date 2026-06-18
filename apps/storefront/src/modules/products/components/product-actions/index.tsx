@@ -180,7 +180,8 @@ export default function ProductActions({
               !isMounted ||
               !!disabled ||
               isAdding ||
-              (!hasMultipleVariants && (!inStock || !isValidVariant))
+              !isValidVariant ||
+              (!hasMultipleVariants && !inStock)
             }
             variant="primary"
             className="h-10"
