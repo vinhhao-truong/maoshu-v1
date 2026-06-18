@@ -19,7 +19,6 @@ export default async function RelatedProducts({
     return null
   }
 
-  // edit this function to define your related products logic
   const queryParams: HttpTypes.StoreProductListParams = {}
   if (region?.id) {
     queryParams.region_id = region.id
@@ -31,6 +30,9 @@ export default async function RelatedProducts({
     queryParams.tag_id = product.tags
       .map((t) => t.id)
       .filter(Boolean) as string[]
+  }
+  if (process.env.ROOT_CATEGORY_ID) {
+    queryParams.category_id = [process.env.ROOT_CATEGORY_ID]
   }
   queryParams.is_giftcard = false
 

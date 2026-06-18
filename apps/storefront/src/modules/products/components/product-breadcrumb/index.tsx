@@ -36,7 +36,7 @@ export default async function ProductBreadcrumb({ product }: Props) {
     : []
 
   return (
-    <div className="border-b border-gray-100">
+    <div>
       <div className="content-container py-3">
         <nav className="flex items-center gap-x-2 text-sm text-gray-500 flex-wrap">
           <LocalizedClientLink href="/store" className="hover:text-gray-800 transition-colors">

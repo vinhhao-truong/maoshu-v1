@@ -43,10 +43,12 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
         {/* Right: all product details stacked */}
         <div className="flex flex-col flex-1 gap-y-6 small:py-2">
           <ProductOnboardingCta />
-          <ProductInfo product={product} />
-          <Suspense fallback={<div className="h-10 w-full animate-pulse bg-gray-100 rounded-md" />}>
-            <ProductActionsWrapper id={product.id!} region={region} />
-          </Suspense>
+          <div className="flex flex-col gap-y-2">
+            <ProductInfo product={product} />
+            <Suspense fallback={<div className="h-10 w-full animate-pulse bg-gray-100 rounded-md" />}>
+              <ProductActionsWrapper id={product.id!} region={region} />
+            </Suspense>
+          </div>
           <ProductTabs product={product} />
         </div>
       </div>
