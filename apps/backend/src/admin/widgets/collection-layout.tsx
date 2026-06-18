@@ -124,18 +124,20 @@ const CollectionLayoutWidget = ({ data }: { data: CollectionData }) => {
   const [general, setGeneral] = useState({
     title: data.title ?? "",
     handle: data.handle ?? "",
-    description: data.description ?? "",
+    description: (data.metadata?.description as string) ?? "",
   })
   const [savingGeneral, setSavingGeneral] = useState(false)
 
   const saveGeneral = async () => {
     setSavingGeneral(true)
     try {
+      const newMeta = { ...metadata, description: general.description }
       await postCollection(data.id, {
         title: general.title,
         handle: general.handle,
-        description: general.description,
+        metadata: newMeta,
       })
+      setMetadata(newMeta)
       toast.success(t("collectionLayout.toast.saved"))
     } catch (e: any) {
       toast.error(e?.message ?? t("collectionLayout.toast.error"))
