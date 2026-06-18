@@ -187,7 +187,7 @@
     "savedAddressPrompt": "Xin chào {name}, bạn có muốn dùng một địa chỉ đã lưu không?"
   },
   "products": {
-    "selectVariant": "Chọn biến thể",
+    "selectVariant": "Chọn phân loại",
     "outOfStock": "Hết hàng",
     "addToCart": "Thêm vào giỏ",
     "selectOptions": "Chọn tùy chọn",
