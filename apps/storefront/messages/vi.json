@@ -205,7 +205,8 @@
     "easyReturns": "Hoàn trả dễ dàng",
     "easyReturnsDesc": "Chỉ cần hoàn trả sản phẩm và chúng tôi sẽ hoàn tiền. Không thắc mắc.",
     "from": "Từ ",
-    "contactUs": "Mua số lượng lớn? Liên hệ ngay!"
+    "contactUs": "Mua số lượng lớn? Liên hệ ngay!",
+    "selectOption": "Chọn {title}"
   },
   "store": {
     "viewAll": "Xem tất cả",

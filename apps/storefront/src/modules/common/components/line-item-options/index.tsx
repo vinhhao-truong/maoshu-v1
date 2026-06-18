@@ -17,13 +17,17 @@ const LineItemOptions = ({
 }: LineItemOptionsProps) => {
   const t = useTranslations("cart")
 
+  if (!variant?.title || variant.title === "Default variant") {
+    return null
+  }
+
   return (
     <Text
       data-testid={dataTestid}
       data-value={dataValue}
       className="inline-block txt-medium text-ui-fg-subtle w-full overflow-hidden text-ellipsis"
     >
-      {t("variant", { title: variant?.title ?? "" })}
+      {t("variant", { title: variant.title })}
     </Text>
   )
 }

@@ -205,7 +205,8 @@
     "easyReturns": "Easy returns",
     "easyReturnsDesc": "Just return your product and we'll refund your money. No questions asked.",
     "from": "From ",
-    "contactUs": "Contact Us"
+    "contactUs": "Contact Us",
+    "selectOption": "Select {title}"
   },
   "store": {
     "viewAll": "View all",
