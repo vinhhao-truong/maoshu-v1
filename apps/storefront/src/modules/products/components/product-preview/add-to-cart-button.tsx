@@ -56,7 +56,10 @@ export default function AddToCartButton({ product, price }: Props) {
         <span className="flex-1 h-8 px-3 flex items-center bg-primary text-primary-fg">
           {price && (
             <span className="flex items-center gap-x-1">
-              {price.price_type === "sale" && (
+              {!singleVariant && (
+                <span className="text-xs font-medium text-primary-fg opacity-80">{t("from")}</span>
+              )}
+              {singleVariant && price.price_type === "sale" && (
                 <span className="line-through text-xs opacity-60">
                   {price.original_price}
                 </span>

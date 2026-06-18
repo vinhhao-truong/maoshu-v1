@@ -19,7 +19,7 @@ export default async function ProductPreview({
   })
 
   return (
-    <div data-testid="product-wrapper" className="group relative p-5 border border-transparent hover:border-primary transition-colors duration-200">
+    <div data-testid="product-wrapper" className="group relative p-5 border border-transparent hover:border-primary transition-colors duration-200 flex flex-col h-full">
       <LocalizedClientLink
         href={`/products/${product.handle}`}
         className="absolute inset-0 z-10"
@@ -38,7 +38,23 @@ export default async function ProductPreview({
       >
         {product.title}
       </Text>
-      <div className="relative z-20 mt-2">
+      {(product.variants?.length ?? 0) > 1 && (product.options ?? []).length > 0 && (
+        <div className="mt-1.5 flex flex-col gap-y-1">
+          {product.options!.map((option) => (
+            <div key={option.id} className="flex flex-wrap gap-1">
+              {(option.values ?? []).map((v) => (
+                <span
+                  key={v.id}
+                  className="text-xs text-ui-fg-subtle border border-ui-border-base px-1.5 py-0.5"
+                >
+                  {v.value}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="relative z-20 mt-auto pt-2">
         <AddToCartButton product={product} price={cheapestPrice} />
       </div>
     </div>

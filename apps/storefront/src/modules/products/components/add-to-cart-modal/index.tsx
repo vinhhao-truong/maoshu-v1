@@ -200,30 +200,13 @@ export default function AddToCartModal({
                   />
                 </div>
 
-                {/* Product name + variant + price */}
+                {/* Product name + variant */}
                 <div className="flex flex-col gap-y-0.5 text-center">
                   <span className="text-base font-semibold text-ui-fg-base">
                     {product.title}
                   </span>
                   {variantLabel && variantLabel !== "Default option value" && (
                     <span className="text-sm text-ui-fg-subtle">{variantLabel}</span>
-                  )}
-                  {totalPrice && (!showVariantSelector || selectedVariant) && (
-                    <div className="flex items-center justify-center gap-x-2 mt-1">
-                      {totalOriginalPrice && (
-                        <span className="text-sm text-ui-fg-muted line-through">
-                          {totalOriginalPrice}
-                        </span>
-                      )}
-                      <span
-                        className={clx("text-lg font-bold", {
-                          "text-ui-fg-interactive": displayPrice?.price_type === "sale",
-                          "text-ui-fg-base": displayPrice?.price_type !== "sale",
-                        })}
-                      >
-                        {totalPrice}
-                      </span>
-                    </div>
                   )}
                 </div>
 
@@ -285,6 +268,23 @@ export default function AddToCartModal({
                             ? t("noMoreAvailable")
                             : t("remainingStock", { count: maxAddable })}
                         </span>
+                      )}
+                      {totalPrice && (
+                        <div className="flex items-center justify-center gap-x-2">
+                          {totalOriginalPrice && (
+                            <span className="text-sm text-ui-fg-muted line-through">
+                              {totalOriginalPrice}
+                            </span>
+                          )}
+                          <span
+                            className={clx("text-lg font-bold", {
+                              "text-ui-fg-interactive": displayPrice?.price_type === "sale",
+                              "text-ui-fg-base": displayPrice?.price_type !== "sale",
+                            })}
+                          >
+                            {totalPrice}
+                          </span>
+                        </div>
                       )}
                     </div>
 
