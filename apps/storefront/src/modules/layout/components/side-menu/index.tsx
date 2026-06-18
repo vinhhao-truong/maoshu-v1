@@ -5,9 +5,10 @@ import useToggleState from "@lib/hooks/use-toggle-state"
 import { XMark } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import { Fragment, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { Locale } from "@lib/data/locales"
 import { useTranslations } from "next-intl"
+import { usePathname } from "next/navigation"
 
 type SideMenuProps = {
   regions: HttpTypes.StoreRegion[] | null
@@ -33,6 +34,8 @@ const ChevronDown = ({ open }: { open: boolean }) => (
 const SideMenu = ({ allCategories, collections, rootCategoryId }: SideMenuProps) => {
   const t = useTranslations("sideMenu")
   const menuToggleState = useToggleState()
+  const pathname = usePathname()
+  useEffect(() => { menuToggleState.close() }, [pathname])
 
   const [openSection, setOpenSection] = useState<"collections" | "categories" | null>(null)
 

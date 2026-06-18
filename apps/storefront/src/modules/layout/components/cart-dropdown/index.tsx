@@ -11,7 +11,7 @@ import LineItemPrice from "@modules/common/components/line-item-price"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Thumbnail from "@modules/products/components/thumbnail"
 import { usePathname } from "next/navigation"
-import { Fragment, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
 
 const CartDropdown = ({
@@ -30,6 +30,7 @@ const CartDropdown = ({
   const subtotal = cartState?.total ?? 0
 
   const pathname = usePathname()
+  useEffect(() => { close() }, [pathname])
 
   return (
     <div className="h-full z-50">
