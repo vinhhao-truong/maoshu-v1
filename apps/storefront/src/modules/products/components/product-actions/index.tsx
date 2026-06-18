@@ -133,22 +133,16 @@ export default function ProductActions({
 
   const inView = useIntersection(actionsRef, "0px")
 
+  const hasMultipleVariants = (product.variants?.length ?? 0) > 1
+
   const openModal = () => {
-    if (!selectedVariant?.id) return
+    if (!hasMultipleVariants && !selectedVariant?.id) return
     setModalOpen(true)
   }
 
-  const handleAddToCart = async (qty: number) => {
-    if (!selectedVariant?.id) return
-
+  const handleAddToCart = async (qty: number, variantId: string) => {
     setIsAdding(true)
-
-    await addToCart({
-      variantId: selectedVariant.id,
-      quantity: qty,
-      countryCode,
-    })
-
+    await addToCart({ variantId, quantity: qty, countryCode })
     setIsAdding(false)
   }
 
@@ -184,11 +178,9 @@ export default function ProductActions({
             onClick={openModal}
             disabled={
               !isMounted ||
-              !inStock ||
-              !selectedVariant ||
               !!disabled ||
               isAdding ||
-              !isValidVariant
+              (!hasMultipleVariants && (!inStock || !isValidVariant))
             }
             variant="primary"
             className="h-10"
@@ -224,16 +216,14 @@ export default function ProductActions({
           show={!inView}
           optionsDisabled={!!disabled || isAdding}
         />
-        {selectedVariant && (
-          <AddToCartModal
-            open={modalOpen}
-            onClose={() => setModalOpen(false)}
-            onConfirm={handleAddToCart}
-            product={product}
-            variant={selectedVariant}
-            isAdding={isAdding}
-          />
-        )}
+        <AddToCartModal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onConfirm={handleAddToCart}
+          product={product}
+          initialVariant={selectedVariant}
+          isAdding={isAdding}
+        />
       </div>
     </>
   )

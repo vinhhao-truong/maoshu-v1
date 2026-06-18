@@ -3,7 +3,7 @@
 import { addToCart } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
 import { clx } from "@modules/common/components/ui"
-import { useParams, useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { VariantPrice } from "types/global"
@@ -18,7 +18,6 @@ export default function AddToCartButton({ product, price }: Props) {
   const [isAdding, setIsAdding] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const countryCode = useParams().countryCode as string
-  const router = useRouter()
   const t = useTranslations("products")
 
   const singleVariant =
@@ -33,25 +32,16 @@ export default function AddToCartButton({ product, price }: Props) {
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-
-    if (!singleVariant) {
-      router.push(`/${countryCode}/products/${product.handle}`)
-      return
-    }
-
     setModalOpen(true)
   }
 
-  const handleConfirm = async (qty: number) => {
-    if (!singleVariant?.id) return
+  const handleConfirm = async (qty: number, variantId: string) => {
     setIsAdding(true)
-    await addToCart({ variantId: singleVariant.id, quantity: qty, countryCode })
+    await addToCart({ variantId, quantity: qty, countryCode })
     setIsAdding(false)
   }
 
-  const label = !singleVariant
-    ? t("selectVariant")
-    : !inStock
+  const label = singleVariant && !inStock
     ? t("outOfStock")
     : t("addToCart")
 
@@ -97,16 +87,14 @@ export default function AddToCartButton({ product, price }: Props) {
         </span>
       </button>
 
-      {singleVariant && (
-        <AddToCartModal
-          open={modalOpen}
-          onClose={() => setModalOpen(false)}
-          onConfirm={handleConfirm}
-          product={product}
-          variant={singleVariant}
-          isAdding={isAdding}
-        />
-      )}
+      <AddToCartModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={handleConfirm}
+        product={product}
+        initialVariant={singleVariant ?? undefined}
+        isAdding={isAdding}
+      />
     </>
   )
 }

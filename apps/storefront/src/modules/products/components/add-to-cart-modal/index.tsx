@@ -1,59 +1,94 @@
 "use client"
 
 import { Dialog, Transition } from "@headlessui/react"
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, useEffect, useMemo, useState } from "react"
 import { usePathname } from "next/navigation"
 import { useTranslations } from "next-intl"
+import { isEqual } from "lodash"
 import { retrieveCart } from "@lib/data/cart"
 import { trackProductView } from "@lib/data/product-stats"
 import { Button } from "@modules/common/components/ui"
 import { HttpTypes } from "@medusajs/types"
 import X from "@modules/common/icons/x"
 import Thumbnail from "@modules/products/components/thumbnail"
+import OptionSelect from "@modules/products/components/product-actions/option-select"
 
 type AddToCartModalProps = {
   open: boolean
   onClose: () => void
-  onConfirm: (qty: number) => Promise<void>
+  onConfirm: (qty: number, variantId: string) => Promise<void>
   product: HttpTypes.StoreProduct
-  variant: HttpTypes.StoreProductVariant
+  initialVariant?: HttpTypes.StoreProductVariant
   isAdding: boolean
 }
+
+const optionsAsKeymap = (
+  variantOptions: HttpTypes.StoreProductVariant["options"]
+): Record<string, string> =>
+  variantOptions?.reduce((acc: Record<string, string>, o) => {
+    if (o.option_id) acc[o.option_id] = o.value
+    return acc
+  }, {}) ?? {}
+
+const hasRealOptions = (product: HttpTypes.StoreProduct) =>
+  (product.variants?.length ?? 0) > 1
 
 export default function AddToCartModal({
   open,
   onClose,
   onConfirm,
   product,
-  variant,
+  initialVariant,
   isAdding,
 }: AddToCartModalProps) {
   const t = useTranslations("addToCartModal")
   const pathname = usePathname()
   const [qty, setQty] = useState(1)
   const [inputValue, setInputValue] = useState("1")
-  const [inCart, setInCart] = useState<number | null>(null)
+  const [inCart, setInCart] = useState<number | null>(0)
+  const [options, setOptions] = useState<Record<string, string>>({})
 
-  const maxInventory =
-    variant.manage_inventory && !variant.allow_backorder
-      ? (variant.inventory_quantity ?? 0)
-      : Infinity
+  const showVariantSelector = hasRealOptions(product)
 
-  const maxAddable = inCart !== null ? Math.max(0, maxInventory - inCart) : Infinity
-
+  // Reset form state and seed options from initialVariant each time modal opens
   useEffect(() => {
     if (!open) return
     setQty(1)
     setInputValue("1")
-    setInCart(null)
+    setOptions(initialVariant?.options ? optionsAsKeymap(initialVariant.options) : {})
+  }, [open, initialVariant])
+
+  // Resolve selected variant from current options
+  const selectedVariant = useMemo(() => {
+    if (!product.variants?.length) return undefined
+    return product.variants.find((v) =>
+      isEqual(optionsAsKeymap(v.options), options)
+    )
+  }, [product.variants, options])
+
+  const maxInventory =
+    selectedVariant?.manage_inventory && !selectedVariant?.allow_backorder
+      ? (selectedVariant?.inventory_quantity ?? 0)
+      : Infinity
+
+  const maxAddable =
+    inCart !== null ? Math.max(0, maxInventory - inCart) : Infinity
+
+  // Fetch cart quantity whenever the resolved variant changes
+  useEffect(() => {
+    if (!open || !selectedVariant?.id) {
+      setInCart(0)
+      return
+    }
+    setInCart(null) // show loading only while actively fetching
     retrieveCart().then((cart) => {
       if (!cart) { setInCart(0); return }
-      const line = cart.items?.find((i) => i.variant_id === variant.id)
+      const line = cart.items?.find((i) => i.variant_id === selectedVariant.id)
       setInCart(line?.quantity ?? 0)
     })
-  }, [open, variant.id])
+  }, [open, selectedVariant?.id])
 
-  // Re-clamp qty once inCart loads and maxAddable is known
+  // Clamp qty once inCart loads
   useEffect(() => {
     if (inCart === null) return
     if (qty > maxAddable) {
@@ -82,14 +117,15 @@ export default function AddToCartModal({
   }
 
   const handleConfirm = async () => {
-    await onConfirm(qty)
+    if (!selectedVariant?.id) return
+    await onConfirm(qty, selectedVariant.id)
     if (!pathname.includes("/products/")) {
       trackProductView(product.id)
     }
     onClose()
   }
 
-  const variantLabel = variant.options?.map((o) => o.value).join(" / ")
+  const variantLabel = selectedVariant?.options?.map((o) => o.value).join(" / ")
 
   return (
     <Transition appear show={open} as={Fragment}>
@@ -148,10 +184,28 @@ export default function AddToCartModal({
                   <span className="text-base font-semibold text-ui-fg-base">
                     {product.title}
                   </span>
-                  {variantLabel && (
+                  {variantLabel && variantLabel !== "Default option value" && (
                     <span className="text-sm text-ui-fg-subtle">{variantLabel}</span>
                   )}
                 </div>
+
+                {/* Variant selectors */}
+                {showVariantSelector && (
+                  <div className="flex flex-col gap-y-3">
+                    {(product.options ?? []).map((option) => (
+                      <OptionSelect
+                        key={option.id}
+                        option={option}
+                        current={options[option.id]}
+                        updateOption={(optionId, value) =>
+                          setOptions((prev) => ({ ...prev, [optionId]: value }))
+                        }
+                        title={option.title ?? ""}
+                        disabled={isAdding}
+                      />
+                    ))}
+                  </div>
+                )}
 
                 {/* Quantity stepper */}
                 <div className="flex flex-col items-center gap-y-2">
@@ -236,7 +290,7 @@ export default function AddToCartModal({
                   className="flex-1"
                   onClick={handleConfirm}
                   isLoading={isAdding}
-                  disabled={isAdding || maxAddable === 0}
+                  disabled={isAdding || !selectedVariant || maxAddable === 0}
                 >
                   {t("addToCart")}
                 </Button>
