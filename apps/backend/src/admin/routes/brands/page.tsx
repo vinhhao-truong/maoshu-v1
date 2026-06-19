@@ -32,11 +32,8 @@ type BrandForm = {
   is_active: boolean
 }
 
-const BACKEND_URL =
-  (import.meta as any).env?.VITE_MEDUSA_BACKEND_URL ?? "http://localhost:9000"
-
 async function adminFetch(path: string, options: RequestInit = {}) {
-  const res = await fetch(`${BACKEND_URL}${path}`, {
+  const res = await fetch(path, {
     ...options,
     credentials: "include",
     headers: {

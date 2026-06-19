@@ -13,11 +13,8 @@ type ProductStat = {
   total_view_amount: number
 }
 
-const BACKEND_URL =
-  (import.meta as any).env?.VITE_MEDUSA_BACKEND_URL ?? "http://localhost:9000"
-
 async function adminFetch(path: string) {
-  const res = await fetch(`${BACKEND_URL}${path}`, {
+  const res = await fetch(path, {
     credentials: "include",
     headers: { "Content-Type": "application/json" },
   })

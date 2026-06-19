@@ -77,11 +77,8 @@ const HOURS = Array.from({ length: 24 }, (_, i) => String(i))
 const MINUTES = ["0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"]
 const MONTH_DAYS = Array.from({ length: 31 }, (_, i) => String(i + 1))
 
-const BACKEND_URL =
-  (import.meta as any).env?.VITE_MEDUSA_BACKEND_URL ?? "http://localhost:9000"
-
 async function adminFetch(path: string, options: RequestInit = {}) {
-  const res = await fetch(`${BACKEND_URL}${path}`, {
+  const res = await fetch(path, {
     ...options,
     credentials: "include",
     headers: { "Content-Type": "application/json", ...(options.headers ?? {}) },

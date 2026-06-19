@@ -3,11 +3,8 @@ import { Button, Input, toast } from "@medusajs/ui"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
-const BACKEND_URL =
-  (import.meta as any).env?.VITE_MEDUSA_BACKEND_URL ?? "http://localhost:9000"
-
 async function adminFetch(path: string, options: RequestInit = {}) {
-  const res = await fetch(`${BACKEND_URL}${path}`, {
+  const res = await fetch(path, {
     ...options,
     credentials: "include",
     headers: {

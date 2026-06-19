@@ -11,10 +11,6 @@ type CollectionData = {
   metadata: Record<string, any> | null
 }
 
-const BACKEND_URL =
-  (import.meta as any).env?.VITE_MEDUSA_BACKEND_URL ?? "http://localhost:9000"
-
-
 function readAsBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -25,7 +21,7 @@ function readAsBase64(file: File): Promise<string> {
 }
 
 async function postCollection(id: string, body: Record<string, any>) {
-  const res = await fetch(`${BACKEND_URL}/admin/collections/${id}`, {
+  const res = await fetch(`/admin/collections/${id}`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -36,7 +32,7 @@ async function postCollection(id: string, body: Record<string, any>) {
 
 async function uploadFile(file: File, folder: string, oldUrl?: string): Promise<string> {
   const data = await readAsBase64(file)
-  const res = await fetch(`${BACKEND_URL}/admin/media`, {
+  const res = await fetch(`/admin/media`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },

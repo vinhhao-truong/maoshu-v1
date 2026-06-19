@@ -55,7 +55,7 @@ Medusa uses a **modular architecture** with dependency injection. Key convention
 - **Subscribers** (`src/subscribers/`): Event-driven listeners for domain events.
 - **Jobs** (`src/jobs/`): Async background tasks.
 - **Links** (`src/links/`): Declare relationships between modules from different packages.
-- **Admin extensions** (`src/admin/`): React components injected into the admin dashboard.
+- **Admin extensions** (`src/admin/`): React components injected into the admin dashboard. Always use relative fetch URLs — see the `/admin-widget-fetch` skill (`.claude/skills/admin-widget-fetch.md`).
 
 Config is in `medusa-config.ts` — loads env vars and registers CORS, database, plugins, and modules.
 

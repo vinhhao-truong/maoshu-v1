@@ -74,11 +74,8 @@ const STATUS_COLORS: Record<string, "blue" | "green" | "orange" | "grey"> = {
   archived: "orange",
 }
 
-const BACKEND_URL =
-  (import.meta as any).env?.VITE_MEDUSA_BACKEND_URL ?? "http://localhost:9000"
-
 async function adminFetch(path: string, options: RequestInit = {}) {
-  const res = await fetch(`${BACKEND_URL}${path}`, {
+  const res = await fetch(path, {
     ...options,
     credentials: "include",
     headers: {
@@ -101,7 +98,7 @@ function readAsBase64(file: File): Promise<string> {
 
 async function uploadFile(file: File, folder: string, oldUrl?: string): Promise<string> {
   const data = await readAsBase64(file)
-  const res = await fetch(`${BACKEND_URL}/admin/media`, {
+  const res = await fetch(`/admin/media`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },

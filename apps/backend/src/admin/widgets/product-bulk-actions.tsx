@@ -10,10 +10,8 @@ type Product = {
   thumbnail: string | null
 }
 
-const BACKEND_URL = (import.meta as any).env?.VITE_MEDUSA_BACKEND_URL ?? "http://localhost:9000"
-
 async function adminFetch(path: string, options: RequestInit = {}) {
-  const res = await fetch(`${BACKEND_URL}${path}`, {
+  const res = await fetch(path, {
     ...options,
     credentials: "include",
     headers: {
@@ -200,7 +198,7 @@ const ProductBulkActionsWidget = () => {
     try {
       const form = new FormData()
       form.append("file", file)
-      const res = await fetch(`${BACKEND_URL}/admin/product-import`, {
+      const res = await fetch(`/admin/product-import`, {
         method: "POST",
         credentials: "include",
         body: form,
@@ -258,11 +256,11 @@ const ProductBulkActionsWidget = () => {
   }
 
   const downloadTemplate = () => {
-    window.open(`${BACKEND_URL}/admin/product-import-template`, "_blank")
+    window.open(`/admin/product-import-template`, "_blank")
   }
 
   const exportProducts = () => {
-    window.open(`${BACKEND_URL}/admin/product-export`, "_blank")
+    window.open(`/admin/product-export`, "_blank")
   }
 
   return (
