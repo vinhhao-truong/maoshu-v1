@@ -37,7 +37,7 @@ yarn-error.log*
 **/.env.local
 **/.env.development
 **/.env.production
-**/.env.template
+**/.env.template    
 **/.env.development.local
 **/.env.test.local
 **/.env.production.local
