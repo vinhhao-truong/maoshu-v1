@@ -114,7 +114,7 @@
     "confirmPassword": "Xác nhận mật khẩu",
     "noBillingAddress": "Chưa có địa chỉ thanh toán",
     "billingAddress": "Địa chỉ thanh toán",
-    "company": "Công ty",
+    "company": "Công ty (không bắt buộc)",
     "addressLine": "Địa chỉ",
     "apartment": "Căn hộ, tầng, v.v.",
     "postalCode": "Mã bưu điện",
@@ -176,7 +176,7 @@
     "firstName": "Tên",
     "lastName": "Họ",
     "addressLine": "Địa chỉ",
-    "company": "Công ty",
+    "company": "Công ty (không bắt buộc)",
     "postalCode": "Mã bưu chính",
     "city": "Thành phố",
     "stateProvince": "Tỉnh / Thành",
@@ -184,7 +184,14 @@
     "phone": "Số điện thoại",
     "billingAddressSameAsShipping": "Địa chỉ thanh toán giống địa chỉ giao hàng",
     "chooseAnAddress": "Chọn địa chỉ",
-    "savedAddressPrompt": "Xin chào {name}, bạn có muốn dùng một địa chỉ đã lưu không?"
+    "savedAddressPrompt": "Xin chào {name}, bạn có muốn dùng một địa chỉ đã lưu không?",
+    "backToCart": "Quay lại giỏ hàng",
+    "back": "Quay lại",
+    "inYourCart": "Giỏ hàng của bạn",
+    "country": "Quốc gia",
+    "paymentTestAttention": "Lưu ý:",
+    "paymentTestOnlyDesc": "Chỉ dành cho mục đích thử nghiệm.",
+    "removeDiscountCode": "Xóa mã giảm giá khỏi đơn hàng"
   },
   "products": {
     "selectVariant": "Chọn phân loại",

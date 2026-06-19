@@ -184,7 +184,14 @@
     "phone": "Phone",
     "billingAddressSameAsShipping": "Billing address same as shipping address",
     "chooseAnAddress": "Choose an address",
-    "savedAddressPrompt": "Hi {name}, do you want to use one of your saved addresses?"
+    "savedAddressPrompt": "Hi {name}, do you want to use one of your saved addresses?",
+    "backToCart": "Back to shopping cart",
+    "back": "Back",
+    "inYourCart": "In your Cart",
+    "country": "Country",
+    "paymentTestAttention": "Attention:",
+    "paymentTestOnlyDesc": "For testing purposes only.",
+    "removeDiscountCode": "Remove discount code from order"
   },
   "products": {
     "selectVariant": "Select variant",
